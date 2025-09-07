@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 const Sidebar: React.FC = () => {
   return (
@@ -13,14 +14,14 @@ const Sidebar: React.FC = () => {
       <div className="sidebar-content">
         <div className="sidebar-section">
           <div className="sidebar-section-title">Getting Started</div>
-          <div className="sidebar-item active">
+          <NavLink to="/" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`} end>
             <div className="sidebar-item-icon">📝</div>
             <span>Order Lesson</span>
-          </div>
-          <div className="sidebar-item">
+          </NavLink>
+          <NavLink to="/my-lessons" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
             <div className="sidebar-item-icon">📚</div>
             <span>My Lessons</span>
-          </div>
+          </NavLink>
           <div className="sidebar-item">
             <div className="sidebar-item-icon">⚙️</div>
             <span>Settings</span>
@@ -74,4 +75,6 @@ const Sidebar: React.FC = () => {
 }
 
 export default Sidebar
+
+
 
