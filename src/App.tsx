@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LessonOrderForm from './components/LessonOrderForm'
 import LessonPage from './components/LessonPage'

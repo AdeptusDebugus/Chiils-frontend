@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react'
 import { createLesson } from '../services/api'
 
@@ -96,6 +97,11 @@ const LessonOrderForm: React.FC = () => {
       newErrors.youtube_links = 'At least one valid YouTube link is required'
     }
 
+    const selectedGrammar = (formData.grammar_topics || []).filter(Boolean)
+    if (selectedGrammar.length === 0) {
+      newErrors.grammar_topics = 'Выберите хотя бы одну грамматическую тему'
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -124,11 +130,35 @@ const LessonOrderForm: React.FC = () => {
     }))
   }
 
+  // multi-select version removed in favor of three individual selects
+
   const addYoutubeLink = () => {
-    setFormData(prev => ({
-      ...prev,
-      youtube_links: [...prev.youtube_links, '']
-    }))
+    setFormData(prev => {
+      if (prev.youtube_links.length >= 3) return prev
+      return {
+        ...prev,
+        youtube_links: [...prev.youtube_links, '']
+      }
+    })
+  }
+
+  const handleGrammarSingleSelectChange = (index: number, value: string) => {
+    setFormData((prev) => {
+      const next = [...prev.grammar_topics]
+      // ensure array has 3 slots
+      while (next.length < 3) next.push('')
+      // prevent duplicates by clearing the other same selections
+      for (let i = 0; i < 3; i++) {
+        if (i !== index && next[i] === value && value !== '') {
+          next[i] = ''
+        }
+      }
+      next[index] = value
+      return { ...prev, grammar_topics: next }
+    })
+    if (errors.grammar_topics) {
+      setErrors((prev) => ({ ...prev, grammar_topics: '' }))
+    }
   }
 
   const removeYoutubeLink = (index: number) => {
@@ -141,14 +171,7 @@ const LessonOrderForm: React.FC = () => {
     }
   }
 
-  const handleGrammarTopicToggle = (topic: string) => {
-    setFormData(prev => ({
-      ...prev,
-      grammar_topics: prev.grammar_topics.includes(topic)
-        ? prev.grammar_topics.filter(t => t !== topic)
-        : [...prev.grammar_topics, topic]
-    }))
-  }
+  // replaced by select-based handler
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -166,9 +189,10 @@ const LessonOrderForm: React.FC = () => {
         link.trim() && link.includes('youtube.com')
       )
 
-      const response = await createLesson({
+      await createLesson({
         ...formData,
-        youtube_links: validYoutubeLinks
+        youtube_links: validYoutubeLinks,
+        grammar_topics: (formData.grammar_topics || []).filter(Boolean)
       })
 
       setSubmitStatus('success')
@@ -260,7 +284,7 @@ const LessonOrderForm: React.FC = () => {
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="your.email@example.com"
                 />
-                <small style={{ color: '#666', fontSize: '12px' }}>Учебный модуль появится в твоем Notion-workspace</small>
+                <small style={{ color: '#666', fontSize: '12px' }}>Учебный модуль появится в твоем профиле - вкладка My Lessons</small>
                 {errors.email && <div className="error">{errors.email}</div>}
               </div>
 
@@ -306,8 +330,10 @@ const LessonOrderForm: React.FC = () => {
                 type="button"
                 className="add-link"
                 onClick={addYoutubeLink}
+                disabled={formData.youtube_links.length >= 3}
+                style={formData.youtube_links.length >= 3 ? { background: '#e9ecef', color: '#6c757d', borderColor: '#dee2e6', cursor: 'not-allowed' } : undefined}
               >
-                + Add YouTube Link
+                {formData.youtube_links.length >= 3 ? 'Maximum 3 links' : '+ Add YouTube Link'}
               </button>
               {errors.youtube_links && <div className="error">{errors.youtube_links}</div>}
             </div>
@@ -336,20 +362,67 @@ const LessonOrderForm: React.FC = () => {
 
             <div className="form-group">
               <label>Какие грамматические темы тебе интересны?</label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', marginTop: '8px' }}>
-                {commonGrammarTopics.map(topic => (
-                  <label key={topic} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                    <input
-                      type="checkbox"
-                      checked={formData.grammar_topics.includes(topic)}
-                      onChange={() => handleGrammarTopicToggle(topic)}
-                      style={{ marginRight: '8px' }}
-                    />
-                    <span style={{ fontSize: '14px' }}>{topic}</span>
-                  </label>
-                ))}
+              <div className="form-row">
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="grammar_topic_1">Выберите 1ю грамматическую тему</label>
+                  <select
+                    id="grammar_topic_1"
+                    value={formData.grammar_topics[0] || ''}
+                    onChange={(e) => handleGrammarSingleSelectChange(0, e.target.value)}
+                  >
+                    <option value="">— Не выбрано —</option>
+                    {commonGrammarTopics.map((topic) => (
+                      <option
+                        key={topic}
+                        value={topic}
+                        disabled={(formData.grammar_topics[1] || '') === topic || (formData.grammar_topics[2] || '') === topic}
+                      >
+                        {topic}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="grammar_topic_2">Выберите 2ю грамматическую тему</label>
+                  <select
+                    id="grammar_topic_2"
+                    value={formData.grammar_topics[1] || ''}
+                    onChange={(e) => handleGrammarSingleSelectChange(1, e.target.value)}
+                  >
+                    <option value="">— Не выбрано —</option>
+                    {commonGrammarTopics.map((topic) => (
+                      <option
+                        key={topic}
+                        value={topic}
+                        disabled={(formData.grammar_topics[0] || '') === topic || (formData.grammar_topics[2] || '') === topic}
+                      >
+                        {topic}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="grammar_topic_3">Выберите 3ю грамматическую тему</label>
+                  <select
+                    id="grammar_topic_3"
+                    value={formData.grammar_topics[2] || ''}
+                    onChange={(e) => handleGrammarSingleSelectChange(2, e.target.value)}
+                  >
+                    <option value="">— Не выбрано —</option>
+                    {commonGrammarTopics.map((topic) => (
+                      <option
+                        key={topic}
+                        value={topic}
+                        disabled={(formData.grammar_topics[0] || '') === topic || (formData.grammar_topics[1] || '') === topic}
+                      >
+                        {topic}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <small style={{ color: '#666', fontSize: '12px' }}>Упражнения на грамматику будут созданы на основе этого ответа</small>
+              <small style={{ color: '#666', fontSize: '12px' }}>Выбери до 3 уникальных тем. Упражнения на грамматику будут созданы на основе этого ответа</small>
+              {errors.grammar_topics && <div className="error">{errors.grammar_topics}</div>}
             </div>
           </div>
 
