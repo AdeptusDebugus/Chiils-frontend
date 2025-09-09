@@ -45,26 +45,26 @@ const LessonOrderForm: React.FC = () => {
     { value: 'C2', label: 'C2 - Proficient' }
   ]
 
-  const commonGrammarTopics = [
-    'Present Simple',
-    'Present Continuous',
-    'Present Perfect',
-    'Past Simple',
-    'Past Continuous',
-    'Past Perfect',
-    'Future Simple',
-    'Future Continuous',
-    'Future Perfect',
-    'Conditional Sentences',
-    'Passive Voice',
-    'Reported Speech',
-    'Modal Verbs',
-    'Gerunds and Infinitives',
-    'Relative Clauses',
-    'Articles',
-    'Prepositions',
-    'Phrasal Verbs'
-  ]
+  // const commonGrammarTopics = [
+  //   'Present Simple',
+  //   'Present Continuous',
+  //   'Present Perfect',
+  //   'Past Simple',
+  //   'Past Continuous',
+  //   'Past Perfect',
+  //   'Future Simple',
+  //   'Future Continuous',
+  //   'Future Perfect',
+  //   'Conditional Sentences',
+  //   'Passive Voice',
+  //   'Reported Speech',
+  //   'Modal Verbs',
+  //   'Gerunds and Infinitives',
+  //   'Relative Clauses',
+  //   'Articles',
+  //   'Prepositions',
+  //   'Phrasal Verbs'
+  // ]
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -215,7 +215,7 @@ const LessonOrderForm: React.FC = () => {
     <div className="form-container">
       <div className="form-header">
         <h1 className="form-title">Форма заказа Real Talk</h1>
-        <p className="form-subtitle">Персональный урок английского языка</p>
+        <p className="form-subtitle">Персональный урок иностранного языка</p>
       </div>
 
       <div className="form-content">
