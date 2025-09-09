@@ -10,6 +10,8 @@ interface FormData {
   youtube_links: string[]
   language_level: string
   grammar_topics: string[]
+  language: string
+  grammar_topics_text?: string
 }
 
 interface FormErrors {
@@ -24,7 +26,9 @@ const LessonOrderForm: React.FC = () => {
     telegram: '',
     youtube_links: [''],
     language_level: '',
-    grammar_topics: []
+    grammar_topics: [],
+    language: '',
+    grammar_topics_text: ''
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
@@ -89,17 +93,20 @@ const LessonOrderForm: React.FC = () => {
       newErrors.language_level = 'Please select your language level'
     }
 
+    if (!formData.language) {
+      newErrors.language = 'Please select language'
+    }
+
+    if (!formData.grammar_topics_text || !formData.grammar_topics_text.trim()) {
+      newErrors.grammar_topics_text = 'Укажите грамматические темы'
+    }
+
     const validYoutubeLinks = formData.youtube_links.filter(link => 
       link.trim() && link.includes('youtube.com')
     )
 
     if (validYoutubeLinks.length === 0) {
       newErrors.youtube_links = 'At least one valid YouTube link is required'
-    }
-
-    const selectedGrammar = (formData.grammar_topics || []).filter(Boolean)
-    if (selectedGrammar.length === 0) {
-      newErrors.grammar_topics = 'Выберите хотя бы одну грамматическую тему'
     }
 
     setErrors(newErrors)
@@ -142,24 +149,7 @@ const LessonOrderForm: React.FC = () => {
     })
   }
 
-  const handleGrammarSingleSelectChange = (index: number, value: string) => {
-    setFormData((prev) => {
-      const next = [...prev.grammar_topics]
-      // ensure array has 3 slots
-      while (next.length < 3) next.push('')
-      // prevent duplicates by clearing the other same selections
-      for (let i = 0; i < 3; i++) {
-        if (i !== index && next[i] === value && value !== '') {
-          next[i] = ''
-        }
-      }
-      next[index] = value
-      return { ...prev, grammar_topics: next }
-    })
-    if (errors.grammar_topics) {
-      setErrors((prev) => ({ ...prev, grammar_topics: '' }))
-    }
-  }
+  // removed selects; using free text input instead
 
   const removeYoutubeLink = (index: number) => {
     if (formData.youtube_links.length > 1) {
@@ -192,7 +182,9 @@ const LessonOrderForm: React.FC = () => {
       await createLesson({
         ...formData,
         youtube_links: validYoutubeLinks,
-        grammar_topics: (formData.grammar_topics || []).filter(Boolean)
+        grammar_topics: formData.grammar_topics_text && formData.grammar_topics_text.trim()
+          ? [formData.grammar_topics_text.trim()]
+          : []
       })
 
       setSubmitStatus('success')
@@ -206,7 +198,9 @@ const LessonOrderForm: React.FC = () => {
         telegram: '',
         youtube_links: [''],
         language_level: '',
-        grammar_topics: []
+        grammar_topics: [],
+        language: '',
+        grammar_topics_text: ''
       })
     } catch (error) {
       setSubmitStatus('error')
@@ -300,6 +294,22 @@ const LessonOrderForm: React.FC = () => {
                 {errors.telegram && <div className="error">{errors.telegram}</div>}
               </div>
             </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="language">Язык обучения *</label>
+                <select
+                  id="language"
+                  value={formData.language}
+                  onChange={(e) => handleInputChange('language', e.target.value)}
+                >
+                  <option value="">Выберите язык</option>
+                  <option value="english">English</option>
+                  <option value="spanish">Spanish</option>
+                </select>
+                {errors.language && <div className="error">{errors.language}</div>}
+              </div>
+            </div>
           </div>
 
           <div className="form-section">
@@ -361,68 +371,16 @@ const LessonOrderForm: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label>Какие грамматические темы тебе интересны?</label>
-              <div className="form-row">
-                <div className="form-group" style={{ flex: 1 }}>
-                  <label htmlFor="grammar_topic_1">Выберите 1ю грамматическую тему</label>
-                  <select
-                    id="grammar_topic_1"
-                    value={formData.grammar_topics[0] || ''}
-                    onChange={(e) => handleGrammarSingleSelectChange(0, e.target.value)}
-                  >
-                    <option value="">— Не выбрано —</option>
-                    {commonGrammarTopics.map((topic) => (
-                      <option
-                        key={topic}
-                        value={topic}
-                        disabled={(formData.grammar_topics[1] || '') === topic || (formData.grammar_topics[2] || '') === topic}
-                      >
-                        {topic}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group" style={{ flex: 1 }}>
-                  <label htmlFor="grammar_topic_2">Выберите 2ю грамматическую тему</label>
-                  <select
-                    id="grammar_topic_2"
-                    value={formData.grammar_topics[1] || ''}
-                    onChange={(e) => handleGrammarSingleSelectChange(1, e.target.value)}
-                  >
-                    <option value="">— Не выбрано —</option>
-                    {commonGrammarTopics.map((topic) => (
-                      <option
-                        key={topic}
-                        value={topic}
-                        disabled={(formData.grammar_topics[0] || '') === topic || (formData.grammar_topics[2] || '') === topic}
-                      >
-                        {topic}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group" style={{ flex: 1 }}>
-                  <label htmlFor="grammar_topic_3">Выберите 3ю грамматическую тему</label>
-                  <select
-                    id="grammar_topic_3"
-                    value={formData.grammar_topics[2] || ''}
-                    onChange={(e) => handleGrammarSingleSelectChange(2, e.target.value)}
-                  >
-                    <option value="">— Не выбрано —</option>
-                    {commonGrammarTopics.map((topic) => (
-                      <option
-                        key={topic}
-                        value={topic}
-                        disabled={(formData.grammar_topics[0] || '') === topic || (formData.grammar_topics[1] || '') === topic}
-                      >
-                        {topic}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <small style={{ color: '#666', fontSize: '12px' }}>Выбери до 3 уникальных тем. Упражнения на грамматику будут созданы на основе этого ответа</small>
-              {errors.grammar_topics && <div className="error">{errors.grammar_topics}</div>}
+              <label htmlFor="grammar_topics_text">Какие грамматические темы тебе интересны?</label>
+              <input
+                id="grammar_topics_text"
+                type="text"
+                value={formData.grammar_topics_text || ''}
+                onChange={(e) => handleInputChange('grammar_topics_text', e.target.value)}
+                placeholder="Например: Conditional Sentences, Passive Voice"
+              />
+              <small style={{ color: '#666', fontSize: '12px' }}>Можно перечислить через запятую</small>
+              {errors.grammar_topics_text && <div className="error">{errors.grammar_topics_text}</div>}
             </div>
           </div>
 

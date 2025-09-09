@@ -15,16 +15,20 @@ export interface ExerciseBlock {
   examples: string[]
 }
 
+export interface AnswersBlock {
+  type: string
+  answer: string[]
+}
+
 export interface PublicLesson {
+  lesson_topic: string
   you_tube_url: string
   glossary: GlossaryItem[]
   lexical_exercises: ExerciseBlock[]
   grammar_exercises: ExerciseBlock[]
   quizlet: string[]
-  answers: {
-    lexical_exercises: string[]
-    grammar_exercises: string[]
-  }
+  lexical_answers?: AnswersBlock[]
+  grammar_answers?: AnswersBlock[]
 }
 
 export const lessonService = {

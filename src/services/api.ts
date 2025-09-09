@@ -18,6 +18,7 @@ export interface CreateLessonRequest {
   telegram: string
   language_level: string
   grammar_topics: string[]
+  language: string
 }
 
 export interface CreateLessonResponse {

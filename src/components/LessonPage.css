@@ -1,10 +1,10 @@
 .lesson-page {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 32px 20px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   line-height: 1.6;
-  color: #333;
+  color: #37352f;
 }
 
 .lesson-header {
@@ -13,80 +13,82 @@
 }
 
 .lesson-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #37352f;
   line-height: 1.2;
 }
 
 .lesson-description {
-  font-size: 1.1rem;
-  color: #666;
-  max-width: 800px;
+  font-size: 15px;
+  color: #787774;
+  max-width: 700px;
   margin: 0 auto;
   text-align: left;
 }
 
 .lesson-description em {
   font-style: italic;
-  color: #3498db;
+  color: #9b9a97;
   font-weight: 500;
 }
 
 .lesson-content {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 28px;
 }
 
 .video-embed {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
-  border-radius: 12px;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border: 1px solid #e9e9e7;
+  background: #fff;
 }
 
 .video-embed iframe {
   width: 100%;
-  height: 320px;
+  height: 420px;
   border: none;
 }
 
 .vocabulary-section {
-  background: #f8f9fa;
-  padding: 2rem;
-  border-radius: 12px;
-  border-left: 4px solid #3498db;
+  background: #f7f6f3;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #e9e9e7;
 }
 
 .vocabulary-section h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  color: #2c3e50;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #37352f;
   font-weight: 600;
 }
 
 .vocabulary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 
 .vocabulary-item {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e9ecef;
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 6px;
+  box-shadow: none;
+  border: 1px solid #e9e9e7;
 }
 
 .vocabulary-item h3 {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-  color: #2c3e50;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #37352f;
   font-weight: 600;
 }
 
@@ -102,23 +104,27 @@
 
 .vocab-details em {
   font-style: italic;
-  color: #7f8c8d;
-  background: #f1f2f6;
-  padding: 0.2rem 0.4rem;
+  color: #000000;
+}
+
+.vocab-details p.quote em,
+.vocab-details p.example em {
+  background: #ffffff;
+  padding: 2px 4px;
   border-radius: 4px;
 }
 
 .exercises-section {
   background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #e9e9e7;
 }
 
 .exercises-section h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: #2c3e50;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #37352f;
   font-weight: 600;
 }
 
@@ -129,14 +135,14 @@
 }
 
 .exercise-tip {
-  background: #e8f4fd;
-  border: 1px solid #b3d9ff;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 2rem;
+  background: #f7f6f3;
+  border: 1px solid #e9e9e7;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
   display: flex;
   align-items: flex-start;
-  gap: 0.8rem;
+  gap: 8px;
 }
 
 .tip-icon {
@@ -153,35 +159,33 @@
 .exercise-questions {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .question {
-  background: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 8px;
-  border-left: 4px solid #3498db;
-  transition: all 0.2s ease;
+  background: #f7f6f3;
+  padding: 14px;
+  border-radius: 6px;
+  border: 1px solid #e9e9e7;
+  transition: background-color 0.15s ease;
 }
 
 .question:hover {
-  background: #f1f2f6;
-  transform: translateX(4px);
+  background: #f1f1ef;
 }
 
 .question p {
   margin: 0;
-  font-size: 1.1rem;
-  color: #2c3e50;
+  font-size: 15px;
+  color: #37352f;
   font-weight: 500;
 }
 
 .exercise-divider {
-  height: 2px;
-  background: linear-gradient(90deg, #3498db, #e9ecef, #3498db);
-  margin: 3rem 0;
-  border-radius: 1px;
+  height: 1px;
+  background: #e9e9e7;
+  margin: 20px 0;
 }
 
 .true-false-questions {
@@ -191,16 +195,16 @@
 }
 
 .true-false-questions .question {
-  background: #fff5f5;
-  border-left-color: #e74c3c;
+  background: #f7f6f3;
+  border-color: #e9e9e7;
 }
 
 .true-false-questions .question:hover {
-  background: #fef2f2;
+  background: #f1f1ef;
 }
 
 .true-false-questions em {
-  color: #e74c3c;
+  color: #787774;
   font-weight: 600;
   font-style: italic;
 }
@@ -217,13 +221,13 @@
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e9e9e7;
+  border-top: 3px solid #37352f;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
+  margin-bottom: 12px;
 }
 
 @keyframes spin {
@@ -233,53 +237,43 @@
 
 .loading-container p,
 .error-container p {
-  color: #666;
-  font-size: 1.1rem;
+  color: #787774;
+  font-size: 15px;
 }
 
 .error-container h2 {
-  color: #e74c3c;
-  margin-bottom: 1rem;
+  color: #37352f;
+  margin-bottom: 12px;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .lesson-page {
-    padding: 1rem;
+    padding: 16px;
   }
-  
   .lesson-header h1 {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
-  
-  .vocabulary-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .vocabulary-item {
-    padding: 1rem;
+    padding: 12px;
   }
-  
   .exercises-section {
-    padding: 1.5rem;
+    padding: 16px;
   }
-  
   .question {
-    padding: 1rem;
+    padding: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .lesson-header h1 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
   }
-  
   .lesson-description {
-    font-size: 1rem;
+    font-size: 14px;
   }
-  
   .vocabulary-section h2,
   .exercises-section h2 {
-    font-size: 1.5rem;
+    font-size: 16px;
   }
 }

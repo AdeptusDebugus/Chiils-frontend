@@ -87,6 +87,15 @@ const LessonPage: React.FC = () => {
     }
   }
 
+  const scrollToPlayerAndSeek = (seconds: number) => {
+    const el = document.getElementById('yt-player')
+    if (el && typeof el.scrollIntoView === 'function') {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    // Give the browser a moment to scroll, then seek
+    window.setTimeout(() => seekTo(seconds), 150)
+  }
+
   const { idx } = useParams<{ idx?: string }>()
   useEffect(() => {
     const fetchLesson = async () => {
@@ -142,6 +151,16 @@ const LessonPage: React.FC = () => {
     setLexicalChecks(checksInit)
   }, [lesson])
 
+  const normalize = (s: string | undefined | null): string => (s || '').trim().toLowerCase()
+  const getLexicalAnswerType = (exerciseType: string): string | null => {
+    const n = normalize(exerciseType)
+    if (n.startsWith('вставь пропущенное')) return 'fillTheBlankAnswers'
+    if (n.includes('ложь') || n.includes('правда')) return 'truOrFalseAnswers'
+    if (n.startsWith('послушай и отметь слова')) return null
+    return null
+  }
+  const getGrammarAnswerType = (index: number): string => `grammar${index + 1}Answers`
+
   if (loading) {
     return (
       <div className="lesson-page">
@@ -167,8 +186,13 @@ const LessonPage: React.FC = () => {
   return (
     <div className="lesson-page">
       <div className="lesson-content">
+        {lesson.lesson_topic && (
+          <div className="lesson-header" style={{ textAlign: 'left' }}>
+            <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#37352f', marginBottom: 8 }}>{lesson.lesson_topic}</h1>
+          </div>
+        )}
         <div className="video-embed">
-          <div id="yt-player" style={{ width: '100%', height: 320 }}></div>
+          <div id="yt-player" style={{ width: '100%', height: 420 }}></div>
         </div>
 
         <div className="vocabulary-section">
@@ -178,19 +202,19 @@ const LessonPage: React.FC = () => {
               <div key={`${item.expression}-${index}`} className="vocabulary-item">
                 <h3>📌 {item.expression}</h3>
                 <div className="vocab-details">
-                  <p><strong>Цитата:</strong> <em>"{item.quote}"</em></p>
+                  <p className="quote"><strong>Цитата:</strong> <em>"{item.quote}"</em></p>
                   <p><strong>Перевод:</strong> {item.translation}</p>
                   <p><strong>Объяснение:</strong> {item.explanation}</p>
-                  <p><strong>Пример:</strong> <em>{item.example}</em></p>
+                  <p className="example"><strong>Пример:</strong> <em>{item.example}</em></p>
                   {item.time_code !== null && (
                     <p>
                       <strong>Тайм-код:</strong>{' '}
                       <button
-                        onClick={() => seekTo(item.time_code as number)}
+                        onClick={() => scrollToPlayerAndSeek(item.time_code as number)}
                         style={{
                           background: 'transparent',
                           border: 'none',
-                          color: '#3498db',
+                          color: '#37352f',
                           cursor: 'pointer',
                           textDecoration: 'underline',
                           padding: 0,
@@ -228,8 +252,8 @@ const LessonPage: React.FC = () => {
                           src={toYouTubeEmbedUrl(lesson.you_tube_url)}
                           title="YouTube video player"
                           width="100%"
-                          height="220"
-                          style={{ border: 0, borderRadius: 8 }}
+                          height="280"
+                          style={{ border: 0, borderRadius: 6 }}
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                           allowFullScreen
                         ></iframe>
@@ -296,9 +320,9 @@ const LessonPage: React.FC = () => {
                                       }}
                                       style={{
                                         width: `${Math.max(6, (lexicalAnswers[blockIndex]?.[i]?.[pi] ?? '').length + 1)}ch`,
-                                        padding: '1px 3px',
+                                        padding: '1px 6px',
                                         borderRadius: 4,
-                                        border: '1px solid #ced4da',
+                                        border: '1px solid #e9e9e7',
                                         font: 'inherit',
                                       }}
                                       placeholder="слово"
@@ -364,9 +388,9 @@ const LessonPage: React.FC = () => {
                                   }}
                                   style={{
                                     width: `${Math.max(6, (grammarAnswers[blockIndex]?.[i]?.[pi] ?? '').length + 1)}ch`,
-                                    padding: '1px 3px',
+                                    padding: '1px 6px',
                                     borderRadius: 4,
-                                    border: '1px solid #ced4da',
+                                    border: '1px solid #e9e9e7',
                                     font: 'inherit',
                                   }}
                                   aria-label={`Заполнить пропуск ${pi + 1}`}
@@ -391,9 +415,9 @@ const LessonPage: React.FC = () => {
             <button
               onClick={() => setShowQuizlet((v) => !v)}
               style={{
-                background: '#2f80ed',
+                background: '#37352f',
                 color: '#ffffff',
-                border: '1px solid #2f80ed',
+                border: '1px solid #37352f',
                 borderRadius: 6,
                 padding: '6px 10px',
                 cursor: 'pointer',
@@ -418,9 +442,9 @@ const LessonPage: React.FC = () => {
             <button
               onClick={() => setShowAnswers((v) => !v)}
               style={{
-                background: '#2f80ed',
+                background: '#37352f',
                 color: '#ffffff',
-                border: '1px solid #2f80ed',
+                border: '1px solid #37352f',
                 borderRadius: 6,
                 padding: '6px 10px',
                 cursor: 'pointer',
@@ -430,24 +454,44 @@ const LessonPage: React.FC = () => {
             </button>
             {showAnswers && (
               <div style={{ marginTop: 12 }}>
-                {lesson.answers?.lexical_exercises?.length ? (
+                {lesson.lexical_exercises && lesson.lexical_exercises.length > 0 ? (
                   <div style={{ marginBottom: 12 }}>
                     <h3>Ответы: Лексические упражнения</h3>
-                    <ol style={{ paddingLeft: 20 }}>
-                      {lesson.answers.lexical_exercises.map((ans, i) => (
-                        <li key={`ans-lex-${i}`}><span>{ans}</span></li>
-                      ))}
-                    </ol>
+                    {lesson.lexical_exercises.map((exBlock, bi) => {
+                      const ansType = getLexicalAnswerType(exBlock.type)
+                      const ansBlock = ansType ? lesson.lexical_answers?.find((b) => b.type === ansType) : undefined
+                      if (!ansBlock || !ansBlock.answer || ansBlock.answer.length === 0) return null
+                      return (
+                        <div key={`ans-lex-block-${bi}`} style={{ marginBottom: 8 }}>
+                          <p style={{ margin: '4px 0' }}><strong>Тип:</strong> {exBlock.type}</p>
+                          <ol style={{ paddingLeft: 20, marginTop: 4 }}>
+                            {ansBlock.answer.map((ans, i) => (
+                              <li key={`ans-lex-${bi}-${i}`}><span>{ans}</span></li>
+                            ))}
+                          </ol>
+                        </div>
+                      )
+                    })}
                   </div>
                 ) : null}
-                {lesson.answers?.grammar_exercises?.length ? (
+                {lesson.grammar_exercises && lesson.grammar_exercises.length > 0 ? (
                   <div>
                     <h3>Ответы: Грамматические упражнения</h3>
-                    <ol style={{ paddingLeft: 20 }}>
-                      {lesson.answers.grammar_exercises.map((ans, i) => (
-                        <li key={`ans-gram-${i}`}><span>{ans}</span></li>
-                      ))}
-                    </ol>
+                    {lesson.grammar_exercises.map((exBlock, bi) => {
+                      const ansType = getGrammarAnswerType(bi)
+                      const ansBlock = lesson.grammar_answers?.find((b) => b.type === ansType)
+                      if (!ansBlock || !ansBlock.answer || ansBlock.answer.length === 0) return null
+                      return (
+                        <div key={`ans-gram-block-${bi}`} style={{ marginBottom: 8 }}>
+                          <p style={{ margin: '4px 0' }}><strong>Тип:</strong> {exBlock.type}</p>
+                          <ol style={{ paddingLeft: 20, marginTop: 4 }}>
+                            {ansBlock.answer.map((ans, i) => (
+                              <li key={`ans-gram-${bi}-${i}`}><span>{ans}</span></li>
+                            ))}
+                          </ol>
+                        </div>
+                      )
+                    })}
                   </div>
                 ) : null}
               </div>
