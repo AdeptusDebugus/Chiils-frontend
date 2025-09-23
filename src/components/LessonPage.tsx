@@ -205,7 +205,7 @@ const LessonPage: React.FC = () => {
                   <p className="quote"><strong>Цитата:</strong> <em>"{item.quote}"</em></p>
                   <p><strong>Перевод:</strong> {item.translation}</p>
                   <p><strong>Объяснение:</strong> {item.explanation}</p>
-                  <p className="example"><strong>Пример:</strong> <em>{item.example}</em></p>
+                  <p className="example"><strong>Пример:</strong> <em>{item.another_example}</em></p>
                   {item.time_code !== null && (
                     <p>
                       <strong>Тайм-код:</strong>{' '}
@@ -478,8 +478,7 @@ const LessonPage: React.FC = () => {
                   <div>
                     <h3>Ответы: Грамматические упражнения</h3>
                     {lesson.grammar_exercises.map((exBlock, bi) => {
-                      const ansType = getGrammarAnswerType(bi)
-                      const ansBlock = lesson.grammar_answers?.find((b) => b.type === ansType)
+                      const ansBlock = lesson.grammar_answers?.[bi]
                       if (!ansBlock || !ansBlock.answer || ansBlock.answer.length === 0) return null
                       return (
                         <div key={`ans-gram-block-${bi}`} style={{ marginBottom: 8 }}>
