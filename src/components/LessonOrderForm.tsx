@@ -270,7 +270,7 @@ const LessonOrderForm: React.FC = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="email">Твой email, привязанный к Notion *</label>
+                <label htmlFor="email">Твой email *</label>
                 <input
                   type="email"
                   id="email"
@@ -306,6 +306,8 @@ const LessonOrderForm: React.FC = () => {
                   <option value="">Выберите язык</option>
                   <option value="english">English</option>
                   <option value="spanish">Spanish</option>
+                  <option value="german">German</option>
+                  <option value="french">French</option>
                 </select>
                 {errors.language && <div className="error">{errors.language}</div>}
               </div>
@@ -377,7 +379,7 @@ const LessonOrderForm: React.FC = () => {
                 type="text"
                 value={formData.grammar_topics_text || ''}
                 onChange={(e) => handleInputChange('grammar_topics_text', e.target.value)}
-                placeholder="Например: Conditional Sentences, Passive Voice"
+                placeholder="Например: Present Perfect, Conditional Sentences, Passive Voice"
               />
               <small style={{ color: '#666', fontSize: '12px' }}>Можно перечислить через запятую</small>
               {errors.grammar_topics_text && <div className="error">{errors.grammar_topics_text}</div>}
