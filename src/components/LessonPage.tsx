@@ -159,7 +159,6 @@ const LessonPage: React.FC = () => {
     if (n.startsWith('послушай и отметь слова')) return null
     return null
   }
-  const getGrammarAnswerType = (index: number): string => `grammar${index + 1}Answers`
 
   if (loading) {
     return (
