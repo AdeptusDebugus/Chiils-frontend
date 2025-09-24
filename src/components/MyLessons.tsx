@@ -59,7 +59,7 @@ const MyLessons: React.FC = () => {
             <div key={idx} className="question" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <p style={{ marginBottom: 6 }}>
-                  {idx + 1}. YouTube Lesson
+                  {idx + 1}. {l.lesson_topic}
                 </p>
                 <small style={{ color: '#7f8c8d' }}>{l.you_tube_url}</small>
               </div>

@@ -325,7 +325,7 @@ const LessonPage: React.FC = () => {
                                         border: '1px solid #e9e9e7',
                                         font: 'inherit',
                                       }}
-                                      placeholder="слово"
+                                      placeholder="word"
                                       aria-label={`Заполнить пропуск ${pi + 1}`}
                                     />
                                   )}
