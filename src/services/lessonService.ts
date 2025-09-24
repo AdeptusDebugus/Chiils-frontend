@@ -77,7 +77,7 @@ export const lessonService = {
       if (lex.fill_in_the_blank?.items?.length) {
         lexical_exercises.push({
           type: 'Вставь пропущенное слово',
-          input: lex.fill_in_the_blank.note ?? null,
+          input: lex.fill_in_the_blank.phrases_pool ?? null,
           examples: lex.fill_in_the_blank.items
             .map((it: any) => (it.sentence ? toSixUnderscores(String(it.sentence)) : ''))
             .filter(Boolean),
