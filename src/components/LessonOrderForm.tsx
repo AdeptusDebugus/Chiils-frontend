@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createLesson } from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 
 interface FormData {
   name: string
@@ -19,6 +20,8 @@ interface FormErrors {
 }
 
 const LessonOrderForm: React.FC = () => {
+  const { user } = useAuth();
+  
   const [formData, setFormData] = useState<FormData>({
     name: '',
     order_number: '',
@@ -30,6 +33,17 @@ const LessonOrderForm: React.FC = () => {
     language: '',
     grammar_topics_text: ''
   })
+
+  // Autofill name and email from authenticated user
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name || '',
+        email: user.email || ''
+      }));
+    }
+  }, [user]);
 
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -250,7 +264,16 @@ const LessonOrderForm: React.FC = () => {
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Введите ваше имя"
+                  style={{ 
+                    backgroundColor: user?.name ? '#f8f9fa' : 'white',
+                    borderColor: user?.name ? '#28a745' : undefined
+                  }}
                 />
+                {user?.name && (
+                  <small style={{ color: '#28a745', fontSize: '12px' }}>
+                    ✓ Автоматически заполнено из вашего профиля Google
+                  </small>
+                )}
                 {errors.name && <div className="error">{errors.name}</div>}
               </div>
 
@@ -270,15 +293,25 @@ const LessonOrderForm: React.FC = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="email">Твой email, привязанный к Notion *</label>
+                <label htmlFor="email">Твой email *</label>
                 <input
                   type="email"
                   id="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="your.email@example.com"
+                  style={{ 
+                    backgroundColor: user?.email ? '#f8f9fa' : 'white',
+                    borderColor: user?.email ? '#28a745' : undefined
+                  }}
                 />
-                <small style={{ color: '#666', fontSize: '12px' }}>Учебный модуль появится в твоем профиле - вкладка My Lessons</small>
+                {user?.email ? (
+                  <small style={{ color: '#28a745', fontSize: '12px' }}>
+                    ✓ Автоматически заполнено из вашего профиля Google
+                  </small>
+                ) : (
+                  <small style={{ color: '#666', fontSize: '12px' }}>Учебный модуль появится в твоем профиле - вкладка My Lessons</small>
+                )}
                 {errors.email && <div className="error">{errors.email}</div>}
               </div>
 
@@ -306,6 +339,8 @@ const LessonOrderForm: React.FC = () => {
                   <option value="">Выберите язык</option>
                   <option value="english">English</option>
                   <option value="spanish">Spanish</option>
+                  <option value="german">German</option>
+                  <option value="french">French</option>
                 </select>
                 {errors.language && <div className="error">{errors.language}</div>}
               </div>
@@ -377,7 +412,7 @@ const LessonOrderForm: React.FC = () => {
                 type="text"
                 value={formData.grammar_topics_text || ''}
                 onChange={(e) => handleInputChange('grammar_topics_text', e.target.value)}
-                placeholder="Например: Conditional Sentences, Passive Voice"
+                placeholder="Например: Present Perfect, Conditional Sentences, Passive Voice"
               />
               <small style={{ color: '#666', fontSize: '12px' }}>Можно перечислить через запятую</small>
               {errors.grammar_topics_text && <div className="error">{errors.grammar_topics_text}</div>}

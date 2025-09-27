@@ -23,6 +23,8 @@ export interface AnswersBlock {
 export interface PublicLesson {
   lesson_topic: string
   you_tube_url: string
+  tag?: string
+  language?: string
   glossary: GlossaryItem[]
   lexical_exercises: ExerciseBlock[]
   grammar_exercises: ExerciseBlock[]
@@ -56,7 +58,7 @@ export const lessonService = {
 
       if (lex.true_or_false?.items?.length) {
         lexical_exercises.push({
-          type: 'Правда / Ложь',
+          type: 'True / False',
           input: lex.true_or_false.note ?? null,
           examples: lex.true_or_false.items.map((it: any) => it.sentence ?? '').filter(Boolean),
         })
@@ -130,6 +132,8 @@ export const lessonService = {
       const lesson: PublicLesson = {
         lesson_topic: raw.lesson_theme ?? raw.lesson_topic ?? '',
         you_tube_url: raw.you_tube_url ?? '',
+        tag: raw.tag ?? raw.lesson_tag ?? '',
+        language: raw.language ?? raw.lesson_language ?? '',
         glossary,
         lexical_exercises,
         grammar_exercises,
