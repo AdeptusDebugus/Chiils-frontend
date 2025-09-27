@@ -21,7 +21,7 @@ const MyLessons: React.FC = () => {
         const data = await lessonService.getPublicLessons()
         
         // Transform lessons to include card data
-        const cardData: LessonCardData[] = data.map((lesson, index) => ({
+        const cardData: LessonCardData[] = data.map((lesson) => ({
           ...lesson,
           grammar_topics: lesson.grammar_exercises.map(ex => ex.type) // Extract grammar topics from exercises
         }))
