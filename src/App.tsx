@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './components/Login';
@@ -11,16 +11,22 @@ import Sidebar from './components/Sidebar';
 import './App.css';
 
 function App() {
+  const location = useLocation();
+  
+  // Hide sidebar on login pages
+  const shouldShowSidebar = !['/', '/login', '/login/success'].includes(location.pathname);
+
   return (
     <AuthProvider>
       <div className="app">
-        <Sidebar />
-        <div className="main-content">
+        {shouldShowSidebar && <Sidebar />}
+        <div className={`main-content ${shouldShowSidebar ? '' : 'full-width'}`}>
           <Routes>
             {/* Public routes */}
-            <Route path="/" element={<LessonOrderForm />} />
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/login/success" element={<LoginSuccess />} />
+            <Route path="/lesson-order" element={<LessonOrderForm />} />
             <Route path="/lesson/:idx" element={<LessonPage />} />
             
             {/* Protected routes */}

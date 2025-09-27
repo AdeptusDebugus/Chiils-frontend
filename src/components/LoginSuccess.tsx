@@ -2,6 +2,21 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
+// Utility function to properly decode JWT with UTF-8 support
+const decodeJWT = (token: string): any => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Failed to decode JWT:', error);
+    return {};
+  }
+};
+
 const LoginSuccess: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -25,26 +40,24 @@ const LoginSuccess: React.FC = () => {
         }
 
         // Decode JWT to get user info (you might want to verify the token on backend)
-        let tokenPayload: any = {}
-        try {
-          tokenPayload = JSON.parse(atob(token.split('.')[1]));
-        } catch (e) {
-          // If decoding fails, still proceed to store token and go to dashboard
-          tokenPayload = {}
-        }
+        const tokenPayload = decodeJWT(token);
+        console.log('JWT Payload:', tokenPayload); // Debug log
         
+        // Handle different JWT formats and field names
         const userData = {
-          id: tokenPayload.sub || tokenPayload.id,
-          email: tokenPayload.email,
-          name: tokenPayload.name,
-          picture: tokenPayload.picture
+          id: tokenPayload.sub || tokenPayload.id || tokenPayload.email,
+          email: tokenPayload.email || tokenPayload.emailAddress,
+          name: tokenPayload.name || tokenPayload.given_name || tokenPayload.full_name || tokenPayload.username || 'Unknown User',
+          picture: tokenPayload.picture || tokenPayload.avatar || tokenPayload.profile_image
         };
+
+        console.log('Processed user data:', userData); // Debug log
 
         // Store token and user data
         login(token, userData);
         
-        // Redirect to My Lessons or intended page
-        navigate('/my-lessons', { replace: true });
+        // Redirect to lesson order form or intended page
+        navigate('/lesson-order', { replace: true });
         
       } catch (err) {
         console.error('Error processing login:', err);

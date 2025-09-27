@@ -43,6 +43,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (storedToken && storedUser) {
       try {
         const userData = JSON.parse(storedUser);
+        console.log('Retrieved user data from localStorage:', userData); // Debug log
         setToken(storedToken);
         setUser(userData);
       } catch (error) {
@@ -56,6 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = (newToken: string, userData: User) => {
+    console.log('Storing user data:', userData); // Debug log
     setToken(newToken);
     setUser(userData);
     localStorage.setItem('jwt_token', newToken);

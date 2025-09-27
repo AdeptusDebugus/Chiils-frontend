@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
       <div className="sidebar-content">
         <div className="sidebar-section">
           <div className="sidebar-section-title">Getting Started</div>
-          <NavLink to="/" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`} end>
+          <NavLink to="/lesson-order" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
             <div className="sidebar-item-icon">📝</div>
             <span>Order Lesson</span>
           </NavLink>
@@ -25,12 +25,6 @@ const Sidebar: React.FC = () => {
             <NavLink to="/my-lessons" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
               <div className="sidebar-item-icon">📚</div>
               <span>My Lessons</span>
-            </NavLink>
-          )}
-          {isAuthenticated && (
-            <NavLink to="/dashboard" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
-              <div className="sidebar-item-icon">📊</div>
-              <span>Dashboard</span>
             </NavLink>
           )}
         </div>

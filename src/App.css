@@ -21,6 +21,11 @@
   scrollbar-color: #e9e9e7 transparent;
 }
 
+.main-content.full-width {
+  width: 100%;
+  flex: none;
+}
+
 .main-content::-webkit-scrollbar {
   width: 8px;
 }
