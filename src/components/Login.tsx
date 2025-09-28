@@ -1,10 +1,85 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { telegramAuth, TelegramAuthPayload } from '../services/api';
 
 const Login: React.FC = () => {
   const { login, user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const tgWidgetMounted = useRef(false)
+  const botUsername = (import.meta as any)?.env?.VITE_TELEGRAM_BOT_USERNAME || 'unreal_talk_auth_bot'
+  const [telegramError, setTelegramError] = React.useState<string | null>(null)
+
+  useEffect(() => {
+    if (tgWidgetMounted.current) return
+    tgWidgetMounted.current = true
+
+    ;(window as any).__onTelegramAuth = function(user: any) {
+      window.dispatchEvent(new CustomEvent('telegram-auth', { detail: user }))
+    }
+
+    const handler = async (e: any) => {
+      try {
+        const user = e.detail || {}
+        const payload: TelegramAuthPayload = {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          username: user.username,
+          photo_url: user.photo_url,
+          auth_date: user.auth_date,
+          hash: user.hash,
+        }
+
+        const { token, user: backendUser } = await telegramAuth(payload)
+        const derivedUser = {
+          id: backendUser?.id || String(user.id),
+          email: backendUser?.email || '',
+          name: backendUser?.name || [user.first_name, user.last_name].filter(Boolean).join(' '),
+          picture: backendUser?.picture || user.photo_url,
+        }
+        login(token, derivedUser)
+        navigate('/lesson-order', { replace: true })
+      } catch (err) {
+        console.error('Telegram auth failed', err)
+        alert('Telegram authentication failed. Please try again.')
+      }
+    }
+
+    window.addEventListener('telegram-auth', handler)
+
+    const container = document.getElementById('telegram-login-container')
+    if (container) {
+      const scriptId = 'telegram-login-script'
+      if (!document.getElementById(scriptId)) {
+        // Check if bot username is properly configured
+        if (botUsername === 'YOUR_TELEGRAM_BOT_USERNAME') {
+          setTelegramError('Telegram bot username not configured. Please set VITE_TELEGRAM_BOT_USERNAME in your .env file.')
+          return
+        }
+        
+        const s = document.createElement('script')
+        s.id = scriptId
+        s.src = 'https://telegram.org/js/telegram-widget.js?22'
+        s.async = true
+        s.setAttribute('data-telegram-login', botUsername)
+        s.setAttribute('data-size', 'large')
+        s.setAttribute('data-userpic', 'true')
+        s.setAttribute("data-auth-url", "http://localhost:8080/auth/telegram");
+        s.setAttribute('data-request-access', 'write')
+        
+        s.onerror = () => {
+          setTelegramError('Failed to load Telegram widget. Please check your internet connection.')
+        }
+        
+        container.appendChild(s)
+      }
+    }
+
+    return () => {
+      window.removeEventListener('telegram-auth', handler)
+    }
+  }, [botUsername, login, navigate])
 
   const handleGoogleLogin = () => {
     // Redirect to your Spring Boot OAuth2 endpoint
@@ -176,6 +251,34 @@ const Login: React.FC = () => {
       gap: '20px',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
+      {/* Telegram Login Widget */}
+      <div style={{ marginBottom: '8px' }}>
+        <div id="telegram-login-container" />
+        {telegramError && (
+          <div style={{ 
+            color: '#d73a49', 
+            fontSize: '14px', 
+            marginTop: '8px',
+            padding: '8px 12px',
+            backgroundColor: '#ffeef0',
+            border: '1px solid #f97583',
+            borderRadius: '6px',
+            textAlign: 'center'
+          }}>
+            {telegramError}
+            <br />
+            <small style={{ color: '#6a737d' }}>
+              To fix: Create a .env file with VITE_TELEGRAM_BOT_USERNAME=your_bot_username
+            </small>
+          </div>
+        )}
+        <noscript>
+          <div style={{ color: '#787774', fontSize: '14px', marginTop: '8px' }}>
+            Enable JavaScript to use Telegram login.
+          </div>
+        </noscript>
+      </div>
+
       <div style={{ textAlign: 'center' }}>
         <h1 style={{ 
           fontSize: '32px', 

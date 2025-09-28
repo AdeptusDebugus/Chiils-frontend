@@ -77,3 +77,29 @@ export const createLesson = async (data: CreateLessonRequest): Promise<CreateLes
 }
 
 export default api
+
+// Telegram Auth
+export interface TelegramAuthPayload {
+  id: number
+  first_name?: string
+  last_name?: string
+  username?: string
+  photo_url?: string
+  auth_date: number
+  hash: string
+}
+
+export interface TelegramAuthResponse {
+  token: string
+  user: {
+    id: string
+    email?: string
+    name?: string
+    picture?: string
+  }
+}
+
+export const telegramAuth = async (payload: TelegramAuthPayload): Promise<TelegramAuthResponse> => {
+  const response = await api.post<TelegramAuthResponse>('/auth/telegram', payload)
+  return response.data
+}
