@@ -14,11 +14,17 @@ const MyLessons: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+    // --- минимальный стейт управления списком ---
+    const [page, setPage] = useState(1)            // 1-based (UI)
+      const [size, setSize] = useState(10)           // 10/20/50
+      const [sort, setSort] = useState('-createdAt') // дефолт как на бэке
+      const [language, setLanguage] = useState<string>('ALL')
+
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true)
-        const data = await lessonService.getPublicLessons()
+        const data = await lessonService.getPublicLessons({ page, size, sort, language })
         
         // Transform lessons to include card data
         const cardData: LessonCardData[] = data.map((lesson) => ({
@@ -35,7 +41,7 @@ const MyLessons: React.FC = () => {
       }
     }
     load()
-  }, [])
+  }, [page, size, sort, language])
 
   if (loading) {
     return (
@@ -62,9 +68,50 @@ const MyLessons: React.FC = () => {
   return (
     <div className="lesson-page">
       <div className="lesson-header">
-        <h1>My Lessons</h1>
-        <p className="lesson-description">Select a lesson to start learning.</p>
+                 <h1>Public Lessons</h1>
+                 <p className="lesson-description">Browse public lessons with basic filters.</p>
       </div>
+
+
+        {/* Панель управления (минимум для MVP) */}
+             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', margin: '8px 0 16px' }}>
+               <label>
+                 Language:&nbsp;
+                 <select
+                   value={language}
+                   onChange={(e) => { setPage(1); setLanguage(e.target.value) }}
+                 >
+                   {/* можно расширить список языков по мере необходимости */}
+                   {['ALL','english','russian','spanish'].map(l => (
+                     <option key={l} value={l}>{l}</option>
+                   ))}
+                 </select>
+               </label>
+
+               <label>
+                 Sort:&nbsp;
+                 <select
+                   value={sort}
+                   onChange={(e) => { setPage(1); setSort(e.target.value) }}
+                 >
+                   <option value="-createdAt">Новые сверху</option>
+                   <option value="language">Язык A→Z</option>
+                   <option value="-language">Язык Z→A</option>
+                   <option value="lesson_topic">Тема A→Z</option>
+                   <option value="-lesson_topic">Тема Z→A</option>
+                 </select>
+               </label>
+
+               <label>
+                 Size:&nbsp;
+                 <select
+                   value={size}
+                   onChange={(e) => { setPage(1); setSize(Number(e.target.value)) }}
+                 >
+                   {[10,20,50].map(s => <option key={s} value={s}>{s}</option>)}
+                 </select>
+               </label>
+             </div>
 
       <div className="lessons-grid" style={{
         display: 'grid',
@@ -73,16 +120,16 @@ const MyLessons: React.FC = () => {
         padding: '20px 0'
       }}>
         {lessons.length === 0 && (
-          <div style={{ 
-            gridColumn: '1 / -1', 
-            textAlign: 'center', 
+          <div style={{
+            gridColumn: '1 / -1',
+            textAlign: 'center',
             padding: '40px',
             color: '#666'
           }}>
             No lessons available yet.
           </div>
         )}
-        
+
         {lessons.map((lesson, idx) => (
           <div key={idx} style={{
             backgroundColor: '#ffffff',
@@ -101,8 +148,8 @@ const MyLessons: React.FC = () => {
             e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)'
             e.currentTarget.style.transform = 'translateY(0)'
           }}>
-            <Link to={`/my-lessons/${idx}`} style={{ 
-              textDecoration: 'none', 
+            <Link to={`/my-lessons/${idx}`} style={{
+              textDecoration: 'none',
               color: 'inherit',
               display: 'block'
             }}>
@@ -216,6 +263,25 @@ const MyLessons: React.FC = () => {
           </div>
         ))}
       </div>
+
+
+
+              {/* Пагинация (эвристика: если вернулось меньше, чем size — считаем, что страниц больше нет) */}
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page <= 1 || loading}
+                >
+                  ← Prev
+                </button>
+                <span>Page {page}</span>
+                <button
+                  onClick={() => setPage(p => p + 1)}
+                  disabled={loading || lessons.length < size}
+                >
+                  Next →
+                </button>
+              </div>
     </div>
   )
 }

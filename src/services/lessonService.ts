@@ -34,8 +34,31 @@ export interface PublicLesson {
 }
 
 export const lessonService = {
-  async getPublicLessons(): Promise<PublicLesson[]> {
-    const response = await api.get<any[]>('/lessons/public-lessons')
+      async getPublicLessons(params: {
+        page?: number;     // UI: 1-based
+        size?: number;     // 10/20/50
+        sort?: string;     // '-createdAt' | 'language' | '-language' | 'lesson_topic' | '-lesson_topic'
+        language?: string; // 'ALL' | 'english' | 'russian' | ...
+      } = {}): Promise<PublicLesson[]> {
+    const {
+      page = 1,
+          size = 10,
+          sort = '-createdAt',
+          language,
+        } = params;
+
+        // UI 1-based -> API 0-based
+           const query: Record<string, string | number> = {
+          page: Math.max(0, page - 1),
+          size,
+          sort,
+        };
+    // 'ALL' или undefined не шлём — backend трактует как "без фильтра"
+        if (language && language !== 'ALL') {
+          query.language = language;
+        }
+
+    const response = await api.get<any[]>('/lessons/public-lessons', { params: query })
     const rawLessons = response.data || []
 
     const toSixUnderscores = (s: string): string => s.replace(/_{2,}/g, '______')
