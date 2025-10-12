@@ -3,22 +3,6 @@ import { lessonService, LessonData } from '../services/lessonService';
 import { useParams } from 'react-router-dom';
 import './LessonPage.css';
 
-const toYouTubeEmbedUrl = (url: string): string => {
-  try {
-    const u = new URL(url)
-    if (u.hostname.includes('youtube.com')) {
-      const v = u.searchParams.get('v')
-      if (v) return `https://www.youtube.com/embed/${v}`
-    }
-    if (u.hostname.includes('youtu.be')) {
-      const id = u.pathname.replace('/', '')
-      if (id) return `https://www.youtube.com/embed/${id}`
-    }
-    return url
-  } catch {
-    return url
-  }
-}
 
 const extractYouTubeId = (url: string): string | null => {
   try {
@@ -37,21 +21,34 @@ const extractYouTubeId = (url: string): string | null => {
   }
 }
 
+const calculateInputWidth = (text: string): number => {
+  // Create a temporary canvas to measure text width
+  const canvas = document.createElement('canvas')
+  const context = canvas.getContext('2d')
+  if (!context) return Math.max(60, text.length * 12)
+  
+  // Use bold font weight to account for when answers are shown as incorrect/correct
+  context.font = '600 15.79px "TeX Gyre Heros", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif'
+  const metrics = context.measureText(text)
+  const width = metrics.width + 28 // Add extra padding (14px on each side) for bold text
+  
+  return Math.max(60, Math.min(width, 250)) // Min 60px, max 250px
+}
+
 const LessonPage: React.FC = () => {
   const [lesson, setLesson] = useState<LessonData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const playerRef = useRef<any>(null)
+  // Remove tab state since we're displaying all exercises sequentially
   const [grammarAnswers, setGrammarAnswers] = useState<string[][][]>([])
-  const [lexicalAnswers, setLexicalAnswers] = useState<string[][][]>([])
   const [lexicalChecks, setLexicalChecks] = useState<boolean[][]>([])
   const [trueFalseSelections, setTrueFalseSelections] = useState<('true' | 'false' | null)[][]>([])
   const [submittedGrammar, setSubmittedGrammar] = useState<boolean[][]>([])
   const [submittedLexical, setSubmittedLexical] = useState<boolean[][]>([])
   const [selectedWords, setSelectedWords] = useState<string[][][]>([])
   const [availableWords, setAvailableWords] = useState<string[][]>([])
-  const [usedCorrectWords, setUsedCorrectWords] = useState<string[]>([])
-  const [incorrectWords, setIncorrectWords] = useState<string[][][]>([])
+  const [usedCorrectWords] = useState<string[]>([])
   const [showAnswers, setShowAnswers] = useState<boolean>(false)
   const [showQuizlet, setShowQuizlet] = useState<boolean>(false)
 
@@ -144,13 +141,6 @@ const LessonPage: React.FC = () => {
     )
     setGrammarAnswers(initialized)
     // initialize lexical answers: inputs only for blanks (______)
-    const lexInit = lesson.lexical_exercises.map((block) =>
-      block.examples.map((ex) => {
-        const blanks = (ex.match(/_{2,}/g) || []).length
-        return Array.from({ length: blanks }, () => '')
-      })
-    )
-    setLexicalAnswers(lexInit)
 
     // initialize checkbox selections for listening/marking words blocks
     const checksInit = lesson.lexical_exercises.map((block) =>
@@ -209,11 +199,7 @@ const LessonPage: React.FC = () => {
     )
     setSelectedWords(selectedWordsInit)
 
-    // initialize incorrect words for tracking
-    const incorrectWordsInit = lesson.lexical_exercises.map((block) =>
-      block.examples.map(() => [])
-    )
-    setIncorrectWords(incorrectWordsInit)
+    // initialize incorrect words for tracking (not used in new design)
   }, [lesson])
 
   const normalize = (s: string | undefined | null): string => (s || '').trim().toLowerCase()
@@ -261,64 +247,28 @@ const LessonPage: React.FC = () => {
 
   return (
     <div className="lesson-page">
-      <div className="lesson-content">
-        {lesson.lesson_topic && (
-          <div className="lesson-header" style={{ textAlign: 'left' }}>
-            <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#37352f', marginBottom: 8 }}>{lesson.lesson_topic}</h1>
+      <div className="lesson-layout">
+        {/* Main content area */}
+        <div className="main-content">
+          {lesson.lesson_topic && (
+            <div className="lesson-header">
+              <h1 className="lesson-title">{lesson.lesson_topic}</h1>
+            </div>
+          )}
+          
+          <div className="video-section">
+            <div className="video-embed">
+              <div id="yt-player"></div>
+            </div>
           </div>
-        )}
-        <div className="video-embed">
-          <div id="yt-player" style={{ width: '100%', height: 420 }}></div>
-        </div>
 
-        <div className="vocabulary-section">
-          <h2>Словарь</h2>
-          <div className="vocabulary-grid">
-            {lesson.glossary
-              .filter(item => item.time_code !== null && item.time_code !== undefined)
-              .sort((a, b) => (a.time_code || 0) - (b.time_code || 0))
-              .map((item, index) => {
-                const minutes = Math.floor((item.time_code || 0) / 60);
-                const seconds = Math.floor((item.time_code || 0) % 60);
-                const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                
-                return (
-              <div key={`${item.expression}-${index}`} className="vocabulary-item">
-                <h3>📌 {item.expression}</h3>
-                <div className="vocab-details">
-                  <p className="quote"><strong>Цитата:</strong> <em>"{item.quote}"</em></p>
-                  <p><strong>Перевод:</strong> {item.translation}</p>
-                  <p><strong>Объяснение:</strong> {item.explanation}</p>
-                  <p className="example"><strong>Пример:</strong> <em>{item.another_example}</em></p>
-                    <p>
-                      <strong>Тайм-код:</strong>{' '}
-                      <button
-                        onClick={() => scrollToPlayerAndSeek(item.time_code as number)}
-                        style={{
-                          background: 'transparent',
-                          border: 'none',
-                          color: '#37352f',
-                          cursor: 'pointer',
-                          textDecoration: 'underline',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
-                        title="Перейти к времени"
-                      >
-                          {timeDisplay}
-                      </button>
-                    </p>
-                </div>
-              </div>
-                );
-              })}
-          </div>
-        </div>
 
-        <div className="exercises-section">
-          <div>
-            <h2>📌 Лексические упражнения</h2>
-            {lesson.lexical_exercises
+
+        {/* All Exercises Container */}
+        <div className="all-exercises-container">
+          {/* Lexical Exercises */}
+          {lesson.lexical_exercises && lesson.lexical_exercises.length > 0 && 
+          lesson.lexical_exercises
               .map((block, originalIndex) => ({ block, originalIndex }))
               .sort((a, b) => {
                 // Put "Послушай и отметь слова из списка" exercises first
@@ -330,29 +280,19 @@ const LessonPage: React.FC = () => {
                 return 0;
               })
               .map(({ block, originalIndex }) => (
-              <div key={`lex-${originalIndex}`}>
-                <p><strong>Тип:</strong> {block.type}</p>
+            <div key={`lex-${originalIndex}`} className="exercises-section">
+              <h2>{block.type}</h2>
                 <div className="exercise-questions">
                   {block.type && block.type.trim().toLowerCase().startsWith('послушай и отметь слова из списка') ? (
                     <div>
-                      <div className="video-embed" style={{ marginBottom: 12 }}>
-                        <iframe
-                          src={toYouTubeEmbedUrl(lesson.you_tube_url)}
-                          title="YouTube video player"
-                          width="100%"
-                          height="280"
-                          style={{ border: 0, borderRadius: 6 }}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                        ></iframe>
-                      </div>
-                      <p style={{ margin: '4px 0 6px' }}>Отметь слова:</p>
-                      <div className="question" style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4, alignItems: 'flex-start', paddingLeft: 0, marginLeft: 0 }}>
+                      <p className="instruction-text">Постарайся услышать новую лексику в видео. Помечай слова по мере того, как услышишь их в видео.</p>
+
+                      <div className="question checkbox-list">
                         {(block.examples.length === 1
                           ? block.examples[0].split(/[,;\n]+/).map((w) => w.trim()).filter(Boolean)
                           : block.examples
                         ).map((word, i) => (
-                          <label key={`lex-check-${i}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer', font: 'inherit', fontSize: 'inherit', margin: 0, padding: 0, justifyContent: 'flex-start', whiteSpace: 'nowrap' }}>
+                          <label key={`lex-check-${i}`} className="checkbox-label">
                             <input
                               type="checkbox"
                               checked={!!lexicalChecks[originalIndex]?.[i]}
@@ -365,546 +305,361 @@ const LessonPage: React.FC = () => {
                                   return next
                                 })
                               }}
-                              style={{ margin: 0, verticalAlign: 'middle' }}
                             />
-                            <span style={{ display: 'inline-block', verticalAlign: 'middle', whiteSpace: 'nowrap', textAlign: 'left', lineHeight: 1.2 }}>{word}</span>
+                            <span className="checkbox-text">{word}</span>
                           </label>
                         ))}
                       </div>
                     </div>
                   ) : isTrueFalseExercise(block.type) ? (
-                    // True/False exercise rendering
-                    block.examples.map((ex, i) => {
-                      const userSelection = trueFalseSelections[originalIndex]?.[i]
-                      // Get the correct answer from the answer block
-                      const ansType = getLexicalAnswerType(block.type)
-                      const ansBlock = ansType ? lesson.lexical_answers?.find((b) => b.type === ansType) : undefined
-                      const correctAnswer = ansBlock?.answer?.[i]?.toLowerCase()
-                      const isCorrect = userSelection === correctAnswer
+                    // True/False exercise rendering with new design
+                    (() => {
+                      // Check if all answers are correct
+                      const allAnswersCorrect = block.examples.every((_, i) => {
+                        const userSelection = trueFalseSelections[originalIndex]?.[i]
+                        const ansType = getLexicalAnswerType(block.type)
+                        const ansBlock = ansType ? lesson.lexical_answers?.find((b) => b.type === ansType) : undefined
+                        const correctAnswer = ansBlock?.answer?.[i]?.toLowerCase()
+                        return userSelection === correctAnswer
+                      })
                       
+                      const isExerciseSubmitted = submittedLexical[originalIndex]?.some(submitted => submitted) || false
+
                       return (
-                        <div key={`lex-ex-${i}`} className="question" style={{
-                          backgroundColor: userSelection 
-                            ? (isCorrect ? '#d4edda' : '#f8d7da')
-                            : '#f7f6f3',
-                          borderColor: userSelection 
-                            ? (isCorrect ? '#c3e6cb' : '#f5c6cb')
-                            : '#e9e9e7',
-                          borderWidth: userSelection ? '2px' : '1px'
-                        }}>
-                          <p style={{ 
-                            color: userSelection 
-                              ? (isCorrect ? '#155724' : '#721c24')
-                              : '#37352f',
-                            fontWeight: userSelection ? '600' : '500'
-                          }}>
-                            {i + 1}. {ex}
-                            {userSelection && (
-                              <span style={{ 
-                                marginLeft: '8px', 
-                                fontSize: '16px',
-                                fontWeight: 'bold'
-                              }}>
-                                {isCorrect ? '✓' : '✗'}
-                              </span>
-                            )}
+                        <div key={`true-false-exercise-${originalIndex}`} className="true-false-exercise">
+                          <p className="true-false-instruction">
+                            Прочитай предложения и выбери правильный ответ - True или False.
                           </p>
                           
-                          <div style={{ 
-                            display: 'flex', 
-                            gap: '8px', 
-                            marginTop: '12px',
-                            alignItems: 'center'
-                          }}>
+                          {/* Exercise Questions */}
+                          <div className="exercise-questions">
+                            {block.examples.map((ex, i) => {
+                              const userSelection = trueFalseSelections[originalIndex]?.[i]
+                              // Get the correct answer from the answer block
+                              const ansType = getLexicalAnswerType(block.type)
+                              const ansBlock = ansType ? lesson.lexical_answers?.find((b) => b.type === ansType) : undefined
+                              const correctAnswer = ansBlock?.answer?.[i]?.toLowerCase()
+                              const isCorrect = userSelection === correctAnswer
+                              const isSubmitted = submittedLexical[originalIndex]?.[i] || false
+                              
+                              return (
+                                <div key={`lex-ex-${i}`} className="true-false-question">
+                                  <p className="true-false-sentence">
+                                    {i + 1}. {ex}
+                                  </p>
+                                  
+                                  <div className="true-false-buttons">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const value = 'true' as 'true' | 'false'
+                                        setTrueFalseSelections((prev) => {
+                                          const next = prev.map((arr) => [...arr])
+                                          if (!next[originalIndex]) next[originalIndex] = []
+                                          next[originalIndex][i] = value
+                                          return next
+                                        })
+                                        
+                                        // Reset submitted state when user changes answer
+                                        if (isSubmitted) {
+                                          setSubmittedLexical((prev) => {
+                                            const next = prev.map((arr) => [...arr])
+                                            if (!next[originalIndex]) next[originalIndex] = []
+                                            next[originalIndex][i] = false
+                                            return next
+                                          })
+                                        }
+                                      }}
+                                      className={`true-false-btn true-btn ${
+                                        userSelection === 'true' ? 'selected' : ''
+                                      } ${isSubmitted ? (isCorrect && userSelection === 'true' ? 'correct' : 'incorrect') : ''}`}
+                                    >
+                                      True
+                                    </button>
+                                    
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const value = 'false' as 'true' | 'false'
+                                        setTrueFalseSelections((prev) => {
+                                          const next = prev.map((arr) => [...arr])
+                                          if (!next[originalIndex]) next[originalIndex] = []
+                                          next[originalIndex][i] = value
+                                          return next
+                                        })
+                                        
+                                        // Reset submitted state when user changes answer
+                                        if (isSubmitted) {
+                                          setSubmittedLexical((prev) => {
+                                            const next = prev.map((arr) => [...arr])
+                                            if (!next[originalIndex]) next[originalIndex] = []
+                                            next[originalIndex][i] = false
+                                            return next
+                                          })
+                                        }
+                                      }}
+                                      className={`true-false-btn false-btn ${
+                                        userSelection === 'false' ? 'selected' : ''
+                                      } ${isSubmitted ? (isCorrect && userSelection === 'false' ? 'correct' : 'incorrect') : ''}`}
+                                    >
+                                      False
+                                    </button>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                          
+                          {/* Check Button - Exercise Level */}
+                          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <button
                               type="button"
+                              className="exercise-check-button"
                               onClick={() => {
-                                const value = 'true' as 'true' | 'false'
-                                setTrueFalseSelections((prev) => {
+                                // Mark all sentences in this exercise as submitted
+                                setSubmittedLexical((prev) => {
                                   const next = prev.map((arr) => [...arr])
                                   if (!next[originalIndex]) next[originalIndex] = []
-                                  next[originalIndex][i] = value
+                                  next[originalIndex] = next[originalIndex].map(() => true)
                                   return next
                                 })
                               }}
-                              style={{
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                border: '2px solid',
-                                backgroundColor: userSelection === 'true' ? '#27ae60' : 'white',
-                                borderColor: userSelection === 'true' ? '#27ae60' : '#27ae60',
-                                color: userSelection === 'true' ? 'white' : '#27ae60',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: '600',
-                                transition: 'all 0.2s ease',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px'
-                              }}
-                              onMouseOver={(e) => {
-                                if (userSelection !== 'true') {
-                                  e.currentTarget.style.backgroundColor = '#27ae60'
-                                  e.currentTarget.style.color = 'white'
-                                }
-                              }}
-                              onMouseOut={(e) => {
-                                if (userSelection !== 'true') {
-                                  e.currentTarget.style.backgroundColor = 'white'
-                                  e.currentTarget.style.color = '#27ae60'
-                                }
-                              }}
                             >
-                              ✓ True
-                            </button>
-                            
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const value = 'false' as 'true' | 'false'
-                                setTrueFalseSelections((prev) => {
-                                  const next = prev.map((arr) => [...arr])
-                                  if (!next[originalIndex]) next[originalIndex] = []
-                                  next[originalIndex][i] = value
-                                  return next
-                                })
-                              }}
-                              style={{
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                border: '2px solid',
-                                backgroundColor: userSelection === 'false' ? '#e74c3c' : 'white',
-                                borderColor: userSelection === 'false' ? '#e74c3c' : '#e74c3c',
-                                color: userSelection === 'false' ? 'white' : '#e74c3c',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: '600',
-                                transition: 'all 0.2s ease',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px'
-                              }}
-                              onMouseOver={(e) => {
-                                if (userSelection !== 'false') {
-                                  e.currentTarget.style.backgroundColor = '#e74c3c'
-                                  e.currentTarget.style.color = 'white'
-                                }
-                              }}
-                              onMouseOut={(e) => {
-                                if (userSelection !== 'false') {
-                                  e.currentTarget.style.backgroundColor = 'white'
-                                  e.currentTarget.style.color = '#e74c3c'
-                                }
-                              }}
-                            >
-                              ✗ False
+                              Check
                             </button>
                           </div>
                           
-                          {userSelection && (
+                          {/* Exercise Level Feedback */}
+                          {isExerciseSubmitted && !allAnswersCorrect && (
                             <div style={{
-                              marginTop: '8px',
-                              padding: '6px 12px',
-                              borderRadius: '4px',
-                              backgroundColor: isCorrect ? '#c3e6cb' : '#f5c6cb',
-                              border: `1px solid ${isCorrect ? '#b8dacc' : '#f1b0b7'}`,
-                              fontSize: '13px',
-                              color: isCorrect ? '#155724' : '#721c24',
+                              marginTop: '12px',
+                              padding: '8px 12px',
+                              borderRadius: '6px',
+                              backgroundColor: '#f26430',
+                              border: '1px solid #f1b0b7',
+                              fontSize: '14px',
+                              color: '#ffffff',
                               fontWeight: '500'
                             }}>
-                              {isCorrect ? 'Правильно!' : 'Неправильно. Правильный ответ: ' + (correctAnswer === 'true' ? 'True' : 'False')}
+                              Неправильно. Попробуйте еще раз.
                             </div>
                           )}
                         </div>
                       )
-                    })
+                    })()
                   ) : isFillInTheBlankExercise(block.type) ? (
-                    // Fill-in-the-blank exercise rendering with multiple choice
+                    // Fill-in-the-blank exercise rendering with new Figma design
                     (() => {
                       const words = availableWords[originalIndex] || []
-                      return block.examples.map((ex, i) => {
+                      
+                      // Check if all answers are correct
+                      const allAnswersCorrect = block.examples.every((ex, i) => {
                         const blanks = (ex.match(/_{2,}/g) || []).length
-
-                        // Get correct answers for this exercise
                         const ansType = getLexicalAnswerType(block.type)
                         const ansBlock = ansType ? lesson.lexical_answers?.find((b) => b.type === ansType) : undefined
                         const correctAnswers = ansBlock?.answer?.[i]?.split(',').map(a => a.trim().toLowerCase()) || []
-                        
-                        // Check if all blanks are selected and compare with correct answers
                         const userSelections = selectedWords[originalIndex]?.[i] || []
-                        const incorrectSelections = incorrectWords[originalIndex]?.[i] || []
-                        const allSelected = userSelections.length === blanks
-                        const isCorrect = allSelected && userSelections.every((selection, index) => 
+                        return userSelections.length === blanks && userSelections.every((selection, index) => 
                           correctAnswers[index] && selection.toLowerCase().trim() === correctAnswers[index]
-                        )
-                        const isSubmitted = submittedLexical[originalIndex]?.[i] || false
-                        
-                        // Check individual word correctness for immediate feedback
-                        const wordCorrectness = userSelections.map((selection, index) => 
-                          correctAnswers[index] && selection.toLowerCase().trim() === correctAnswers[index]
-                        )
-
-                        return (
-                          <div key={`lex-ex-${i}`} className="question" style={{
-                            backgroundColor: isSubmitted 
-                              ? (isCorrect ? '#d4edda' : '#f8d7da')
-                              : '#f7f6f3',
-                            borderColor: isSubmitted 
-                              ? (isCorrect ? '#c3e6cb' : '#f5c6cb')
-                              : '#e9e9e7',
-                            borderWidth: isSubmitted ? '2px' : '1px'
-                          }}>
-                            {blanks === 0 ? (
-                              <p style={{ 
-                                color: isSubmitted 
-                                  ? (isCorrect ? '#155724' : '#721c24')
-                                  : '#37352f',
-                                fontWeight: isSubmitted ? '600' : '500'
-                              }}>
-                                {i + 1}. {ex}
-                                {isSubmitted && (
-                                  <span style={{ 
-                                    marginLeft: '8px', 
-                                    fontSize: '16px',
-                                    fontWeight: 'bold'
-                                  }}>
-                                    {isCorrect ? '✓' : '✗'}
-                                  </span>
-                                )}
-                              </p>
-                            ) : (
-                              <div>
-                                <p style={{ 
-                                  color: isSubmitted 
-                                    ? (isCorrect ? '#155724' : '#721c24')
-                                    : '#37352f',
-                                  fontWeight: isSubmitted ? '600' : '500',
-                                  marginBottom: '12px'
-                                }}
-                                dangerouslySetInnerHTML={{
-                                  __html: `${i + 1}. ${(() => {
-                                    // Insert selected words into the sentence with immediate feedback
-                                    const parts = ex.split('______')
-                                    let filledSentence = ''
-                                    parts.forEach((part, partIndex) => {
-                                      filledSentence += part
-                                      if (partIndex < parts.length - 1) {
-                                        const selectedWord = userSelections[partIndex] || '______'
-                                        const isWordCorrect = wordCorrectness[partIndex]
-                                        
-                                        if (selectedWord !== '______') {
-                                          if (isWordCorrect) {
-                                            // Correct word - green styling
-                                            filledSentence += ` <strong style="color: #28a745; background-color: #d4edda; padding: 2px 4px; border-radius: 3px;">${selectedWord}</strong>`
-                                          } else {
-                                            // Incorrect word - red styling
-                                            filledSentence += ` <strong style="color: #dc3545; background-color: #f8d7da; padding: 2px 4px; border-radius: 3px;">${selectedWord}</strong>`
-                                          }
-                                        } else {
-                                          filledSentence += ' ______'
-                                        }
-                                      }
-                                    })
-                                    return filledSentence
-                                  })()}${isSubmitted ? ` <span style="margin-left: 8px; font-size: 16px; font-weight: bold; color: ${isCorrect ? '#155724' : '#721c24'}">${isCorrect ? '✓' : '✗'}</span>` : ''}`
-                                }}>
-                                </p>
-                                
-                                <div style={{ 
-                                  display: 'flex',
-                                  flexWrap: 'wrap',
-                                  gap: '6px',
-                                  marginBottom: '12px'
-                                }}>
-                                  {words.map((word, wordIndex) => {
-                                    const isSelected = userSelections.includes(word)
-                                    const isIncorrect = incorrectSelections.includes(word)
-                                    const isUsed = usedCorrectWords.includes(word.toLowerCase())
-                                    const isCompleted = allSelected && isCorrect
-                                    
-                                    return (
-                                      <button
-                                        key={`word-${wordIndex}`}
-                                        type="button"
-                                        disabled={isUsed || isIncorrect || isCompleted}
-                                        onClick={() => {
-                                          if (isUsed || isIncorrect || isCompleted) return
-                                          
-                                          // Check if this word is correct for any blank position
-                                          const isWordCorrect = correctAnswers.some(correctAnswer => 
-                                            correctAnswer && word.toLowerCase().trim() === correctAnswer
-                                          )
-                                          
-                                          if (isWordCorrect) {
-                                            // Correct word - add to selections and remove from pool
-                                            setSelectedWords((prev) => {
-                                              const next = prev.map((b) => b.map((exArr) => [...exArr]))
-                                              if (!next[originalIndex]) next[originalIndex] = []
-                                              if (!next[originalIndex][i]) next[originalIndex][i] = []
-                                              
-                                              const currentSelections = next[originalIndex][i]
-                                              if (currentSelections.length < blanks) {
-                                                next[originalIndex][i] = [...currentSelections, word]
-                                              }
-                                              return next
-                                            })
-                                            
-                                            // Remove correct word from available pool
-                                            setAvailableWords(currentWords => 
-                                              currentWords.map((blockWords, blockIdx) => {
-                                                if (blockIdx === originalIndex) {
-                                                  return blockWords.filter(w => w !== word)
-                                                }
-                                                return blockWords
-                                              })
-                                            )
-                                            
-                                            // Add to used correct words
-                                            setUsedCorrectWords(prev => {
-                                              if (!prev.includes(word.toLowerCase())) {
-                                                return [...prev, word.toLowerCase()]
-                                              }
-                                              return prev
-                                            })
-                                            
-                                            // Clear any red (incorrect) word when correct word is found
-                                            setIncorrectWords((prev) => {
-                                              const next = prev.map((b) => b.map((exArr) => [...exArr]))
-                                              if (!next[originalIndex]) next[originalIndex] = []
-                                              next[originalIndex][i] = []
-                                              return next
-                                            })
-                                            
-                                            // Mark as submitted when correct word is selected
-                                            setSubmittedLexical((prev) => {
-                                              const next = prev.map((arr) => [...arr])
-                                              if (!next[originalIndex]) next[originalIndex] = []
-                                              next[originalIndex][i] = true
-                                              return next
-                                            })
-                                          } else {
-                                            // Incorrect word - clear previous incorrect word and add this one
-                                            setIncorrectWords((prev) => {
-                                              const next = prev.map((b) => b.map((exArr) => [...exArr]))
-                                              if (!next[originalIndex]) next[originalIndex] = []
-                                              // Clear previous incorrect word for this exercise
-                                              next[originalIndex][i] = [word]
-                                              return next
-                                            })
-                                          }
-                                        }}
-                                        style={{
-                                          padding: '6px 12px',
-                                          borderRadius: '6px',
-                                          border: '2px solid',
-                                          backgroundColor: isSelected ? '#28a745' : isIncorrect ? '#dc3545' : isCompleted ? '#f8f9fa' : 'white',
-                                          borderColor: isSelected ? '#28a745' : isIncorrect ? '#dc3545' : isCompleted ? '#dee2e6' : '#e9e9e7',
-                                          color: isSelected ? 'white' : isIncorrect ? 'white' : isCompleted ? '#6c757d' : '#37352f',
-                                          cursor: (isUsed || isIncorrect || isCompleted) ? 'not-allowed' : 'pointer',
-                                          fontSize: '14px',
-                                          fontWeight: '500',
-                                          transition: 'all 0.2s ease',
-                                          opacity: (isUsed || isCompleted) ? 0.5 : 1,
-                                          textDecoration: isUsed ? 'line-through' : 'none'
-                                        }}
-                                        onMouseOver={(e) => {
-                                          if (!isUsed && !isSelected && !isIncorrect && !isCompleted) {
-                                            e.currentTarget.style.backgroundColor = '#f0f0f0'
-                                            e.currentTarget.style.borderColor = '#37352f'
-                                          }
-                                        }}
-                                        onMouseOut={(e) => {
-                                          if (!isUsed && !isSelected && !isIncorrect && !isCompleted) {
-                                            e.currentTarget.style.backgroundColor = 'white'
-                                            e.currentTarget.style.borderColor = '#e9e9e7'
-                                          }
-                                        }}
-                                      >
-                                        {word}
-                                      </button>
-                                    )
-                                  })}
-                                </div>
-                                
-                                
-                                {/* Display selected words as clickable chips for removal */}
-                                {userSelections.length > 0 && (
-                                  <div style={{ 
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: '6px',
-                                    marginBottom: '12px'
-                                  }}>
-                                    {userSelections.map((selectedWord, wordIndex) => (
-                                      <button
-                                        key={`selected-${wordIndex}`}
-                                        type="button"
-                                        onClick={() => {
-                                          // Remove this specific word from selections
-                                          setSelectedWords((prev) => {
-                                            const next = prev.map((b) => b.map((exArr) => [...exArr]))
-                                            if (!next[originalIndex]) next[originalIndex] = []
-                                            next[originalIndex][i] = userSelections.filter((_, idx) => idx !== wordIndex)
-                                            return next
-                                          })
-                                          
-                                          // Return the word to available pool
-                                          setAvailableWords(currentWords => 
-                                            currentWords.map((blockWords, blockIdx) => {
-                                              if (blockIdx === originalIndex) {
-                                                // Add back the word to the available pool if not already there
-                                                if (!blockWords.includes(selectedWord)) {
-                                                  return [...blockWords, selectedWord]
-                                                }
-                                              }
-                                              return blockWords
-                                            })
-                                          )
-                                          
-                                          // Remove from used list if it was correct
-                                          const isWordCorrect = correctAnswers[wordIndex] && selectedWord.toLowerCase().trim() === correctAnswers[wordIndex]
-                                          if (isWordCorrect) {
-                                            setUsedCorrectWords(prev => 
-                                              prev.filter(usedWord => usedWord !== selectedWord.toLowerCase())
-                                            )
-                                          }
-                                          
-                                          // Reset submitted state when user removes a word
-                                          if (isSubmitted) {
-                                            setSubmittedLexical((prev) => {
-                                              const next = prev.map((arr) => [...arr])
-                                              if (!next[originalIndex]) next[originalIndex] = []
-                                              next[originalIndex][i] = false
-                                              return next
-                                            })
-                                          }
-                                        }}
-                                        style={{
-                                          padding: '4px 8px',
-                                          borderRadius: '6px',
-                                          border: '2px solid #28a745',
-                                          backgroundColor: '#d4edda',
-                                          color: '#155724',
-                                          cursor: 'pointer',
-                                          fontSize: '12px',
-                                          fontWeight: '500',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          gap: '4px',
-                                          transition: 'all 0.2s ease'
-                                        }}
-                                        onMouseOver={(e) => {
-                                          e.currentTarget.style.backgroundColor = '#28a745'
-                                          e.currentTarget.style.color = 'white'
-                                        }}
-                                        onMouseOut={(e) => {
-                                          e.currentTarget.style.backgroundColor = '#d4edda'
-                                          e.currentTarget.style.color = '#155724'
-                                        }}
-                                        title="Нажмите чтобы удалить"
-                                      >
-                                        {selectedWord} ×
-                                      </button>
-                                    ))}
-                                  </div>
-                                )}
-                                
-                                
-                                
-                                {isSubmitted && !isCorrect && (
-                                  <div style={{
-                                    marginTop: '8px',
-                                    padding: '6px 12px',
-                                    borderRadius: '4px',
-                                    backgroundColor: '#f5c6cb',
-                                    border: '1px solid #f1b0b7',
-                                    fontSize: '13px',
-                                    color: '#721c24',
-                                    fontWeight: '500'
-                                  }}>
-                                    Неправильно. Попробуйте еще раз.
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
                         )
                       })
-                    })()
-                  ) : (
-                    // Regular exercise rendering (for other types)
-                    block.examples.map((ex, i) => {
-                      const parts = ex.split('______')
-                      const blanks = (ex.match(/_{2,}/g) || []).length
-                      if (lexicalAnswers[originalIndex] && lexicalAnswers[originalIndex][i] && lexicalAnswers[originalIndex][i].length !== blanks) {
-                        const next = [...lexicalAnswers]
-                        next[originalIndex] = [...(next[originalIndex] || [])]
-                        next[originalIndex][i] = Array.from({ length: blanks }, (_, bi) => next[originalIndex][i]?.[bi] || '')
-                        setLexicalAnswers(next)
-                      }
+                      
+                      const isExerciseSubmitted = submittedLexical[originalIndex]?.some(submitted => submitted) || false
+
                       return (
-                        <div key={`lex-ex-${i}`} className="question">
-                          {blanks === 0 ? (
-                            <p>{i + 1}. {ex}</p>
-                          ) : (
-                            <p style={{ display: 'flex', flexWrap: 'nowrap', gap: 6, alignItems: 'center', overflowX: 'auto' }}>
-                              <span>{i + 1}.&nbsp;</span>
-                              {parts.map((part, pi) => (
-                                <React.Fragment key={`lex-part-${pi}`}>
-                                  <span>{part}</span>
-                                  {pi < parts.length - 1 && (
-                                    <input
-                                      type="text"
-                                      value={lexicalAnswers[originalIndex]?.[i]?.[pi] ?? ''}
-                                      onChange={(e) => {
-                                        const val = e.target.value
-                                        setLexicalAnswers((prev) => {
-                                          const next = prev.map((b) => b.map((exArr) => [...exArr]))
-                                          if (!next[originalIndex]) next[originalIndex] = []
-                                          if (!next[originalIndex][i]) next[originalIndex][i] = []
-                                          next[originalIndex][i][pi] = val
-                                          return next
-                                        })
-                                      }}
-                                      style={{
-                                        width: `${Math.max(6, (lexicalAnswers[originalIndex]?.[i]?.[pi] ?? '').length + 1)}ch`,
-                                        padding: '1px 6px',
-                                        borderRadius: 4,
-                                        border: '1px solid #e9e9e7',
-                                        font: 'inherit',
-                                      }}
-                                      placeholder=""
-                                      aria-label={`Заполнить пропуск ${pi + 1}`}
-                                    />
+                        <div key={`lex-exercise-${originalIndex}`} className="fill-blank-exercise">
+                          <p className="fill-blank-instruction">
+                            Вставь пропущенное слово так, чтобы оно соответствовало контектсту. Используй выражения ниже.
+                          </p>
+                          
+                          {/* Word List Display */}
+                          <div className="word-list-container">
+                            {words.map((word, wordIndex) => (
+                              <span key={`word-display-${wordIndex}`} className="word-list-item">
+                                {word}{wordIndex < words.length - 1 ? ', ' : '.'}
+                              </span>
+                            ))}
+                          </div>
+                          
+                          {/* Exercise Questions */}
+                          <div className="exercise-questions">
+                            {block.examples.map((ex, i) => {
+                              const blanks = (ex.match(/_{2,}/g) || []).length
+
+                              // Get correct answers for this exercise
+                              const ansType = getLexicalAnswerType(block.type)
+                              const ansBlock = ansType ? lesson.lexical_answers?.find((b) => b.type === ansType) : undefined
+                              const correctAnswers = ansBlock?.answer?.[i]?.split(',').map(a => a.trim().toLowerCase()) || []
+                              
+                              // Check if all blanks are selected and compare with correct answers
+                              const userSelections = selectedWords[originalIndex]?.[i] || []
+                              const isSubmitted = submittedLexical[originalIndex]?.[i] || false
+                              
+                              // Check individual word correctness for immediate feedback
+                              const wordCorrectness = userSelections.map((selection, index) => 
+                                correctAnswers[index] && selection.toLowerCase().trim() === correctAnswers[index]
+                              )
+
+                              return (
+                                <div key={`lex-ex-${i}`} className="fill-blank-question">
+                                  {blanks === 0 ? (
+                                    <p className="fill-blank-sentence">
+                                      {i + 1}. {ex}
+                                    </p>
+                                  ) : (
+                                    <div>
+                                      <p className="fill-blank-sentence">
+                                        {i + 1}. {(() => {
+                                          // Create sentence with input fields
+                                          const parts = ex.split('______')
+                                          let sentenceElements: React.ReactNode[] = []
+                                          
+                                          parts.forEach((part, partIndex) => {
+                                            if (part.trim()) {
+                                              sentenceElements.push(
+                                                <span key={`text-${partIndex}`}>{part}</span>
+                                              )
+                                            }
+                                            if (partIndex < parts.length - 1) {
+                                              const selectedWord = userSelections[partIndex] || ''
+                                              const isWordCorrect = wordCorrectness[partIndex]
+                                              
+                                              sentenceElements.push(
+                                                <input
+                                                  key={`input-${partIndex}`}
+                                                  type="text"
+                                                  value={selectedWord}
+                                                  style={{ width: `${calculateInputWidth(selectedWord)}px` }}
+                                                  onChange={(e) => {
+                                                    const value = e.target.value
+                                                    setSelectedWords((prev) => {
+                                                      const next = prev.map((b) => b.map((exArr) => [...exArr]))
+                                                      if (!next[originalIndex]) next[originalIndex] = []
+                                                      if (!next[originalIndex][i]) next[originalIndex][i] = []
+                                                      next[originalIndex][i][partIndex] = value
+                                                      return next
+                                                    })
+                                                    
+                                                    // Reset submitted state when user changes input
+                                                    if (isSubmitted) {
+                                                      setSubmittedLexical((prev) => {
+                                                        const next = prev.map((arr) => [...arr])
+                                                        if (!next[originalIndex]) next[originalIndex] = []
+                                                        next[originalIndex][i] = false
+                                                        return next
+                                                      })
+                                                    }
+                                                  }}
+                                                  className={`fill-blank-input ${
+                                                    isSubmitted ? (isWordCorrect ? 'correct' : 'incorrect') : ''
+                                                  }`}
+                                                />
+                                              )
+                                            }
+                                          })
+                                          
+                                          return sentenceElements
+                                        })()}
+                                      </p>
+                                    </div>
                                   )}
-                                </React.Fragment>
-                              ))}
-                            </p>
+                                </div>
+                              )
+                            })}
+                          </div>
+                          
+                          {/* Check Button - Exercise Level */}
+                          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <button
+                              type="button"
+                              className="exercise-check-button"
+                              onClick={() => {
+                                // Mark all sentences in this exercise as submitted
+                                setSubmittedLexical((prev) => {
+                                  const next = prev.map((arr) => [...arr])
+                                  if (!next[originalIndex]) next[originalIndex] = []
+                                  next[originalIndex] = next[originalIndex].map(() => true)
+                                  return next
+                                })
+                              }}
+                            >
+                              Check
+                            </button>
+                          </div>
+                          
+                          {/* Exercise Level Feedback */}
+                          {isExerciseSubmitted && !allAnswersCorrect && (
+                            <div style={{
+                              marginTop: '12px',
+                              padding: '8px 12px',
+                              borderRadius: '6px',
+                              backgroundColor: '#f26430',
+                              border: '1px solid #f1b0b7',
+                              fontSize: '14px',
+                              color: '#ffffff',
+                              fontWeight: '500'
+                            }}>
+                              Неправильно. Попробуйте еще раз.
+                            </div>
                           )}
                         </div>
                       )
-                    })
-                  )}
+                    })()
+                  ) : null}
                 </div>
-                <div className="exercise-divider"></div>
               </div>
-            ))}
-          </div>
+          ))
+        }
 
-          <div>
-            <h2>📌 Грамматические упражнения</h2>
-            {lesson.grammar_exercises.map((block, blockIndex) => (
-              <div key={`gram-${blockIndex}`}>
-                <p><strong>Тип:</strong> {block.type}</p>
+        {/* Grammar Exercises */}
+        {lesson.grammar_exercises && lesson.grammar_exercises.length > 0 && 
+          lesson.grammar_exercises.map((block, blockIndex) => (
+            <div key={`gram-${blockIndex}`} className="exercises-section">
+              <h2>{block.type}</h2>
                 {block.input && (
                   <div className="exercise-tip">
-                    <span className="tip-icon">💡</span>
+                    <span className="tip-icon"></span>
                     <p>{block.input}</p>
                   </div>
                 )}
+                
+                {/* Grammar Exercise with new design */}
+                <div className="grammar-exercise">
+                  <p className="grammar-instruction">
+                    Заполните пропуски правильными формами слов согласно грамматическим правилам.
+                  </p>
+                  
+                  {/* Check if all answers are correct for this grammar block */}
+                  {(() => {
+                    const allAnswersCorrect = block.examples.every((ex, i) => {
+                      const blanks = (ex.match(/_{2,}/g) || []).length
+                      
+                      // Get correct answers for this exercise
+                      const ansType = getGrammarAnswerType(blockIndex)
+                      const ansBlock = lesson.grammar_answers?.find((b) => b.type === ansType)
+                      const rawAnswer = ansBlock?.answer?.[i] || ''
+                      
+                      // Parse correct answers - handle both comma and semicolon separated answers
+                      const correctAnswers = rawAnswer
+                        .split(/[,;]/)
+                        .map(a => a.trim().toLowerCase())
+                        .filter(a => a.length > 0)
+                      
+                      // Check if all blanks are filled and compare with correct answers
+                      const userAnswers = grammarAnswers[blockIndex]?.[i] || []
+                      const allFilled = userAnswers.every(answer => answer.trim() !== '')
+                      return allFilled && userAnswers.length >= blanks && userAnswers.every((answer, index) => 
+                        correctAnswers[index] && answer.toLowerCase().trim() === correctAnswers[index]
+                      )
+                    })
+                    
+                    const isExerciseSubmitted = submittedGrammar[blockIndex]?.some(submitted => submitted) || false
+
+                    return (
+                      <>
+                        {/* Exercise Questions */}
                 <div className="exercise-questions">
                   {block.examples.map((ex, i) => {
-                    const parts = ex.split('______')
                     const blanks = (ex.match(/_{2,}/g) || []).length
                     const hasBlanks = blanks > 0
                     
@@ -938,46 +693,42 @@ const LessonPage: React.FC = () => {
                     const isSubmitted = submittedGrammar[blockIndex]?.[i] || false
 
                     return (
-                      <div key={`gram-ex-${i}`} className="question" style={{
-                        backgroundColor: isSubmitted 
-                          ? (isCorrect ? '#d4edda' : '#f8d7da')
-                          : '#f7f6f3',
-                        borderColor: isSubmitted 
-                          ? (isCorrect ? '#c3e6cb' : '#f5c6cb')
-                          : '#e9e9e7',
-                        borderWidth: isSubmitted ? '2px' : '1px'
-                      }}>
+                              <div key={`gram-ex-${i}`} className="grammar-question">
                         {hasBlanks ? (
                           <div>
-                            <p style={{ 
-                              display: 'flex', 
-                              flexWrap: 'nowrap', 
-                              gap: 6, 
-                              alignItems: 'center', 
-                              overflowX: 'auto',
-                              color: isSubmitted 
-                                ? (isCorrect ? '#155724' : '#721c24')
-                                : '#37352f',
-                              fontWeight: isSubmitted ? '600' : '500'
-                            }}>
-                          <span>{i + 1}.&nbsp;</span>
-                          {parts.map((part, pi) => (
-                            <React.Fragment key={`part-${pi}`}>
-                              <span>{part}</span>
-                              {pi < parts.length - 1 && (
+                                    <p className="grammar-sentence">
+                                      {i + 1}. {(() => {
+                                        // Create sentence with input fields
+                                        const parts = ex.split('______')
+                                        let sentenceElements: React.ReactNode[] = []
+                                        
+                                        parts.forEach((part, partIndex) => {
+                                          if (part.trim()) {
+                                            sentenceElements.push(
+                                              <span key={`text-${partIndex}`}>{part}</span>
+                                            )
+                                          }
+                                          if (partIndex < parts.length - 1) {
+                                            const userAnswer = userAnswers[partIndex] || ''
+                                            const isWordCorrect = correctAnswers[partIndex] && userAnswer.toLowerCase().trim() === correctAnswers[partIndex]
+                                            
+                                            sentenceElements.push(
                                 <input
+                                                key={`input-${partIndex}`}
                                   type="text"
-                                  value={grammarAnswers[blockIndex]?.[i]?.[pi] ?? ''}
+                                                value={userAnswer}
+                                                style={{ width: `${calculateInputWidth(userAnswer)}px` }}
                                   onChange={(e) => {
-                                    const val = e.target.value
+                                                  const value = e.target.value
                                     setGrammarAnswers((prev) => {
                                       const next = prev.map((b) => b.map((exArr) => [...exArr]))
                                       if (!next[blockIndex]) next[blockIndex] = []
                                       if (!next[blockIndex][i]) next[blockIndex][i] = []
-                                      next[blockIndex][i][pi] = val
+                                                    next[blockIndex][i][partIndex] = value
                                       return next
                                     })
-                                        // Reset submitted state when user changes answer
+                                                  
+                                                  // Reset submitted state when user changes input
                                         if (isSubmitted) {
                                           setSubmittedGrammar((prev) => {
                                             const next = prev.map((arr) => [...arr])
@@ -987,73 +738,25 @@ const LessonPage: React.FC = () => {
                                           })
                                         }
                                       }}
-                                      onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                          // Mark as submitted when Enter is pressed
-                                          setSubmittedGrammar((prev) => {
-                                            const next = prev.map((arr) => [...arr])
-                                            if (!next[blockIndex]) next[blockIndex] = []
-                                            next[blockIndex][i] = true
-                                            return next
-                                          })
-                                        }
-                                  }}
-                                  style={{
-                                    width: `${Math.max(6, (grammarAnswers[blockIndex]?.[i]?.[pi] ?? '').length + 1)}ch`,
-                                    padding: '1px 6px',
-                                    borderRadius: 4,
-                                    border: '1px solid #e9e9e7',
-                                    font: 'inherit',
-                                        backgroundColor: isSubmitted 
-                                          ? (isCorrect ? '#c3e6cb' : '#f5c6cb')
-                                          : 'white'
-                                  }}
-                                  aria-label={`Заполнить пропуск ${pi + 1}`}
-                                />
-                              )}
-                            </React.Fragment>
-                          ))}
-                              {isSubmitted && (
-                                <span style={{ 
-                                  marginLeft: '8px', 
-                                  fontSize: '16px',
-                                  fontWeight: 'bold'
-                                }}>
-                                  {isCorrect ? '✓' : '✗'}
-                                </span>
-                              )}
-                            </p>
-                            <div style={{ 
-                              fontSize: '12px', 
-                              color: '#666', 
-                              marginTop: '4px',
-                              textAlign: 'right'
-                            }}>
-                              Нажмите Enter для проверки ответа
-                            </div>
+                                                className={`grammar-input ${
+                                                  isSubmitted ? (isWordCorrect ? 'correct' : 'incorrect') : ''
+                                                }`}
+                                              />
+                                            )
+                                          }
+                                        })
+                                        
+                                        return sentenceElements
+                                      })()}
+                                    </p>
                           </div>
                         ) : (
                           <div>
-                            <p style={{ 
-                              color: isSubmitted 
-                                ? (isCorrect ? '#155724' : '#721c24')
-                                : '#37352f',
-                              fontWeight: isSubmitted ? '600' : '500',
-                              marginBottom: '12px'
-                            }}>
+                                    <p className="grammar-sentence">
                               {i + 1}. {ex}
-                              {isSubmitted && (
-                                <span style={{ 
-                                  marginLeft: '8px', 
-                                  fontSize: '16px',
-                                  fontWeight: 'bold'
-                                }}>
-                                  {isCorrect ? '✓' : '✗'}
-                                </span>
-                              )}
                             </p>
                             
-                            <div style={{ marginBottom: '12px' }}>
+                                    <div style={{ marginTop: '10px' }}>
                               <input
                                 type="text"
                                 value={grammarAnswers[blockIndex]?.[i]?.[0] ?? ''}
@@ -1076,85 +779,79 @@ const LessonPage: React.FC = () => {
                                     })
                                   }
                                 }}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    // Mark as submitted when Enter is pressed
+                                        placeholder="Введите ваш ответ здесь..."
+                                        className={`grammar-full-input ${
+                                          isSubmitted ? (isCorrect ? 'correct' : 'incorrect') : ''
+                                        }`}
+                                        aria-label="Введите полный ответ"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                        
+                        {/* Check Button - Exercise Level */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <button
+                            type="button"
+                            className="exercise-check-button"
+                            onClick={() => {
+                              // Mark all sentences in this exercise as submitted
                                     setSubmittedGrammar((prev) => {
                                       const next = prev.map((arr) => [...arr])
                                       if (!next[blockIndex]) next[blockIndex] = []
-                                      next[blockIndex][i] = true
+                                next[blockIndex] = next[blockIndex].map(() => true)
                                       return next
                                     })
-                                  }
-                                }}
-                                placeholder="Введите ваш ответ здесь..."
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 12px',
-                                  borderRadius: '6px',
-                                  border: '1px solid #e9e9e7',
-                                  font: 'inherit',
-                                  fontSize: '14px',
-                                  backgroundColor: isSubmitted 
-                                    ? (isCorrect ? '#c3e6cb' : '#f5c6cb')
-                                    : 'white'
-                                }}
-                                aria-label="Введите полный ответ"
-                              />
-                              <div style={{ 
-                                fontSize: '12px', 
-                                color: '#666', 
-                                marginTop: '4px',
-                                textAlign: 'right'
-                              }}>
-                                Нажмите Enter для проверки ответа
+                            }}
+                          >
+                            Check
+                          </button>
                               </div>
-                            </div>
-                          </div>
-                        )}
                         
-                        {isSubmitted && (
+                        {/* Exercise Level Feedback */}
+                        {isExerciseSubmitted && !allAnswersCorrect && (
                           <div style={{
-                            marginTop: '8px',
-                            padding: '6px 12px',
-                            borderRadius: '4px',
-                            backgroundColor: isCorrect ? '#c3e6cb' : '#f5c6cb',
-                            border: `1px solid ${isCorrect ? '#b8dacc' : '#f1b0b7'}`,
-                            fontSize: '13px',
-                            color: isCorrect ? '#155724' : '#721c24',
+                            marginTop: '12px',
+                            padding: '8px 12px',
+                            borderRadius: '6px',
+                            backgroundColor: '#f26430',
+                            border: '1px solid #f1b0b7',
+                            fontSize: '14px',
+                            color: '#ffffff',
                             fontWeight: '500'
                           }}>
-                            {isCorrect ? 'Правильно!' : `Неправильно. Правильный ответ: ${correctAnswers.join(', ')}`}
+                            Неправильно. Попробуйте еще раз.
                           </div>
                         )}
-                      </div>
+                      </>
                     )
-                  })}
+                  })()}
                 </div>
-                {blockIndex < lesson.grammar_exercises.length - 1 && (
-                  <div className="exercise-divider"></div>
-                )}
               </div>
-            ))}
-          </div>
+          ))
+        }
+        </div>
 
-          <div>
-            <h2>📌 Quizlet</h2>
-            <button
-              onClick={() => setShowQuizlet((v) => !v)}
-              style={{
-                background: '#37352f',
-                color: '#ffffff',
-                border: '1px solid #37352f',
-                borderRadius: 6,
-                padding: '6px 10px',
-                cursor: 'pointer',
-                marginBottom: 8,
-              }}
-            >
-              {showQuizlet ? 'Скрыть Quizlet' : 'Показать Quizlet'}
-            </button>
+        {/* Quizlet Section */}
+        {lesson.quizlet && lesson.quizlet.length > 0 && (
+          <div className="exercises-section">
+            <div className="answers-header">
+              <h2>Quizlet</h2>
+              <button 
+                type="button"
+                className="answers-toggle-btn"
+                onClick={() => setShowQuizlet(!showQuizlet)}
+              >
+                {showQuizlet ? 'Hide Quizlet' : 'Show Quizlet'}
+              </button>
+            </div>
+            
             {showQuizlet && (
+              <div className="answers-content">
               <div className="exercise-questions">
                 {lesson.quizlet.map((q, i) => (
                   <div key={`quizlet-${i}`} className="question">
@@ -1162,38 +859,37 @@ const LessonPage: React.FC = () => {
                   </div>
                 ))}
               </div>
+            </div>
             )}
           </div>
-          
-          <div className="exercise-divider" style={{ marginTop: 16 }}></div>
-          <div className="answers-section" style={{ marginTop: 12 }}>
-            <button
-              onClick={() => setShowAnswers((v) => !v)}
-              style={{
-                background: '#37352f',
-                color: '#ffffff',
-                border: '1px solid #37352f',
-                borderRadius: 6,
-                padding: '6px 10px',
-                cursor: 'pointer',
-              }}
+        )}
+
+        {/* Answers Section */}
+          <div className="exercises-section">
+          <div className="answers-header">
+            <h2>Answers</h2>
+            <button 
+              type="button"
+              className="answers-toggle-btn"
+              onClick={() => setShowAnswers(!showAnswers)}
             >
-              {showAnswers ? 'Скрыть ответы' : 'Показать ответы'}
+              {showAnswers ? 'Hide Answers' : 'Show Answers'}
             </button>
-            {showAnswers && (
-              <div style={{ marginTop: 12 }}>
-                {lesson.lexical_exercises && lesson.lexical_exercises.length > 0 ? (
-                  <div style={{ marginBottom: 12 }}>
-                    <h3>Ответы: Лексические упражнения</h3>
+          </div>
+          
+          {showAnswers && (
+            <div className="answers-content">
+              {lesson.lexical_exercises && lesson.lexical_exercises.length > 0 && (
+                <div className="answers-subsection">
+                  <h3>Лексические упражнения</h3>
                     {lesson.lexical_exercises.map((exBlock, bi) => {
                       const ansType = getLexicalAnswerType(exBlock.type)
                       const ansBlock = ansType ? lesson.lexical_answers?.find((b) => b.type === ansType) : undefined
                       if (!ansBlock || !ansBlock.answer || ansBlock.answer.length === 0) return null
-                      
                       return (
-                        <div key={`ans-lex-block-${bi}`} style={{ marginBottom: 8 }}>
-                          <p style={{ margin: '4px 0' }}><strong>Тип:</strong> {exBlock.type}</p>
-                          <ol style={{ paddingLeft: 20, marginTop: 4 }}>
+                      <div key={`ans-lex-block-${bi}`} className="answer-block">
+                        <p className="answer-type"><strong>Тип:</strong> {exBlock.type}</p>
+                        <ol className="answer-list">
                             {ansBlock.answer.map((ans, i) => (
                               <li key={`ans-lex-${bi}-${i}`}>
                                 <span>{ans}</span>
@@ -1204,31 +900,65 @@ const LessonPage: React.FC = () => {
                       )
                     })}
                   </div>
-                ) : null}
-                {lesson.grammar_exercises && lesson.grammar_exercises.length > 0 ? (
-                  <div>
-                    <h3>Ответы: Грамматические упражнения</h3>
+              )}
+              
+              {lesson.grammar_exercises && lesson.grammar_exercises.length > 0 && (
+                <div className="answers-subsection">
+                  <h3>Грамматические упражнения</h3>
                     {lesson.grammar_exercises.map((exBlock, bi) => {
                       const ansType = getGrammarAnswerType(bi)
                       const ansBlock = lesson.grammar_answers?.find((b) => b.type === ansType)
                       if (!ansBlock || !ansBlock.answer || ansBlock.answer.length === 0) return null
                       return (
-                        <div key={`ans-gram-block-${bi}`} style={{ marginBottom: 8 }}>
-                          <p style={{ margin: '4px 0' }}><strong>Тип:</strong> {exBlock.type}</p>
-                          <ol style={{ paddingLeft: 20, marginTop: 4 }}>
+                      <div key={`ans-gram-block-${bi}`} className="answer-block">
+                        <p className="answer-type"><strong>Тип:</strong> {exBlock.type}</p>
+                        <ol className="answer-list">
                             {ansBlock.answer.map((ans, i) => (
-                              <li key={`ans-gram-${bi}-${i}`}><span>{ans}</span></li>
+                            <li key={`ans-gram-${bi}-${i}`}>
+                              <span>{ans}</span>
+                            </li>
                             ))}
                           </ol>
                         </div>
                       )
                     })}
                   </div>
-                ) : null}
-              </div>
-            )}
+              )}
           </div>
+        )}
         </div>
+        </div>
+
+        {/* Vocabulary sidebar - always visible */}
+          <div className="vocabulary-sidebar">
+          <h2>Dictionary</h2>
+            <div className="vocabulary-list">
+              {lesson.glossary
+                .filter(item => item.time_code !== null && item.time_code !== undefined)
+                .sort((a, b) => (a.time_code || 0) - (b.time_code || 0))
+                .map((item, index) => {
+                  const minutes = Math.floor((item.time_code || 0) / 60);
+                  const seconds = Math.floor((item.time_code || 0) % 60);
+                  const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                  
+                  return (
+                    <div key={`${item.expression}-${index}`} className="vocab-sidebar-card">
+                      <div className="vocab-sidebar-content">
+                        <h3>{item.expression} — {item.translation}</h3>
+                        <div className="time-code">
+                          <span className="time-link" onClick={() => scrollToPlayerAndSeek(item.time_code as number)}>
+                            {timeDisplay}
+                          </span>
+                        </div>
+                        <p className="quote">«{item.quote}»</p>
+                        <p className="explanation">{item.explanation}</p>
+                        <p className="example">{item.another_example}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
       </div>
     </div>
   );

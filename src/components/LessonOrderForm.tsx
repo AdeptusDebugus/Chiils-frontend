@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react'
 import { createLesson } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
+import { useNotification } from '../contexts/NotificationContext'
+import { lessonMonitoringService, createLessonReadyNotification, createLessonErrorNotification } from '../services/lessonMonitoringService'
+import './LessonOrderForm.css'
 
 interface FormData {
   name: string
-  order_number: string
   email: string
-  telegram: string
-  youtube_links: string[]
+  youtube_link: string
   language_level: string
   grammar_topics: string[]
   language: string
@@ -21,16 +22,15 @@ interface FormErrors {
 
 const LessonOrderForm: React.FC = () => {
   const { user } = useAuth();
+  const { showNotification } = useNotification();
   
   const [formData, setFormData] = useState<FormData>({
     name: '',
-    order_number: '',
     email: '',
-    telegram: '',
-    youtube_links: [''],
-    language_level: '',
+    youtube_link: '',
+    language_level: 'B1',
     grammar_topics: [],
-    language: '',
+    language: 'english',
     grammar_topics_text: ''
   })
 
@@ -45,40 +45,26 @@ const LessonOrderForm: React.FC = () => {
     }
   }, [user]);
 
+  // Cleanup monitoring on component unmount
+  useEffect(() => {
+    return () => {
+      // Останавливаем все активные мониторинги при размонтировании компонента
+      lessonMonitoringService.stopAllMonitoring()
+    }
+  }, [])
+
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
 
   const languageLevels = [
-    { value: 'A1', label: 'A1 - Beginner' },
     { value: 'A2', label: 'A2 - Elementary' },
     { value: 'B1', label: 'B1 - Intermediate' },
     { value: 'B2', label: 'B2 - Upper Intermediate' },
     { value: 'C1', label: 'C1 - Advanced' },
     { value: 'C2', label: 'C2 - Proficient' }
   ]
-
-  // const commonGrammarTopics = [
-  //   'Present Simple',
-  //   'Present Continuous',
-  //   'Present Perfect',
-  //   'Past Simple',
-  //   'Past Continuous',
-  //   'Past Perfect',
-  //   'Future Simple',
-  //   'Future Continuous',
-  //   'Future Perfect',
-  //   'Conditional Sentences',
-  //   'Passive Voice',
-  //   'Reported Speech',
-  //   'Modal Verbs',
-  //   'Gerunds and Infinitives',
-  //   'Relative Clauses',
-  //   'Articles',
-  //   'Prepositions',
-  //   'Phrasal Verbs'
-  // ]
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -87,40 +73,28 @@ const LessonOrderForm: React.FC = () => {
       newErrors.name = 'Name is required'
     }
 
-    if (!formData.order_number.trim()) {
-      newErrors.order_number = 'Order number is required'
-    }
-
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address'
     }
 
-    if (!formData.telegram.trim()) {
-      newErrors.telegram = 'Telegram username is required'
-    } else if (!formData.telegram.startsWith('@')) {
-      newErrors.telegram = 'Telegram username must start with @'
+    if (!formData.language_level || formData.language_level === '') {
+      newErrors.language_level = 'Выберите уровень языка'
     }
 
-    if (!formData.language_level) {
-      newErrors.language_level = 'Please select your language level'
-    }
-
-    if (!formData.language) {
-      newErrors.language = 'Please select language'
+    if (!formData.language || formData.language === '') {
+      newErrors.language = 'Выберите язык'
     }
 
     if (!formData.grammar_topics_text || !formData.grammar_topics_text.trim()) {
       newErrors.grammar_topics_text = 'Укажите грамматические темы'
     }
 
-    const validYoutubeLinks = formData.youtube_links.filter(link => 
-      link.trim() && link.includes('youtube.com')
-    )
-
-    if (validYoutubeLinks.length === 0) {
-      newErrors.youtube_links = 'At least one valid YouTube link is required'
+    if (!formData.youtube_link.trim()) {
+      newErrors.youtube_link = 'YouTube link is required'
+    } else if (!formData.youtube_link.includes('youtube.com')) {
+      newErrors.youtube_link = 'Please enter a valid YouTube link'
     }
 
     setErrors(newErrors)
@@ -142,40 +116,6 @@ const LessonOrderForm: React.FC = () => {
     }
   }
 
-  const handleYoutubeLinkChange = (index: number, value: string) => {
-    const newLinks = [...formData.youtube_links]
-    newLinks[index] = value
-    setFormData(prev => ({
-      ...prev,
-      youtube_links: newLinks
-    }))
-  }
-
-  // multi-select version removed in favor of three individual selects
-
-  const addYoutubeLink = () => {
-    setFormData(prev => {
-      if (prev.youtube_links.length >= 3) return prev
-      return {
-        ...prev,
-        youtube_links: [...prev.youtube_links, '']
-      }
-    })
-  }
-
-  // removed selects; using free text input instead
-
-  const removeYoutubeLink = (index: number) => {
-    if (formData.youtube_links.length > 1) {
-      const newLinks = formData.youtube_links.filter((_, i) => i !== index)
-      setFormData(prev => ({
-        ...prev,
-        youtube_links: newLinks
-      }))
-    }
-  }
-
-  // replaced by select-based handler
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -189,36 +129,62 @@ const LessonOrderForm: React.FC = () => {
     setSubmitMessage('')
 
     try {
-      const validYoutubeLinks = formData.youtube_links.filter(link => 
-        link.trim() && link.includes('youtube.com')
-      )
-
-      await createLesson({
-        ...formData,
-        youtube_links: validYoutubeLinks,
+      const requestData = {
+        name: formData.name,
+        email: formData.email,
+        language_level: formData.language_level,
+        language: formData.language,
+        youtube_link: formData.youtube_link,
         grammar_topics: formData.grammar_topics_text && formData.grammar_topics_text.trim()
           ? [formData.grammar_topics_text.trim()]
           : []
-      })
+      }
+
+      // Validate all required fields are present
+      const requiredFields = ['name', 'email', 'language_level', 'language', 'youtube_link']
+      const missingFields = requiredFields.filter(field => !requestData[field as keyof typeof requestData])
+      
+      if (missingFields.length > 0) {
+        throw new Error(`Missing required fields: ${missingFields.join(', ')}`)
+      }
+
+      const response = await createLesson(requestData)
 
       setSubmitStatus('success')
-      setSubmitMessage('Your lesson order has been submitted successfully! We will contact you soon.')
+      setSubmitMessage('Ваш урок создан и обрабатывается! Мы уведомим вас, когда он будет готов.')
+      
+      // Если получили lesson_id, начинаем мониторинг
+      if (response.lesson_id) {
+        console.log('Starting monitoring for lesson:', response.lesson_id)
+        
+        lessonMonitoringService.startMonitoring({
+          lessonId: response.lesson_id,
+          lessonName: requestData.name,
+          onReady: (lessonId: string, lessonName: string) => {
+            showNotification(createLessonReadyNotification(lessonId, lessonName))
+          },
+          onError: (lessonId: string, error: string) => {
+            showNotification(createLessonErrorNotification(lessonId, error))
+          },
+          intervalMs: 30000, // Проверяем каждые 30 секунд
+          maxAttempts: 100   // Максимум 50 минут ожидания
+        })
+      }
       
       // Reset form
       setFormData({
         name: '',
-        order_number: '',
         email: '',
-        telegram: '',
-        youtube_links: [''],
-        language_level: '',
+        youtube_link: '',
+        language_level: 'B1',
         grammar_topics: [],
-        language: '',
+        language: 'english',
         grammar_topics_text: ''
       })
     } catch (error) {
       setSubmitStatus('error')
-      setSubmitMessage('Failed to submit your order. Please try again later.')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit your order. Please try again later.'
+      setSubmitMessage(errorMessage)
       console.error('Error submitting form:', error)
     } finally {
       setIsSubmitting(false)
@@ -226,207 +192,164 @@ const LessonOrderForm: React.FC = () => {
   }
 
   return (
-    <div className="form-container">
-      <div className="form-header">
-        <h1 className="form-title">Форма заказа Real Talk</h1>
-        <p className="form-subtitle">Персональный урок иностранного языка</p>
+    <div className="lesson-builder-container">
+      <div className="lesson-builder-header">
+        <div className="lesson-builder-title">
+          <h1>Lesson Builder</h1>
+        </div>
+        <p className="lesson-builder-description">
+          Здесь можно создавать персонализированные уроки на основе видео и подкастов YouTube. Заполни поля и нажми «Create».
+        </p>
       </div>
 
-      <div className="form-content">
-        <div className="form-description">
-          <p>
-            <strong>Real Talk</strong> — это AI-сервис для изучения живого и актуального языка, который превращает твои любимые видео и подкасты в персонализированные учебные модули.
-          </p>
+      {submitStatus === 'error' && (
+        <div className="error-notification">
+          <p>{submitMessage}</p>
         </div>
+      )}
 
+      <div className="lesson-form-container">
         {submitStatus === 'success' && (
-          <div className="success-message">
-            {submitMessage}
+          <div className="success-form-overlay">
+            <div className="success-form-container">
+              <h2 className="success-form-title">Готовим твой урок ⏳</h2>
+              <p className="success-form-description">
+                Обычно это занимает 3–5 минут. Когда урок будет готов, тебе придёт пуш-уведомление. Все готовые уроки попадают в Open Library.
+              </p>
+              <button 
+                className="success-form-ok-button"
+                onClick={() => setSubmitStatus('idle')}
+              >
+                OK
+              </button>
+            </div>
           </div>
         )}
-
-        {submitStatus === 'error' && (
-          <div className="error-message">
-            {submitMessage}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="form-section">
-            <h3 className="section-title">Основная информация</h3>
-            
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="name">Как тебя зовут? *</label>
+        <form onSubmit={handleSubmit} className="lesson-form">
+          <div className="form-grid">
+            {/* Name Field */}
+            <div className="form-field">
+              <label htmlFor="name" className="field-label">Имя и Фамилия</label>
+              <div className="input-container">
                 <input
                   type="text"
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Введите ваше имя"
-                  style={{ 
-                    backgroundColor: user?.name ? '#f8f9fa' : 'white',
-                    borderColor: user?.name ? '#28a745' : undefined
-                  }}
+                  placeholder="Jane Smith"
+                  className="form-input"
                 />
-                {user?.name && (
-                  <small style={{ color: '#28a745', fontSize: '12px' }}>
-                    ✓ Автоматически заполнено из вашего профиля Google
-                  </small>
-                )}
-                {errors.name && <div className="error">{errors.name}</div>}
               </div>
-
-              <div className="form-group">
-                <label htmlFor="order_number">Номер заказа *</label>
-                <input
-                  type="text"
-                  id="order_number"
-                  value={formData.order_number}
-                  onChange={(e) => handleInputChange('order_number', e.target.value)}
-                  placeholder="ORD-12345"
-                />
-                <small style={{ color: '#666', fontSize: '12px' }}>Отображается при оплате</small>
-                {errors.order_number && <div className="error">{errors.order_number}</div>}
-              </div>
+              {user?.name && (
+                <p className="helper-text orange">Автоматически заполнено из профиля Google</p>
+              )}
+              {errors.name && <p className="error-text">{errors.name}</p>}
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="email">Твой email *</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="your.email@example.com"
-                  style={{ 
-                    backgroundColor: user?.email ? '#f8f9fa' : 'white',
-                    borderColor: user?.email ? '#28a745' : undefined
-                  }}
-                />
-                {user?.email ? (
-                  <small style={{ color: '#28a745', fontSize: '12px' }}>
-                    ✓ Автоматически заполнено из вашего профиля Google
-                  </small>
-                ) : (
-                  <small style={{ color: '#666', fontSize: '12px' }}>Учебный модуль появится в твоем профиле - вкладка My Lessons</small>
-                )}
-                {errors.email && <div className="error">{errors.email}</div>}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="telegram">Как тебя найти в Telegram? *</label>
-                <input
-                  type="text"
-                  id="telegram"
-                  value={formData.telegram}
-                  onChange={(e) => handleInputChange('telegram', e.target.value)}
-                  placeholder="@username"
-                />
-                {errors.telegram && <div className="error">{errors.telegram}</div>}
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="language">Язык обучения *</label>
+            {/* Language Field */}
+            <div className="form-field">
+              <label htmlFor="language" className="field-label">Выбери язык обучения</label>
+              <div className="select-container">
                 <select
                   id="language"
                   value={formData.language}
                   onChange={(e) => handleInputChange('language', e.target.value)}
+                  className="form-select"
                 >
-                  <option value="">Выберите язык</option>
                   <option value="english">English</option>
                   <option value="spanish">Spanish</option>
                   <option value="german">German</option>
                   <option value="french">French</option>
                 </select>
-                {errors.language && <div className="error">{errors.language}</div>}
+                <div className="select-arrow">▼</div>
               </div>
+              {errors.language && <p className="error-text">{errors.language}</p>}
+            </div>
+
+            {/* Email Field */}
+            <div className="form-field">
+              <label htmlFor="email" className="field-label">Твой email</label>
+              <div className="input-container">
+                <input
+                  type="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="example@gmail.com"
+                  className="form-input"
+                />
+              </div>
+              {user?.email ? (
+                <p className="helper-text orange">Автоматически заполнено из профиля Google</p>
+              ) : (
+                <p className="helper-text">Учебный модуль появится в твоем профиле - вкладка My Lessons</p>
+              )}
+              {errors.email && <p className="error-text">{errors.email}</p>}
+            </div>
+
+            {/* Language Level Field */}
+            <div className="form-field">
+              <label htmlFor="language_level" className="field-label">Выбери уровень</label>
+              <div className="select-container">
+                <select
+                  id="language_level"
+                  value={formData.language_level}
+                  onChange={(e) => handleInputChange('language_level', e.target.value)}
+                  className="form-select"
+                >
+                  {languageLevels.map(level => (
+                    <option key={level.value} value={level.value}>
+                      {level.value}
+                    </option>
+                  ))}
+                </select>
+                <div className="select-arrow">▼</div>
+              </div>
+              {errors.language_level && <p className="error-text">{errors.language_level}</p>}
+            </div>
+
+            {/* Grammar Topics Field */}
+            <div className="form-field">
+              <label htmlFor="grammar_topics_text" className="field-label">Укажи до 3-х грамматических тем</label>
+              <div className="input-container">
+                <input
+                  id="grammar_topics_text"
+                  type="text"
+                  value={formData.grammar_topics_text || ''}
+                  onChange={(e) => handleInputChange('grammar_topics_text', e.target.value)}
+                  placeholder="Conditionals, Past Perfect, Prepositions"
+                  className="form-input"
+                />
+              </div>
+              {errors.grammar_topics_text && <p className="error-text">{errors.grammar_topics_text}</p>}
+            </div>
+
+            {/* YouTube Link Field */}
+            <div className="form-field">
+              <label className="field-label">Ссылка на материал Youtube</label>
+              <div className="input-container">
+                <input
+                  type="url"
+                  value={formData.youtube_link}
+                  onChange={(e) => handleInputChange('youtube_link', e.target.value)}
+                  placeholder="https://www.youtube.com/watch?..."
+                  className="form-input"
+                />
+              </div>
+              <p className="helper-text orange">Видео не должно превышать 120 минут</p>
+              {errors.youtube_link && <p className="error-text">{errors.youtube_link}</p>}
             </div>
           </div>
 
-          <div className="form-section">
-            <h3 className="section-title">Материалы для модуля</h3>
-            
-            <div className="form-group">
-              <label>YouTube ссылки *</label>
-              {formData.youtube_links.map((link, index) => (
-                <div key={index} className="youtube-link-item">
-                  <input
-                    type="url"
-                    value={link}
-                    onChange={(e) => handleYoutubeLinkChange(index, e.target.value)}
-                    placeholder="https://www.youtube.com/watch?v=..."
-                  />
-                  {formData.youtube_links.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-link"
-                      onClick={() => removeYoutubeLink(index)}
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-link"
-                onClick={addYoutubeLink}
-                disabled={formData.youtube_links.length >= 3}
-                style={formData.youtube_links.length >= 3 ? { background: '#e9ecef', color: '#6c757d', borderColor: '#dee2e6', cursor: 'not-allowed' } : undefined}
-              >
-                {formData.youtube_links.length >= 3 ? 'Maximum 3 links' : '+ Add YouTube Link'}
-              </button>
-              {errors.youtube_links && <div className="error">{errors.youtube_links}</div>}
-            </div>
+          <div className="form-actions">
+            <button
+              type="submit"
+              className="create-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Creating...' : 'Create'}
+            </button>
           </div>
-
-          <div className="form-section">
-            <h3 className="section-title">Настройки обучения</h3>
-            
-            <div className="form-group">
-              <label htmlFor="language_level">Выберите уровень языка *</label>
-              <select
-                id="language_level"
-                value={formData.language_level}
-                onChange={(e) => handleInputChange('language_level', e.target.value)}
-              >
-                <option value="">Выберите уровень</option>
-                {languageLevels.map(level => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}
-              </select>
-              <small style={{ color: '#666', fontSize: '12px' }}>От этого ответа зависит сложность модуля</small>
-              {errors.language_level && <div className="error">{errors.language_level}</div>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="grammar_topics_text">Какие грамматические темы тебе интересны?</label>
-              <input
-                id="grammar_topics_text"
-                type="text"
-                value={formData.grammar_topics_text || ''}
-                onChange={(e) => handleInputChange('grammar_topics_text', e.target.value)}
-                placeholder="Например: Present Perfect, Conditional Sentences, Passive Voice"
-              />
-              <small style={{ color: '#666', fontSize: '12px' }}>Можно перечислить через запятую</small>
-              {errors.grammar_topics_text && <div className="error">{errors.grammar_topics_text}</div>}
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="submit-button"
-            disabled={isSubmitting}
-          >
-            {isSubmitting && <span className="loading"></span>}
-            {isSubmitting ? 'Отправляем...' : 'Отправить заявку'}
-          </button>
         </form>
       </div>
     </div>
