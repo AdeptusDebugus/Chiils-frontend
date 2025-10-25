@@ -75,6 +75,8 @@ const LessonPage: React.FC = () => {
     const w = window as any
     playerRef.current = new w.YT.Player('yt-player', {
       videoId,
+      width: '100%',
+      height: '100%',
       host: 'https://www.youtube-nocookie.com',
       playerVars: {
         rel: 0,
@@ -615,7 +617,7 @@ const LessonPage: React.FC = () => {
         {lesson.grammar_exercises && lesson.grammar_exercises.length > 0 && 
           lesson.grammar_exercises.map((block, blockIndex) => (
             <div key={`gram-${blockIndex}`} className="exercises-section">
-              <h2>{block.type}</h2>
+              <h2>{block.topic || block.type}</h2>
                 {block.input && (
                   <div className="exercise-tip">
                     <span className="tip-icon"></span>
@@ -625,9 +627,6 @@ const LessonPage: React.FC = () => {
                 
                 {/* Grammar Exercise with new design */}
                 <div className="grammar-exercise">
-                  <p className="grammar-instruction">
-                    Заполните пропуски правильными формами слов согласно грамматическим правилам.
-                  </p>
                   
                   {/* Check if all answers are correct for this grammar block */}
                   {(() => {

@@ -43,7 +43,7 @@ const Login: React.FC = () => {
             color: '#37352f',
             marginBottom: '8px'
           }}>
-            Welcome back to RealTalk
+            Welcome back to Chiils
           </h1>
           <p style={{ 
             fontSize: '16px', 
@@ -183,7 +183,7 @@ const Login: React.FC = () => {
           color: '#37352f',
           marginBottom: '8px'
         }}>
-          Welcome to RealTalk
+          Welcome to Chiils
         </h1>
         <p style={{ 
           fontSize: '16px', 

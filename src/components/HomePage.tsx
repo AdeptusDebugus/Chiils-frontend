@@ -6,7 +6,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="home-page">
       <div className="hero-section">
-        <h1>Welcome to Real Talk</h1>
+        <h1>Welcome to Chiils</h1>
         <p className="hero-subtitle">Learn English through engaging podcast-based lessons</p>
         <div className="cta-buttons">
           <Link to="/lesson/1" className="cta-button primary">
@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
       </div>
 
       <div className="features-section">
-        <h2>Why Choose Real Talk?</h2>
+        <h2>Why Choose Chiils?</h2>
         <div className="features-grid">
           <div className="feature-card">
             <div className="feature-icon">🎧</div>

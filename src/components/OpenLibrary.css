@@ -20,14 +20,7 @@
 }
 
 /* Ensure all containers respect viewport width */
-.open-library-page,
-.open-library-content,
-.main-content-container,
-.filters-section,
-.filters-container,
-.lessons-grid {
-  overflow-x: hidden;
-}
+/* Removed overflow-x to allow shadows to be visible */
 
 .open-library-page {
   flex: 1;
@@ -35,16 +28,16 @@
   flex-direction: column;
   background: #ffffff;
   margin-left: var(--sidebar-width); /* Account for fixed sidebar width */
-  padding: 40px 20px;
+  padding: 40px 20px 120px 20px; /* Add bottom padding to show shadow */
   min-height: 100vh; /* Full viewport height */
   width: calc(100% - var(--sidebar-width)); /* Account for sidebar width */
-  max-width: calc(100vw - var(--sidebar-width) - 40px); /* Prevent overflow */
+  max-width: 100%; /* Allow full width for shadow visibility */
   margin-right: auto; /* Center the page content */
   box-sizing: border-box;
   font-family: 'TeX Gyre Heros', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   line-height: 1.6;
   color: var(--rt-text);
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow: visible; /* Allow shadows to be visible */
 }
 
 .open-library-header {
@@ -80,7 +73,7 @@
   position: relative;
   width: 100%;
   max-width: 100%;
-  margin: 0; /* Remove centering since page is now centered */
+  margin: 0 0 60px 0; /* Add larger bottom margin to show shadow fully */
   background: var(--rt-bg);
   border-radius: 22px;
   box-shadow: 0px 3.158px 11.843px 3.158px rgba(0,0,0,0.25);
@@ -88,7 +81,7 @@
   padding: 36px 40px;
   min-height: 1189px;
   box-sizing: border-box;
-  overflow-x: hidden;
+  overflow: visible; /* Allow shadow to be visible */
 }
 
 .search-section {
@@ -623,7 +616,7 @@
     margin-left: 0;
     width: 100%;
     max-width: 100vw;
-    padding: 20px;
+    padding: 20px 20px 100px 20px; /* Add bottom padding to show shadow */
   }
   
   .open-library-header h1 {
@@ -784,7 +777,7 @@
     margin-left: 0;
     width: 100%;
     max-width: 100vw;
-    padding: 16px;
+    padding: 16px 16px 80px 16px; /* Add bottom padding to show shadow */
   }
   
   .open-library-header h1 {
@@ -925,7 +918,7 @@
     margin-left: 0;
     width: 100%;
     max-width: 100vw;
-    padding: 12px;
+    padding: 12px 12px 80px 12px; /* Add bottom padding to show shadow */
   }
   
   .open-library-content {
@@ -1048,7 +1041,7 @@
 @media (max-width: 480px) {
   .open-library-page {
     max-width: 100vw;
-    padding: 8px;
+    padding: 8px 8px 60px 8px; /* Add bottom padding to show shadow */
   }
   
   .open-library-header h1 {
@@ -1107,7 +1100,7 @@
     margin-left: 0;
     width: 100%;
     max-width: 100vw;
-    padding: 8px;
+    padding: 8px 8px 60px 8px; /* Add bottom padding to show shadow */
   }
   
   .main-content-container {
@@ -1222,7 +1215,7 @@
 /* Extra small screens (320px and below) - prevent any overflow */
 @media (max-width: 320px) {
   .open-library-page {
-    padding: 4px;
+    padding: 4px 4px 60px 4px; /* Add bottom padding to show shadow */
   }
   
   .main-content-container {
@@ -1265,6 +1258,7 @@
 @media (min-width: 1200px) and (max-width: 1439px) {
   .open-library-page {
     max-width: 1400px;
+    padding: 40px 20px 120px 20px; /* Add bottom padding to show shadow */
   }
   
   .main-content-container {
@@ -1302,7 +1296,7 @@
 @media (min-width: 1440px) {
   .open-library-page {
     max-width: 1600px;
-    padding: 40px 30px;
+    padding: 40px 30px 120px 30px; /* Add bottom padding to show shadow */
   }
   
   .main-content-container {
@@ -1349,6 +1343,7 @@
 @media (min-width: 1920px) {
   .open-library-page {
     max-width: 1800px;
+    padding: 40px 30px 120px 30px; /* Add bottom padding to show shadow */
   }
   
   .main-content-container {

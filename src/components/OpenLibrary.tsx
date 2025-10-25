@@ -18,18 +18,19 @@ const OpenLibrary: React.FC = () => {
 
   // Helper functions (defined before they're used)
   const getLanguageLevel = (lesson: LessonData): string => {
-    // Extract level from lesson data if available
-    return 'B1'; // Default level, can be enhanced based on actual data structure
+    return lesson.tags?.language_level || 'B1';
   };
 
   const getGrammarTopics = (lesson: LessonData): string[] => {
-    // Extract grammar topics from lesson data
-    return ['Present Perfect', 'Conditionals']; // Default topics, can be enhanced
+    return lesson.tags?.grammar_topics || [];
   };
 
   const getTopics = (lesson: LessonData): string[] => {
-    // Extract topics from lesson data
-    return ['Architecture & Interior', 'Neutral']; // Default topics, can be enhanced
+    return lesson.tags?.lexical_fields || [];
+  };
+
+  const getStyle = (lesson: LessonData): string => {
+    return lesson.tags?.style || 'Neutral';
   };
 
   useEffect(() => {
@@ -58,10 +59,13 @@ const OpenLibrary: React.FC = () => {
       const topics = getTopics(lesson);
       const matchesSearch = (
         lesson.lesson_topic?.toLowerCase().includes(searchLower) ||
+        lesson.tags?.lesson_theme?.toLowerCase().includes(searchLower) ||
+        lesson.tags?.language?.toLowerCase().includes(searchLower) ||
         lesson.language?.toLowerCase().includes(searchLower) ||
         lesson.tag?.toLowerCase().includes(searchLower) ||
         grammarTopics.some(topic => topic.toLowerCase().includes(searchLower)) ||
         topics.some(topic => topic.toLowerCase().includes(searchLower)) ||
+        lesson.tags?.style?.toLowerCase().includes(searchLower) ||
         lesson.glossary?.some(item => 
           item.expression?.toLowerCase().includes(searchLower) ||
           item.translation?.toLowerCase().includes(searchLower)
@@ -71,7 +75,7 @@ const OpenLibrary: React.FC = () => {
     }
     
     // Language filter
-    if (selectedLanguage && lesson.language?.toLowerCase() !== selectedLanguage.toLowerCase()) {
+    if (selectedLanguage && lesson.tags?.language?.toLowerCase() !== selectedLanguage.toLowerCase()) {
       return false;
     }
     
@@ -98,10 +102,8 @@ const OpenLibrary: React.FC = () => {
     
     // Style filter
     if (selectedStyle && selectedStyle !== 'All') {
-      const lessonStyles = getTopics(lesson); // Using topics as style for now
-      const hasMatchingStyle = lessonStyles.some(style => 
-        style.toLowerCase().includes(selectedStyle.toLowerCase())
-      );
+      const lessonStyle = getStyle(lesson);
+      const hasMatchingStyle = lessonStyle.toLowerCase().includes(selectedStyle.toLowerCase());
       if (!hasMatchingStyle && selectedStyle !== 'Neutral') {
         return false;
       }
@@ -267,7 +269,7 @@ const OpenLibrary: React.FC = () => {
                 <div className="lesson-info">
                   <div className="lesson-meta">
                     <div className="lesson-tags">
-                      <span className="tag language">{lesson.language || 'English'}</span>
+                      <span className="tag language">{lesson.tags?.language || 'English'}</span>
                       <span className="tag level">{getLanguageLevel(lesson)}</span>
                       {getGrammarTopics(lesson).map((topic, i) => (
                         <span key={i} className="tag grammar">{topic}</span>
@@ -280,7 +282,7 @@ const OpenLibrary: React.FC = () => {
                       ))}
                     </div>
                     <span className="lesson-title">
-                    {lesson.lesson_topic || 'Untitled Lesson'}
+                    {lesson.tags?.lesson_theme || lesson.lesson_topic || 'Untitled Lesson'}
                     </span>
                   </div>
                 </div>

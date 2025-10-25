@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { createLesson } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 import { useNotification } from '../contexts/NotificationContext'
-import { lessonMonitoringService, createLessonReadyNotification, createLessonErrorNotification } from '../services/lessonMonitoringService'
+import { globalLessonMonitoring } from '../services/globalLessonMonitoring'
 import './LessonOrderForm.css'
 
 interface FormData {
@@ -45,13 +45,7 @@ const LessonOrderForm: React.FC = () => {
     }
   }, [user]);
 
-  // Cleanup monitoring on component unmount
-  useEffect(() => {
-    return () => {
-      // Останавливаем все активные мониторинги при размонтировании компонента
-      lessonMonitoringService.stopAllMonitoring()
-    }
-  }, [])
+
 
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -150,25 +144,16 @@ const LessonOrderForm: React.FC = () => {
 
       const response = await createLesson(requestData)
 
+      console.log('Create lesson response:', response) // Детальное логирование ответа
+
       setSubmitStatus('success')
-      setSubmitMessage('Ваш урок создан и обрабатывается! Мы уведомим вас, когда он будет готов.')
+      setSubmitMessage('Ваш урок создан и обрабатывается! Мы уведомлим вас, когда он будет готов.')
       
-      // Если получили lesson_id, начинаем мониторинг
-      if (response.lesson_id) {
-        console.log('Starting monitoring for lesson:', response.lesson_id)
-        
-        lessonMonitoringService.startMonitoring({
-          lessonId: response.lesson_id,
-          lessonName: requestData.name,
-          onReady: (lessonId: string, lessonName: string) => {
-            showNotification(createLessonReadyNotification(lessonId, lessonName))
-          },
-          onError: (lessonId: string, error: string) => {
-            showNotification(createLessonErrorNotification(lessonId, error))
-          },
-          intervalMs: 30000, // Проверяем каждые 30 секунд
-          maxAttempts: 100   // Максимум 50 минут ожидания
-        })
+      // Проверяем различные возможные форматы lesson_id
+      const lessonId = response.lesson_id
+      
+      if (lessonId) {
+        globalLessonMonitoring.startMonitoring(lessonId, requestData.name)
       }
       
       // Reset form
@@ -200,6 +185,7 @@ const LessonOrderForm: React.FC = () => {
         <p className="lesson-builder-description">
           Здесь можно создавать персонализированные уроки на основе видео и подкастов YouTube. Заполни поля и нажми «Create».
         </p>
+        
       </div>
 
       {submitStatus === 'error' && (

@@ -10,7 +10,7 @@ import OpenLibrary from './components/OpenLibrary';
 import LessonPage from './components/LessonPage';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
-import LessonMonitoringStatus from './components/LessonMonitoringStatus';
+import GlobalLessonMonitor from './components/GlobalLessonMonitor';
 import './App.css';
 
 function App() {
@@ -57,8 +57,8 @@ function App() {
           {/* Footer last in DOM order */}
           {shouldShowFooter && <Footer />}
           
-          {/* Lesson monitoring status */}
-          <LessonMonitoringStatus />
+          {/* Global lesson monitor */}
+          <GlobalLessonMonitor />
         </div>
       </NotificationProvider>
     </AuthProvider>

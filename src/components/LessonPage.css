@@ -71,45 +71,26 @@
   overflow: hidden;
   box-shadow: var(--shadow-card);
   background: var(--color-white);
+  position: relative;
+  aspect-ratio: 16 / 9;
 }
 
 .video-embed iframe,
 .video-embed #yt-player {
-  width: 100%;
+  width: 100% !important;
+  height: auto !important;
   aspect-ratio: 16 / 9;
   max-height: 624px;
   min-height: 384px;
   border: none;
+  object-fit: contain;
 }
 
 /* Removed tabs - exercises now display sequentially */
 
 /* Exercise Sections */
 /* All Exercises Container */
-.all-exercises-container {
-  max-height: 60vh;
-  overflow-y: auto;
-  padding: 20px;
-  margin-right: -4px;
-}
 
-.all-exercises-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.all-exercises-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.all-exercises-container::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
-
-.all-exercises-container::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
 
 .exercises-section {
   background: var(--color-white);
@@ -288,28 +269,29 @@
   font-size: 15.79px;
 }
 
-/* Exercise Tip */
+/* Exercise Tip - Matching Fill-in-the-Blank Instruction Style */
 .exercise-tip {
-  background: var(--color-neutral-100);
-  border: 1px solid #e9e9e7;
-  border-radius: var(--border-radius-medium);
-  padding: 12px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  font-size: 15.79px;
+  color: var(--color-text);
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 12px 0 16px 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: block;
 }
 
 .tip-icon {
-  font-size: 1.2rem;
-  flex-shrink: 0;
+  display: none;
 }
 
 .exercise-tip p {
   margin: 0;
   color: var(--color-text);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 15.79px;
+  line-height: 1.4;
 }
 
 /* Exercise Divider */
@@ -946,11 +928,6 @@
     max-height: 432px;
   }
   
-  .all-exercises-container {
-    max-height: 50vh;
-    padding: 20px;
-    margin-right: -2px;
-  }
   
   .exercises-section {
     padding: 16px;

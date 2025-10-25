@@ -11,6 +11,7 @@ export interface GlossaryItem {
 
 export interface ExerciseBlock {
   type: string
+  topic?: string
   input?: string | null
   examples: string[]
 }
@@ -20,11 +21,21 @@ export interface AnswersBlock {
   answer: string[]
 }
 
+export interface Tags {
+  lesson_theme: string
+  language: string
+  language_level: string
+  lexical_fields: string[]
+  style: string
+  grammar_topics: string[]
+}
+
 export interface PublicLesson {
   lesson_topic: string
   you_tube_url: string
   tag?: string
   language?: string
+  tags?: Tags
   glossary: GlossaryItem[]
   lexical_exercises: ExerciseBlock[]
   grammar_exercises: ExerciseBlock[]
@@ -138,6 +149,7 @@ export const lessonService = {
         if (block?.items?.length) {
           grammar_exercises.push({
             type: formatTitle(key),
+            topic: block.topic ?? null,
             input: block.instructions ?? null,
             examples: block.items
               .map((it: any) => (it.sentence ? toSixUnderscores(String(it.sentence)) : ''))
@@ -157,6 +169,14 @@ export const lessonService = {
         you_tube_url: raw.you_tube_url ?? '',
         tag: raw.tag ?? raw.lesson_tag ?? '',
         language: raw.language ?? raw.lesson_language ?? '',
+        tags: raw.tags ? {
+          lesson_theme: raw.tags.lesson_theme ?? '',
+          language: raw.tags.language ?? '',
+          language_level: raw.tags.language_level ?? '',
+          lexical_fields: raw.tags.lexical_fields ?? [],
+          style: raw.tags.style ?? '',
+          grammar_topics: raw.tags.grammar_topics ?? []
+        } : undefined,
         glossary,
         lexical_exercises,
         grammar_exercises,

@@ -54,10 +54,10 @@ export interface CreateLessonResponse {
 }
 
 export interface LessonReadyResponse {
-  success: boolean
-  message: string
-  is_ready: boolean
-  lesson_id: string
+  success?: boolean
+  message?: string
+  is_ready?: boolean
+  lesson_id?: string
 }
 
 export const createLesson = async (data: CreateLessonRequest): Promise<CreateLessonResponse> => {
@@ -105,10 +105,22 @@ export const checkLessonReady = async (lessonId: string): Promise<LessonReadyRes
   try {
     console.log('Checking lesson ready status for:', lessonId)
     
-    const response = await api.get<LessonReadyResponse>(`/lessons/is-lesson-ready/${lessonId}`)
+    const response = await api.get<boolean>(`/lessons/is-lesson-ready/${lessonId}`)
     
     console.log('checkLessonReady response:', response.data)
-    return response.data
+    
+    // Бэкенд возвращает просто boolean true/false
+    const isReady = response.data === true
+    
+    const result: LessonReadyResponse = {
+      success: true,
+      is_ready: isReady,
+      lesson_id: lessonId,
+      message: isReady ? 'Lesson is ready' : 'Lesson is not ready'
+    }
+    
+    console.log('checkLessonReady processed response:', result)
+    return result
   } catch (error) {
     console.error('checkLessonReady error:', error)
     if (axios.isAxiosError(error)) {
