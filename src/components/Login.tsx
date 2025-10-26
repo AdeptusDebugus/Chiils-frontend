@@ -8,7 +8,7 @@ const Login: React.FC = () => {
 
   const handleGoogleLogin = () => {
     // Redirect to your Spring Boot OAuth2 endpoint
-    const backendUrl = 'http://localhost:8080'; // Replace with your backend URL
+    const backendUrl = import.meta.env.VITE_API_URL; // Replace with your backend URL
     const redirectUri = `${window.location.origin}/login/success`;
     const googleAuthUrl = `${backendUrl}/oauth2/authorization/google?redirect_uri=${encodeURIComponent(redirectUri)}`;
     
