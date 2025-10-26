@@ -200,7 +200,7 @@ const LessonOrderForm: React.FC = () => {
             <div className="success-form-container">
               <h2 className="success-form-title">Готовим твой урок ⏳</h2>
               <p className="success-form-description">
-                Обычно это занимает 3–5 минут. Когда урок будет готов, тебе придёт пуш-уведомление. Все готовые уроки попадают в Open Library.
+                Обычно это занимает 10–15 минут. Когда урок будет готов, тебе придёт пуш-уведомление. Все готовые уроки попадают в Open Library.
               </p>
               <button 
                 className="success-form-ok-button"
