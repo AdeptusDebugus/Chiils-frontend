@@ -76,7 +76,7 @@ const Footer: React.FC = () => {
           {/* Chiils Logo - Aligned at bottom */}
           <div className="footer-logo-container">
             <img 
-              src="/src/assets/chiils-footer-logo.svg"
+              src="/assets/chiils-footer-logo.svg"
               alt="Chiils" 
               className="footer-logo-svg"
             />
