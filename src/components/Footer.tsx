@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Footer.css'
 
-// Local logo asset
-const footerLogoPath = "/assets/chiils-footer-logo.svg"
 
 const Footer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false)
@@ -78,7 +76,7 @@ const Footer: React.FC = () => {
           {/* Chiils Logo - Aligned at bottom */}
           <div className="footer-logo-container">
             <img 
-              src={footerLogoPath} 
+              src="/src/assets/chiils-footer-logo.svg"
               alt="Chiils" 
               className="footer-logo-svg"
             />

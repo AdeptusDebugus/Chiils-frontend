@@ -3,9 +3,6 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import './Sidebar.css'
 
-// Local logo asset
-const logoPath = "/assets/chiils-logo.svg"
-
 const Sidebar: React.FC = () => {
   const { isAuthenticated } = useAuth()
 
@@ -14,7 +11,7 @@ const Sidebar: React.FC = () => {
       {/* Chiils Logo */}
       <div className="sidebar-logo">
         <div className="logo-container">
-          <img alt="Chiils" className="logo-img" src={logoPath} />
+          <img alt="Chiils" className="logo-img" src="/src/assets/chiils-logo.svg" />
         </div>
       </div>
       

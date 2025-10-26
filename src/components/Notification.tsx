@@ -65,7 +65,7 @@ const Notification: React.FC<NotificationProps> = ({ notification, onClose }) =>
           onClick={handleClose}
           aria-label="Закрыть уведомление"
         >
-          <img src="/assets/close-icon.svg" alt="Закрыть" width="17" height="17" />
+          <img src="/src/assets/close-icon.svg" alt="Закрыть" width="17" height="17" />
         </button>
       </div>
     </div>
