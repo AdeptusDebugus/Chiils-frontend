@@ -52,11 +52,12 @@
 /* Navigation Links - Adjusted for reduced height */
 .footer-nav-links {
   position: absolute;
-  left: calc(25% + 30px);
+  left: 280px; /* Position after email container (20px + 209px email width + 51px gap) */
   top: 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  z-index: 1002; /* Ensure links are above the footer */
 }
 
 .footer-nav-item {
@@ -70,6 +71,8 @@
   white-space: nowrap;
   display: block;
   text-align: left;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .footer-nav-item:hover {
@@ -171,6 +174,10 @@
 
 /* Desktop (1024px - 1199px) */
 @media (max-width: 1199px) and (min-width: 1024px) {
+  .footer-nav-links {
+    left: 250px; /* Adjust positioning for smaller desktop */
+  }
+  
   .footer-logo-container {
     width: 250px;
     height: 71px;

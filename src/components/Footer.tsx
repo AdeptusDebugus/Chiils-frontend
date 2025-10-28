@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './Footer.css'
 
 
 const Footer: React.FC = () => {
+  const { isAuthenticated } = useAuth()
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -50,9 +52,11 @@ const Footer: React.FC = () => {
         {/* Navigation Links - Exact Figma positioning */}
         <div className="footer-nav-links">
           <Link to="/" className="footer-nav-item">Home</Link>
-          <Link to="/library" className="footer-nav-item">Open library</Link>
+          <Link to="/open-library" className="footer-nav-item">Open library</Link>
           <Link to="/lesson-order" className="footer-nav-item">Lesson builder</Link>
-          <Link to="/profile" className="footer-nav-item">Profile</Link>
+          {isAuthenticated && (
+            <Link to="/profile" className="footer-nav-item">Profile</Link>
+          )}
         </div>
         
         {/* Email Contact - Exact Figma positioning */}
