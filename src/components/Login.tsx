@@ -32,9 +32,13 @@ const Login: React.FC = () => {
         alignItems: 'center', 
         justifyContent: 'center', 
         height: '100vh',
+        width: '100%',
         gap: '30px',
         padding: '20px',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+        margin: 0
       }}>
         <div style={{ textAlign: 'center' }}>
           <h1 style={{ 
@@ -173,8 +177,13 @@ const Login: React.FC = () => {
       alignItems: 'center', 
       justifyContent: 'center', 
       height: '100vh',
+      width: '100%',
       gap: '20px',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      padding: '20px',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      overflow: 'hidden',
+      boxSizing: 'border-box',
+      margin: 0
     }}>
       <div style={{ textAlign: 'center' }}>
         <h1 style={{ 

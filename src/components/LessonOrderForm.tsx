@@ -156,10 +156,10 @@ const LessonOrderForm: React.FC = () => {
         globalLessonMonitoring.startMonitoring(lessonId, requestData.name)
       }
       
-      // Reset form
+      // Reset form (preserve name and email from user)
       setFormData({
-        name: '',
-        email: '',
+        name: user?.name || '',
+        email: user?.email || '',
         youtube_link: '',
         language_level: 'B1',
         grammar_topics: [],
@@ -243,9 +243,6 @@ const LessonOrderForm: React.FC = () => {
                   className="form-select"
                 >
                   <option value="english">English</option>
-                  <option value="spanish">Spanish</option>
-                  <option value="german">German</option>
-                  <option value="french">French</option>
                 </select>
                 <div className="select-arrow">▼</div>
               </div>

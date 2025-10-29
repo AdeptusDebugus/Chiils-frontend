@@ -2,7 +2,7 @@
 
 .figma-footer {
   width: 100%;
-  height: 200px; /* Reduced height for better proportions */
+  height: 356px; /* Updated to match new Figma design height */
   background: #2A2B2A;
   position: fixed; /* Fixed positioning to overlay at bottom */
   bottom: 0; /* Position at bottom of viewport */
@@ -40,50 +40,21 @@
 /* Bottom section container for logo and links alignment */
 .footer-bottom-section {
   position: absolute;
-  left: 20px;
-  right: 20px;
-  bottom: 20px; /* 20px above bottom edge */
+  left: 40px; /* Updated from Figma design */
+  right: 25px; /* Updated to match Figma spacing */
+  bottom: 50px; /* Updated: Footer ends at 6309, copyright at 6259, so 6309-6259=50px from bottom */
   display: flex;
   align-items: flex-end; /* Align bottom edges of both elements */
   justify-content: space-between;
-  height: 88.999px; /* Match logo height for proper alignment */
+  height: 89px; /* Match logo height for proper alignment */
 }
 
-/* Navigation Links - Adjusted for reduced height */
-.footer-nav-links {
-  position: absolute;
-  left: 280px; /* Position after email container (20px + 209px email width + 51px gap) */
-  top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 1002; /* Ensure links are above the footer */
-}
 
-.footer-nav-item {
-  color: white;
-  text-decoration: none;
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  transition: color 0.2s ease;
-  white-space: nowrap;
-  display: block;
-  text-align: left;
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-.footer-nav-item:hover {
-  color: #f0f0f0;
-}
-
-/* Email Contact - Adjusted for reduced height */
+/* Email Contact - Updated to match new Figma design */
 .footer-email-container {
   position: absolute;
-  left: 20px;
-  top: 20px;
+  left: 40px; /* Updated from Figma design */
+  top: 33px; /* 33px from top (5986 - 5953 = 33px) */
 }
 
 .email-pill {
@@ -111,8 +82,17 @@
   left: auto;
   top: auto;
   display: flex;
-  gap: 24px;
-  align-items: center;
+  flex-direction: row;
+  gap: 24px; /* Horizontal gap between copyright and legal links column */
+  align-items: flex-end; /* Align to bottom so Terms & Conditions aligns with copyright */
+}
+
+.footer-bottom-links .legal-links-column {
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* Vertical gap between Privacy Policy and Terms & Conditions */
+  align-items: flex-start; /* Align to left so left borders match */
+  justify-content: flex-end; /* Push items to bottom */
 }
 
 .copyright-text {
@@ -122,6 +102,7 @@
   line-height: 25px;
   color: white;
   text-align: left;
+  white-space: nowrap;
 }
 
 .footer-bottom-item {
@@ -146,12 +127,12 @@
   position: relative;
   left: auto;
   top: auto;
-  width: 312px;
-  height: 89px;
+  width: 312.21px; /* Updated from Figma design */
+  height: 89px; /* Updated from Figma design */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 25px; /* 25px margin from right edge of footer */
+  margin-right: 0; /* No margin needed as right spacing is handled by parent */
 }
 
 .footer-logo-svg {
@@ -201,16 +182,6 @@
     padding: 15px;
   }
   
-  .footer-nav-links {
-    position: relative;
-    left: auto;
-    top: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 15px;
-  }
   
   .footer-email-container {
     position: relative;
@@ -246,7 +217,6 @@
     margin-right: 0;
   }
   
-  .footer-nav-item,
   .copyright-text,
   .footer-bottom-item {
     font-size: 18px;
@@ -268,16 +238,6 @@
     padding: 15px;
   }
   
-  .footer-nav-links {
-    position: relative;
-    left: auto;
-    top: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
   
   .footer-email-container {
     position: relative;
@@ -312,7 +272,6 @@
     margin-right: 0;
   }
   
-  .footer-nav-item,
   .copyright-text,
   .footer-bottom-item {
     font-size: 16px;
@@ -340,15 +299,6 @@
     padding: 12px;
   }
   
-  .footer-nav-links {
-    position: relative;
-    left: auto;
-    top: auto;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
   
   .footer-email-container {
     position: relative;
@@ -383,7 +333,6 @@
     margin-right: 0;
   }
   
-  .footer-nav-item,
   .copyright-text,
   .footer-bottom-item {
     font-size: 14px;
@@ -411,10 +360,6 @@
     padding: 10px;
   }
   
-  .footer-nav-links {
-    gap: 8px;
-    margin-bottom: 10px;
-  }
   
   .footer-email-container {
     margin-bottom: 10px;
@@ -433,7 +378,6 @@
     height: 28px;
   }
   
-  .footer-nav-item,
   .copyright-text,
   .footer-bottom-item {
     font-size: 12px;
@@ -460,12 +404,6 @@
     padding: 10px;
   }
   
-  .footer-nav-links {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 10px;
-  }
   
   .footer-bottom-section {
     flex-direction: row;

@@ -269,16 +269,8 @@ const OpenLibrary: React.FC = () => {
                 <div className="lesson-info">
                   <div className="lesson-meta">
                     <div className="lesson-tags">
-                      <span className="tag language">{lesson.tags?.language || 'English'}</span>
-                      <span className="tag level">{getLanguageLevel(lesson)}</span>
                       {getGrammarTopics(lesson).map((topic, i) => (
                         <span key={i} className="tag grammar">{topic}</span>
-                      ))}
-                    </div>
-                    
-                    <div className="lesson-topics">
-                      {getTopics(lesson).map((topic, i) => (
-                        <span key={i} className="topic-tag">{topic}</span>
                       ))}
                     </div>
                     <span className="lesson-title">

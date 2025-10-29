@@ -90,7 +90,30 @@
 
 /* Exercise Sections */
 /* All Exercises Container */
+.all-exercises-container {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 20px;
+  margin-right: -4px;
+}
 
+.all-exercises-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.all-exercises-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.all-exercises-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.all-exercises-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
 
 .exercises-section {
   background: var(--color-white);
@@ -928,6 +951,11 @@
     max-height: 432px;
   }
   
+  .all-exercises-container {
+    max-height: 50vh;
+    padding: 20px;
+    margin-right: -2px;
+  }
   
   .exercises-section {
     padding: 16px;

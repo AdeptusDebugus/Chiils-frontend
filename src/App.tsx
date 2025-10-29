@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -20,6 +21,23 @@ function App() {
   const isAuthRoute = ['/', '/login', '/login/success'].includes(location.pathname);
   const shouldShowSidebar = !isAuthRoute;
   const shouldShowFooter = !isAuthRoute;
+
+  // Prevent body scrolling on auth routes (Login pages)
+  useEffect(() => {
+    if (isAuthRoute) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+
+    // Cleanup function to restore scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isAuthRoute]);
 
   return (
     <AuthProvider>

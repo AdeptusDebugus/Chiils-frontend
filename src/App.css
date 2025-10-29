@@ -32,7 +32,14 @@
 
 .main-content.full-width {
   width: 100%;
+  margin-left: 0;
+  padding: 0;
   flex: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .main-content::-webkit-scrollbar {

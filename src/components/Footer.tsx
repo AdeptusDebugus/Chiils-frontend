@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { footerService, FooterContent } from '../services/footerService'
 import './Footer.css'
 
-
 const Footer: React.FC = () => {
-  const { isAuthenticated } = useAuth()
   const [isVisible, setIsVisible] = useState(false)
+  const [footerContent, setFooterContent] = useState<FooterContent | null>(null)
+
+  // Fetch footer content from MCP service
+  useEffect(() => {
+    // Initialize and subscribe to content updates
+    footerService.initialize().then((content) => {
+      setFooterContent(content)
+    })
+
+    const unsubscribe = footerService.subscribe((content) => {
+      setFooterContent(content)
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,46 +59,55 @@ const Footer: React.FC = () => {
       window.removeEventListener('resize', handleScroll)
     }
   }, [])
+
+  // Don't render if content hasn't loaded yet
+  if (!footerContent) {
+    return null
+  }
+
   return (
     <div className={`figma-footer ${isVisible ? 'footer-visible' : 'footer-hidden'}`}>
       {/* Main Footer Background */}
       <div className="footer-background">
-        {/* Navigation Links - Exact Figma positioning */}
-        <div className="footer-nav-links">
-          <Link to="/" className="footer-nav-item">Home</Link>
-          <Link to="/open-library" className="footer-nav-item">Open library</Link>
-          <Link to="/lesson-order" className="footer-nav-item">Lesson builder</Link>
-          {isAuthenticated && (
-            <Link to="/profile" className="footer-nav-item">Profile</Link>
-          )}
-        </div>
-        
-        {/* Email Contact - Exact Figma positioning */}
+        {/* Email Contact - From MCP service */}
         <div className="footer-email-container">
           <div className="email-pill">
-            <span className="email-text">team@chiils.com</span>
+            <span className="email-text">
+              {footerContent.contact.emailLabel || footerContent.contact.email}
+            </span>
           </div>
         </div>
         
         {/* Bottom section with logo and links aligned at bottom */}
         <div className="footer-bottom-section">
-          {/* Bottom Links - Aligned at bottom */}
+          {/* Bottom Links - From MCP service */}
           <div className="footer-bottom-links">
             <span className="copyright-text">
-              Copyright © Koala Station DOO Belgrade, {new Date().getFullYear()}
+              Copyright © {footerContent.company.legalName}, {footerContent.company.year}
             </span>
-            <a href="#" className="footer-bottom-item">Public offer</a>
-            <a href="#" className="footer-bottom-item">Privacy policy</a>
+            <div className="legal-links-column">
+              {footerContent.legal.map((legalLink, index) => (
+                <a 
+                  key={index}
+                  href={legalLink.path} 
+                  className="footer-bottom-item"
+                >
+                  {legalLink.label}
+                </a>
+              ))}
+            </div>
           </div>
           
-          {/* Chiils Logo - Aligned at bottom */}
-          <div className="footer-logo-container">
-            <img 
-              src="/assets/chiils-footer-logo.svg"
-              alt="Chiils" 
-              className="footer-logo-svg"
-            />
-          </div>
+          {/* Chiils Logo - From MCP service */}
+          {footerContent.logo && (
+            <div className="footer-logo-container">
+              <img 
+                src={footerContent.logo.src}
+                alt={footerContent.logo.alt} 
+                className="footer-logo-svg"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

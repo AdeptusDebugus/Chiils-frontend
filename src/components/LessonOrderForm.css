@@ -164,7 +164,7 @@
   margin-left: calc(12.5% + 29px);
   margin-right: calc(12.5% + 29px);
   margin-top: 50px;
-  margin-bottom: 120px; /* Add extra space below the form before Footer */
+  margin-bottom: 386px; /* Footer height (356px) + 30px gap */
   position: relative;
 }
 
@@ -356,7 +356,7 @@
   }
   
   .lesson-form-container {
-    margin-bottom: 100px; /* Slightly less space on medium screens */
+    margin-bottom: 386px; /* Footer height (356px) + 30px gap */
   }
 }
 
@@ -372,7 +372,7 @@
   
   .lesson-form-container {
     margin-top: 40px;
-    margin-bottom: 80px; /* Reduce bottom margin on mobile */
+    margin-bottom: 400px; /* Extra space to prevent footer from blocking content */
   }
   
   .lesson-form {
