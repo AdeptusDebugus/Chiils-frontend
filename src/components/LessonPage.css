@@ -1,3 +1,5 @@
+/* wrapper removed; sidebar is direct grid child */
+
 /* Design System Variables */
 :root {
   --color-orange: #f26430;
@@ -23,14 +25,37 @@
   min-height: 100vh;
 }
 
+/* Page Title (from Figma) */
+.page-title {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 24px 20px 24px 20px;
+}
+
+.page-title-text {
+  font-family: var(--font-family-heros);
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text);
+  margin: 0;
+  /* Ensure long text wraps and never forces horizontal scroll */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+
 /* Main Layout */
 .lesson-layout {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   gap: 32px;
   max-width: 1400px;
   margin: 0 auto;
   padding: 32px 20px;
+  align-items: stretch;
 }
 
 .main-content {
@@ -77,13 +102,13 @@
 
 .video-embed iframe,
 .video-embed #yt-player {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100% !important;
-  height: auto !important;
-  aspect-ratio: 16 / 9;
-  max-height: 624px;
-  min-height: 384px;
+  height: 100% !important;
   border: none;
-  object-fit: contain;
+  display: block;
 }
 
 /* Removed tabs - exercises now display sequentially */
@@ -91,28 +116,7 @@
 /* Exercise Sections */
 /* All Exercises Container */
 .all-exercises-container {
-  max-height: 60vh;
-  overflow-y: auto;
   padding: 20px;
-  margin-right: -4px;
-}
-
-.all-exercises-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.all-exercises-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.all-exercises-container::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
-
-.all-exercises-container::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
 }
 
 .exercises-section {
@@ -222,15 +226,24 @@
 }
 
 /* Vocabulary Sidebar */
+/* Dedicated column wrapper for sidebar */
+.vocabulary-column {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+}
+
 .vocabulary-sidebar {
   background: var(--color-white);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-card);
   padding: 24px;
   height: fit-content;
-  max-height: 80vh;
-  overflow-y: auto;
-  margin-top: 160px;
+  /* Scrollable content inside sticky column */
+  position: relative;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  margin-top: 0;
 }
 
 .vocabulary-sidebar h2 {
@@ -438,6 +451,88 @@
 .exercise-questions input[type="checkbox"]:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(242, 100, 48, 0.2);
+}
+
+/* Ensure checkboxes inside .checkbox-list are perfectly square */
+.checkbox-list input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal stretching within .question .checkbox-list */
+.question .checkbox-list input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  max-width: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  flex: 0 0 20px;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  transform: none;
+  line-height: 0;
+  background-origin: border-box;
+  background-clip: padding-box;
+  background-size: 100% 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Eliminate pseudo-elements that could alter visual box size */
+.question .checkbox-list input[type="checkbox"]::before,
+.question .checkbox-list input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Robust custom checkbox to guarantee a 20x20 visual box */
+.question .checkbox-list .checkbox-label {
+  position: relative;
+}
+
+.question .checkbox-list .checkbox-label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  opacity: 0; /* hide native, keep accessible */
+  position: static;
+  flex: 0 0 20px;
+}
+
+.question .checkbox-list .checkbox-label .checkbox-text { min-width: 0; }
+
+.question .checkbox-list .checkbox-label .checkbox-box {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  max-width: 20px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
+  box-sizing: border-box;
+  border: 2px solid #d1d5db;
+  background: #ffffff;
+  display: inline-block;
+  flex: 0 0 20px;
+}
+
+.question .checkbox-list .checkbox-label input[type="checkbox"]:checked + .checkbox-box {
+  background-color: var(--color-orange);
+  border-color: var(--color-orange);
+}
+
+.question .checkbox-list .checkbox-label input[type="checkbox"]:focus-visible + .checkbox-box {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(242, 100, 48, 0.35);
 }
 
 /* First Exercise Section Styling */
@@ -723,83 +818,68 @@
 
 .true-false-buttons {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-top: 5px;
   margin-bottom: 10px;
   align-items: center;
 }
 
+/* Shared sizing and typography for action buttons */
+.exercise-check-button,
 .true-false-btn {
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: 2px solid;
-  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: var(--border-radius-small);
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   font-family: inherit;
 }
 
-.true-false-btn.true-btn {
-  background-color: white;
-  border-color: #27ae60;
-  color: #27ae60;
+.true-false-btn {
+  border: 1px solid #000000;
+  background: #ffffff;
+  color: #2a2b2a;
 }
 
-.true-false-btn.true-btn:hover {
-  background-color: #27ae60;
-  color: white;
+.true-false-btn:hover {
+  background: #f5f5f5;
+  transform: translateY(-1px);
 }
 
-.true-false-btn.true-btn.selected {
-  background-color: #27ae60;
-  color: white;
-  border-color: #27ae60;
+.true-false-btn:active {
+  transform: translateY(0);
 }
 
-.true-false-btn.true-btn.correct {
+.true-false-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(242, 100, 48, 0.35);
+}
+
+/* Selected state becomes black */
+.true-false-btn.selected {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+/* Preserve feedback semantics */
+.true-false-btn.correct {
   background-color: #28a745;
   border-color: #28a745;
-  color: white;
+  color: #ffffff;
 }
 
-.true-false-btn.true-btn.incorrect {
+.true-false-btn.incorrect {
   background-color: #f26430;
   border-color: #f26430;
-  color: white;
+  color: #ffffff;
 }
 
-.true-false-btn.false-btn {
-  background-color: white;
-  border-color: #f26430;
-  color: #f26430;
-}
-
-.true-false-btn.false-btn:hover {
-  background-color: #f26430;
-  color: white;
-}
-
-.true-false-btn.false-btn.selected {
-  background-color: #f26430;
-  color: white;
-  border-color: #f26430;
-}
-
-.true-false-btn.false-btn.correct {
-  background-color: #28a745;
-  border-color: #28a745;
-  color: white;
-}
-
-.true-false-btn.false-btn.incorrect {
-  background-color: #f26430;
-  border-color: #f26430;
-  color: white;
-}
+/* Variants inherit base styling */
 
 .word-list-container {
   font-family: var(--font-family-heros);
@@ -926,16 +1006,33 @@
     padding: 24px 16px;
   }
   
-  .vocabulary-sidebar {
-    order: -1;
-    max-height: 400px;
-    margin-top: 100px;
+  .main-content {
+    margin-left: 0;
   }
+  
+  .page-title {
+    margin-left: 0;
+    padding-left: 16px;
+    /* On mobile/tablet, let title span full content width */
+    max-width: calc(100% - 16px - 16px);
+  }
+  
+  .vocabulary-column { order: -1; top: 8px; }
+  .vocabulary-sidebar { position: relative; max-height: calc(100vh - 16px); overflow: auto; margin-top: 0; }
 }
 
 @media (max-width: 768px) {
   .lesson-layout {
     padding: 16px;
+  }
+  
+  .page-title {
+    padding: 16px 16px 6px 16px;
+  }
+  
+  .page-title-text {
+    font-size: 48px;
+    line-height: 1.25;
   }
   
   .lesson-title {
@@ -952,9 +1049,7 @@
   }
   
   .all-exercises-container {
-    max-height: 50vh;
     padding: 20px;
-    margin-right: -2px;
   }
   
   .exercises-section {
@@ -963,7 +1058,7 @@
   
   .vocabulary-sidebar {
     padding: 16px;
-    margin-top: 80px;
+    margin-top: 0;
   }
   
   .question {
@@ -991,6 +1086,10 @@
     margin: 0 0 12px 0;
   }
   
+  .page-title-text {
+    font-size: 40px;
+  }
+  
   .exercises-section h2,
   .vocabulary-sidebar h2 {
     font-size: 20px;
@@ -1007,10 +1106,93 @@
 /* Desktop enhancements */
 @media (min-width: 1400px) {
   .lesson-layout {
-    max-width: 1600px;
+    max-width: none;
+    width: 100%;
+    /* On very large screens, align container more to the left and reduce left padding */
+    margin-left: 0;
+    margin-right: auto;
+    padding-left: 0;
+    /* Keep some breathing room on the right side of the sidebar */
+    padding-right: 24px;
+    /* Widen main content and keep a fixed 50px gap to the sidebar */
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 50px;
+  }
+  
+  /* Align page title left edge with main-content (50px) */
+  .page-title {
+    margin-left: 50px;
+    margin-right: auto;
+    padding-left: 0;
+  }
+  
+  /* Align page title right edge to sidebar right edge, left aligned to 50px */
+  .page-title {
+    margin-left: 50px;
+    margin-right: auto;
+    padding-left: 0;
+    max-width: calc(100% - 24px - 50px);
+  }
+
+  /* Position main content 50px from the left edge of lesson-layout */
+  .lesson-layout > .main-content,
+  .main-content {
+    margin-left: 50px;
+    width: auto;
   }
   
   .vocabulary-sidebar {
     max-width: 420px;
   }
+  
+  /* Minimize outer padding for primary content so it can stretch fully */
+  .all-exercises-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
+
+/* Laptop and large desktop: nudge content left and tighten left padding */
+@media (min-width: 1025px) and (max-width: 1399px) {
+  .lesson-layout {
+    /* Align grid a bit more to the left to reduce left whitespace */
+    margin-left: 0;
+    margin-right: auto;
+    padding-left: 0;
+    /* Keep some breathing room on the right side of the sidebar */
+    padding-right: 24px;
+    /* Widen main content and keep a fixed 50px gap to the sidebar */
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 50px;
+  }
+  
+  /* Position main content 50px from the left edge of lesson-layout */
+  .lesson-layout > .main-content,
+  .main-content {
+    margin-left: 50px;
+    width: auto;
+  }
+  
+  /* Align page title right edge to sidebar right edge, left aligned to 50px */
+  .page-title {
+    margin-left: 50px;
+    margin-right: auto;
+    padding-left: 0;
+    max-width: calc(100% - 24px - 50px);
+  }
+  
+  /* Align page title left edge with main-content (50px) */
+  .page-title {
+    margin-left: 50px;
+    margin-right: auto;
+    padding-left: 0;
+  }
+
+  /* Reduce only left padding for exercises container to pull it left slightly */
+  .all-exercises-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Sidebar uses sticky positioning within its grid column on desktop and larger */

@@ -52,6 +52,8 @@ const LessonPage: React.FC = () => {
   const [showAnswers, setShowAnswers] = useState<boolean>(false)
   const [showQuizlet, setShowQuizlet] = useState<boolean>(false)
 
+  // Sticky handled by CSS only
+
   const ensureYouTubeAPI = (): Promise<void> => {
     return new Promise((resolve) => {
       const w = window as any
@@ -204,6 +206,8 @@ const LessonPage: React.FC = () => {
     // initialize incorrect words for tracking (not used in new design)
   }, [lesson])
 
+  // Sidebar follows natural document flow; no sticky/fixed JS constraints
+
   const normalize = (s: string | undefined | null): string => (s || '').trim().toLowerCase()
   
   const getLexicalAnswerType = (exerciseType: string): string | null => {
@@ -247,8 +251,14 @@ const LessonPage: React.FC = () => {
     );
   }
 
+  // Sequential counter for exercise section headings
+  let exerciseCounter = 0
+
   return (
     <div className="lesson-page">
+      <div className="page-title">
+        <h1 className="page-title-text">We Bought An Abandoned Chateau - 6 Years of Renovation In 25 Minutes</h1>
+      </div>
       <div className="lesson-layout">
         {/* Main content area */}
         <div className="main-content">
@@ -283,7 +293,7 @@ const LessonPage: React.FC = () => {
               })
               .map(({ block, originalIndex }) => (
             <div key={`lex-${originalIndex}`} className="exercises-section">
-              <h2>{block.type}</h2>
+              <h2>{`Exercise ${++exerciseCounter}`}</h2>
                 <div className="exercise-questions">
                   {block.type && block.type.trim().toLowerCase().startsWith('послушай и отметь слова из списка') ? (
                     <div>
@@ -308,6 +318,7 @@ const LessonPage: React.FC = () => {
                                 })
                               }}
                             />
+                            <span className="checkbox-box" aria-hidden="true"></span>
                             <span className="checkbox-text">{word}</span>
                           </label>
                         ))}
@@ -374,7 +385,11 @@ const LessonPage: React.FC = () => {
                                       }}
                                       className={`true-false-btn true-btn ${
                                         userSelection === 'true' ? 'selected' : ''
-                                      } ${isSubmitted ? (isCorrect && userSelection === 'true' ? 'correct' : 'incorrect') : ''}`}
+                                      } ${
+                                        isSubmitted && userSelection === 'true'
+                                          ? (correctAnswer === 'true' ? 'correct' : 'incorrect')
+                                          : ''
+                                      }`}
                                     >
                                       True
                                     </button>
@@ -402,7 +417,11 @@ const LessonPage: React.FC = () => {
                                       }}
                                       className={`true-false-btn false-btn ${
                                         userSelection === 'false' ? 'selected' : ''
-                                      } ${isSubmitted ? (isCorrect && userSelection === 'false' ? 'correct' : 'incorrect') : ''}`}
+                                      } ${
+                                        isSubmitted && userSelection === 'false'
+                                          ? (correctAnswer === 'false' ? 'correct' : 'incorrect')
+                                          : ''
+                                      }`}
                                     >
                                       False
                                     </button>
@@ -617,7 +636,7 @@ const LessonPage: React.FC = () => {
         {lesson.grammar_exercises && lesson.grammar_exercises.length > 0 && 
           lesson.grammar_exercises.map((block, blockIndex) => (
             <div key={`gram-${blockIndex}`} className="exercises-section">
-              <h2>{block.topic || block.type}</h2>
+              <h2>{`Exercise ${++exerciseCounter}`}</h2>
                 {block.input && (
                   <div className="exercise-tip">
                     <span className="tip-icon"></span>
@@ -928,7 +947,8 @@ const LessonPage: React.FC = () => {
         </div>
         </div>
 
-        {/* Vocabulary sidebar - always visible */}
+        {/* Vocabulary sidebar column */}
+          <div className="vocabulary-column">
           <div className="vocabulary-sidebar">
           <h2>Dictionary</h2>
             <div className="vocabulary-list">
@@ -957,6 +977,7 @@ const LessonPage: React.FC = () => {
                   );
                 })}
             </div>
+          </div>
           </div>
       </div>
     </div>
