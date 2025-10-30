@@ -1,8 +1,14 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL
-    ? `${import.meta.env.VITE_API_URL}/api/v1`
-    : '/api/v1'
+// Normalize base URL protocol to HTTPS when the site is served over HTTPS to avoid mixed content.
+const rawApiBase = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}` : ''
+const normalizedApiBase = (typeof window !== 'undefined' && window.location.protocol === 'https:')
+  ? rawApiBase.replace(/^http:\/\//, 'https://')
+  : rawApiBase
+
+const API_BASE_URL = normalizedApiBase
+  ? `${normalizedApiBase}/api/v1`
+  : '/api/v1'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
