@@ -35,6 +35,10 @@ const calculateInputWidth = (text: string): number => {
   return Math.max(60, Math.min(width, 250)) // Min 60px, max 250px
 }
 
+const sanitizeQuizletEntry = (text: string): string => {
+  return text.replace(/^\s*\d+[.)\]:\-]*\s*/, '').trim()
+}
+
 const LessonPage: React.FC = () => {
   const [lesson, setLesson] = useState<LessonData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -870,12 +874,21 @@ const LessonPage: React.FC = () => {
             
             {showQuizlet && (
               <div className="answers-content">
-              <div className="exercise-questions">
-                {lesson.quizlet.map((q, i) => (
-                  <div key={`quizlet-${i}`} className="question">
-                    <p>{i + 1}. {q}</p>
+                <p className="quizlet-instructions">
+                  Открой Quizlet и нажми на «+» в правом верхнем углу. Выбери «Flashcard set». Нажми «Import» и вставь список ниже в окно импорта. В настройках выбери разделитель между словом и переводом — «comma», а между карточками — «semicolon». Затем нажми «Import» в правом нижнем углу. Сет готов!
+                </p>
+                <div className="exercise-questions quizlet-questions">
+                  {lesson.quizlet.map((rawItem, i) => {
+                    const cleaned = sanitizeQuizletEntry(rawItem)
+                    if (!cleaned) {
+                      return null
+                    }
+                    return (
+                      <div key={`quizlet-${i}`} className="question">
+                        <p>{cleaned}</p>
                   </div>
-                ))}
+                    )
+                  })}
               </div>
             </div>
             )}

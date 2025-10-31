@@ -372,6 +372,33 @@
   margin-top: 16px;
 }
 
+.quizlet-instructions {
+  font-family: var(--font-family-heros);
+  font-size: 15.79px;
+  line-height: 19.738px;
+  color: var(--color-text);
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.quizlet-questions {
+  border: 1px solid #e9e9e7;
+  border-radius: var(--border-radius-medium);
+  background: var(--color-neutral-100);
+  padding: 16px;
+  gap: 12px;
+}
+
+.quizlet-questions .question {
+  padding: 0;
+  border: none;
+}
+
+.quizlet-questions .question + .question {
+  border-top: 1px solid #e0e0de;
+  padding-top: 12px;
+}
+
 .answers-subsection {
   margin-bottom: 24px;
 }
