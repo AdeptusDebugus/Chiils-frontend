@@ -82,17 +82,11 @@
   left: auto;
   top: auto;
   display: flex;
-  flex-direction: row;
-  gap: 24px; /* Horizontal gap between copyright and legal links column */
-  align-items: flex-end; /* Align to bottom so Terms & Conditions aligns with copyright */
-}
-
-.footer-bottom-links .legal-links-column {
-  display: flex;
   flex-direction: column;
-  gap: 40px; /* Vertical gap between Privacy Policy and Terms & Conditions */
-  align-items: flex-start; /* Align to left so left borders match */
-  justify-content: flex-end; /* Push items to bottom */
+  gap: 13px; /* Vertical spacing tuned to align with logo top */
+  align-items: flex-start; /* Align everything to the left edge */
+  justify-content: flex-start;
+  margin-bottom: 1px; /* Fine-tune vertical alignment with logo top */
 }
 
 .copyright-text {

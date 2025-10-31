@@ -82,20 +82,18 @@ const Footer: React.FC = () => {
         <div className="footer-bottom-section">
           {/* Bottom Links - From MCP service */}
           <div className="footer-bottom-links">
+            {footerContent.legal.map((legalLink, index) => (
+              <a
+                key={index}
+                href={legalLink.path}
+                className="footer-bottom-item"
+              >
+                {legalLink.label}
+              </a>
+            ))}
             <span className="copyright-text">
               Copyright © {footerContent.company.legalName}, {footerContent.company.year}
             </span>
-            <div className="legal-links-column">
-              {footerContent.legal.map((legalLink, index) => (
-                <a 
-                  key={index}
-                  href={legalLink.path} 
-                  className="footer-bottom-item"
-                >
-                  {legalLink.label}
-                </a>
-              ))}
-            </div>
           </div>
           
           {/* Chiils Logo - From MCP service */}
