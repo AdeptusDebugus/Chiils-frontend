@@ -2,28 +2,13 @@
 
 .figma-footer {
   width: 100%;
+  margin-left: 0;
   height: 356px; /* Updated to match new Figma design height */
   background: #2A2B2A;
-  position: fixed; /* Fixed positioning to overlay at bottom */
-  bottom: 0; /* Position at bottom of viewport */
-  left: 0; /* Start from left edge of viewport */
-  z-index: 1001; /* Above sidebar (1000) */
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  position: relative;
+  left: 0;
+  z-index: 1100;
   overflow: hidden; /* Prevent content overflow */
-}
-
-/* Hidden state - slide down and fade out */
-.footer-hidden {
-  transform: translateY(100%);
-  opacity: 0;
-  pointer-events: none; /* Prevent interaction when hidden */
-}
-
-/* Visible state - slide up and fade in */
-.footer-visible {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto; /* Enable interaction when visible */
 }
 
 .footer-background {
@@ -134,6 +119,12 @@
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+@media (max-width: 768px) {
+  .figma-footer {
+    width: 100%;
+  }
 }
 
 /* Responsive Design */

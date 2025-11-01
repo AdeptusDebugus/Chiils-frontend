@@ -33,6 +33,7 @@ export interface Tags {
 export interface PublicLesson {
   lesson_topic: string
   you_tube_url: string
+  you_tube_title?: string
   tag?: string
   language?: string
   tags?: Tags
@@ -167,6 +168,7 @@ export const lessonService = {
       const lesson: PublicLesson = {
         lesson_topic: raw.lesson_theme ?? raw.lesson_topic ?? '',
         you_tube_url: raw.you_tube_url ?? '',
+        you_tube_title: raw.you_tube_title ?? raw.video_title ?? raw.title ?? '',
         tag: raw.tag ?? raw.lesson_tag ?? '',
         language: raw.language ?? raw.lesson_language ?? '',
         tags: raw.tags ? {

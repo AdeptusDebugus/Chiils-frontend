@@ -2,24 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { lessonService, LessonData } from '../services/lessonService';
 import { useParams } from 'react-router-dom';
 import './LessonPage.css';
-
-
-const extractYouTubeId = (url: string): string | null => {
-  try {
-    const u = new URL(url)
-    if (u.hostname.includes('youtube.com')) {
-      const v = u.searchParams.get('v')
-      if (v) return v
-    }
-    if (u.hostname.includes('youtu.be')) {
-      const id = u.pathname.replace('/', '')
-      if (id) return id
-    }
-    return null
-  } catch {
-    return null
-  }
-}
+import { extractYouTubeId, fetchYouTubeTitle } from '../utils/youtube';
+import { capitalizeFirstLetter } from '../utils/text';
 
 const calculateInputWidth = (text: string): number => {
   // Create a temporary canvas to measure text width
@@ -55,6 +39,7 @@ const LessonPage: React.FC = () => {
   const [usedCorrectWords] = useState<string[]>([])
   const [showAnswers, setShowAnswers] = useState<boolean>(false)
   const [showQuizlet, setShowQuizlet] = useState<boolean>(false)
+  const titleCacheRef = useRef<Record<string, string>>({})
 
   // Sticky handled by CSS only
 
@@ -119,7 +104,8 @@ const LessonPage: React.FC = () => {
           setLesson(null);
         } else {
           const i = Math.max(0, Math.min(Number(idx ?? 0), lessons.length - 1))
-          setLesson(lessons[i]);
+          const selectedLesson = lessons[i]
+          setLesson(selectedLesson);
           setError(null);
         }
       } catch (err) {
@@ -210,6 +196,52 @@ const LessonPage: React.FC = () => {
     // initialize incorrect words for tracking (not used in new design)
   }, [lesson])
 
+  useEffect(() => {
+    if (!lesson || !lesson.you_tube_url) {
+      return
+    }
+
+    const existingTitle = lesson.you_tube_title?.trim()
+    if (existingTitle) {
+      return
+    }
+
+    const cached = titleCacheRef.current[lesson.you_tube_url]
+    if (cached) {
+      setLesson((prev) => (prev ? { ...prev, you_tube_title: cached } : prev))
+      return
+    }
+
+    let cancelled = false
+
+    const resolveTitle = async () => {
+      const fetchedTitle = await fetchYouTubeTitle(lesson.you_tube_url)
+      if (cancelled || !fetchedTitle) {
+        return
+      }
+      titleCacheRef.current[lesson.you_tube_url] = fetchedTitle
+      setLesson((prev) => (prev ? { ...prev, you_tube_title: fetchedTitle } : prev))
+    }
+
+    resolveTitle()
+
+    return () => {
+      cancelled = true
+    }
+  }, [lesson])
+
+  const displayTitleRaw = lesson?.you_tube_title?.trim() || lesson?.tags?.lesson_theme || lesson?.lesson_topic || 'Lesson'
+  const displayTitle = capitalizeFirstLetter(displayTitleRaw)
+
+  useEffect(() => {
+    if (!lesson) {
+      return
+    }
+    if (displayTitle) {
+      document.title = displayTitle
+    }
+  }, [lesson?.you_tube_title, lesson?.tags?.lesson_theme, lesson?.lesson_topic, displayTitle])
+
   // Sidebar follows natural document flow; no sticky/fixed JS constraints
 
   const normalize = (s: string | undefined | null): string => (s || '').trim().toLowerCase()
@@ -258,17 +290,19 @@ const LessonPage: React.FC = () => {
   // Sequential counter for exercise section headings
   let exerciseCounter = 0
 
+  const lessonTopicTitle = capitalizeFirstLetter(lesson.lesson_topic)
+
   return (
     <div className="lesson-page">
       <div className="page-title">
-        <h1 className="page-title-text">We Bought An Abandoned Chateau - 6 Years of Renovation In 25 Minutes</h1>
+        <h1 className="page-title-text">{displayTitle}</h1>
       </div>
       <div className="lesson-layout">
         {/* Main content area */}
         <div className="main-content">
           {lesson.lesson_topic && (
             <div className="lesson-header">
-              <h1 className="lesson-title">{lesson.lesson_topic}</h1>
+              <h1 className="lesson-title">{lessonTopicTitle}</h1>
             </div>
           )}
           

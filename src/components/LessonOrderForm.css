@@ -164,7 +164,7 @@
   margin-left: calc(12.5% + 29px);
   margin-right: calc(12.5% + 29px);
   margin-top: 50px;
-  margin-bottom: 386px; /* Footer height (356px) + 30px gap */
+  margin-bottom: 100px; /* Match global footer spacing */
   position: relative;
 }
 
@@ -356,7 +356,7 @@
   }
   
   .lesson-form-container {
-    margin-bottom: 386px; /* Footer height (356px) + 30px gap */
+    margin-bottom: 100px;
   }
 }
 
@@ -372,7 +372,7 @@
   
   .lesson-form-container {
     margin-top: 40px;
-    margin-bottom: 400px; /* Extra space to prevent footer from blocking content */
+    margin-bottom: 100px;
   }
   
   .lesson-form {

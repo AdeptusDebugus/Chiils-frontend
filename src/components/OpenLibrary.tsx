@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { lessonService, LessonData } from '../services/lessonService';
 import './OpenLibrary.css';
+import { extractYouTubeId, fetchYouTubeTitle } from '../utils/youtube';
+import { capitalizeFirstLetter } from '../utils/text';
 
 const OpenLibrary: React.FC = () => {
   const navigate = useNavigate();
@@ -9,6 +11,7 @@ const OpenLibrary: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const titleCacheRef = useRef<Record<string, string>>({});
   
   // Filter states
   const [selectedLanguage, setSelectedLanguage] = useState<string>('English');
@@ -50,6 +53,77 @@ const OpenLibrary: React.FC = () => {
 
     fetchLessons();
   }, []);
+
+  useEffect(() => {
+    const missingTitleLessons = lessons.filter(
+      (lesson) => !lesson.you_tube_title && Boolean(lesson.you_tube_url)
+    );
+
+    if (missingTitleLessons.length === 0) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const resolveTitles = async () => {
+      const resolvedMap = new Map<string, string>();
+      const urlsToFetch = new Set<string>();
+
+      missingTitleLessons.forEach((lesson) => {
+        const url = lesson.you_tube_url;
+        if (!url) return;
+
+        const cached = titleCacheRef.current[url];
+        if (cached) {
+          resolvedMap.set(url, cached);
+        } else {
+          urlsToFetch.add(url);
+        }
+      });
+
+      if (urlsToFetch.size > 0) {
+        const fetchResults = await Promise.allSettled(
+          Array.from(urlsToFetch).map(async (url) => {
+            const title = await fetchYouTubeTitle(url);
+            return { url, title };
+          })
+        );
+
+        fetchResults.forEach((result) => {
+          if (result.status === 'fulfilled') {
+            const { url, title } = result.value;
+            if (title) {
+              titleCacheRef.current[url] = title;
+              resolvedMap.set(url, title);
+            }
+          }
+        });
+      }
+
+      if (cancelled || resolvedMap.size === 0) {
+        return;
+      }
+
+      setLessons((prevLessons) =>
+        prevLessons.map((lesson) => {
+          if (lesson.you_tube_title || !lesson.you_tube_url) {
+            return lesson;
+          }
+
+          const resolvedTitle = resolvedMap.get(lesson.you_tube_url);
+          return resolvedTitle
+            ? { ...lesson, you_tube_title: resolvedTitle }
+            : lesson;
+        })
+      );
+    };
+
+    resolveTitles();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [lessons]);
 
   const filteredLessons = lessons.filter(lesson => {
     // Search filter
@@ -274,7 +348,12 @@ const OpenLibrary: React.FC = () => {
                       ))}
                     </div>
                     <span className="lesson-title">
-                    {lesson.tags?.lesson_theme || lesson.lesson_topic || 'Untitled Lesson'}
+                    {capitalizeFirstLetter(
+                      lesson.you_tube_title?.trim() ||
+                      lesson.tags?.lesson_theme ||
+                      lesson.lesson_topic ||
+                      'Untitled Lesson'
+                    )}
                     </span>
                   </div>
                 </div>
@@ -291,23 +370,6 @@ const OpenLibrary: React.FC = () => {
       </div>
     </div>
   );
-};
-
-const extractYouTubeId = (url: string): string | null => {
-  try {
-    const u = new URL(url);
-    if (u.hostname.includes('youtube.com')) {
-      const v = u.searchParams.get('v');
-      if (v) return v;
-    }
-    if (u.hostname.includes('youtu.be')) {
-      const id = u.pathname.replace('/', '');
-      if (id) return id;
-    }
-    return null;
-  } catch {
-    return null;
-  }
 };
 
 export default OpenLibrary;

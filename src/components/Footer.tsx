@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { footerService, FooterContent } from '../services/footerService'
 import './Footer.css'
 
 const Footer: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false)
   const [footerContent, setFooterContent] = useState<FooterContent | null>(null)
 
   // Fetch footer content from MCP service
@@ -22,51 +21,13 @@ const Footer: React.FC = () => {
     }
   }, [])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // Get the total scrollable height
-      const scrollHeight = document.documentElement.scrollHeight
-      // Get the current scroll position
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      // Get the viewport height
-      const clientHeight = window.innerHeight
-      
-      // If content is shorter than viewport, always show footer
-      if (scrollHeight <= clientHeight) {
-        setIsVisible(true)
-        return
-      }
-      
-      // Check if user has scrolled to the bottom (with a small threshold for better UX)
-      const threshold = 50 // pixels from bottom
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - threshold
-      
-      setIsVisible(isAtBottom)
-    }
-
-    // Add scroll event listener
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    
-    // Add resize event listener to handle viewport changes
-    window.addEventListener('resize', handleScroll, { passive: true })
-    
-    // Check initial state
-    handleScroll()
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-    }
-  }, [])
-
   // Don't render if content hasn't loaded yet
   if (!footerContent) {
     return null
   }
 
   return (
-    <div className={`figma-footer ${isVisible ? 'footer-visible' : 'footer-hidden'}`}>
+    <div className="figma-footer">
       {/* Main Footer Background */}
       <div className="footer-background">
         {/* Email Contact - From MCP service */}
