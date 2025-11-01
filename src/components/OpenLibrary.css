@@ -27,10 +27,9 @@
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  margin-left: var(--sidebar-width); /* Account for fixed sidebar width */
-  padding: 40px var(--sidebar-width) 120px 0; /* Equal spacing from sidebar and right edge */
+  padding: 40px 50px 120px 50px; /* Maintain 50px gutters from sidebar and right edge */
   min-height: 100vh; /* Full viewport height */
-  width: calc(100% - var(--sidebar-width)); /* Account for sidebar width */
+  width: 100%;
   max-width: 100%; /* Allow full width for shadow visibility */
   margin-right: auto; /* Center the page content */
   box-sizing: border-box;
@@ -78,7 +77,7 @@
   border-radius: 22px;
   box-shadow: 0px 3.158px 11.843px 3.158px rgba(0,0,0,0.25);
   border: 1px solid var(--rt-border);
-  padding: 36px 40px;
+  padding: 36px 24px;
   min-height: 1189px;
   box-sizing: border-box;
   overflow: visible; /* Allow shadow to be visible */
@@ -267,16 +266,15 @@
 
 .lessons-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 228px);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 24px;
   width: 100%;
   max-width: 100%;
-  justify-content: center;
 }
 
 .lesson-card {
-  width: 228px;
-  height: 230px;
+  width: 100%;
+  min-width: 0;
   background: #F5F5F5;
   border-radius: 22px;
   overflow: hidden;
@@ -307,7 +305,7 @@
 
 .lesson-thumbnail {
   flex-shrink: 0;
-  height: 126px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--rt-bg-subtle);
   border-radius: 22px 22px 0 0;
@@ -574,31 +572,35 @@
     width: 160px;
     min-width: 160px;
   }
+
+  .lessons-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .lesson-card {
+    width: 100%;
+  }
 }
 
 /* Tablet Landscape (1200px - 1400px) */
 @media (max-width: 1400px) and (min-width: 1200px) {
   .open-library-page {
-    max-width: 1000px;
+    padding: 40px 50px 120px 50px;
   }
   
   .main-content-container {
     margin: 0;
-    padding: 32px 30px;
+    padding: 32px 24px;
   }
   
   .lessons-grid {
-    grid-template-columns: repeat(auto-fit, 200px);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 20px;
   }
   
   .lesson-card {
-    width: 200px;
-    height: 230px;
-  }
-  
-  .lesson-thumbnail {
-    height: 110px;
+    width: 100%;
   }
   
   .lesson-info {
@@ -725,12 +727,7 @@
   }
   
   .lesson-card {
-    width: 180px;
-    height: 220px;
-  }
-  
-  .lesson-thumbnail {
-    height: 100px;
+    width: 100%;
   }
   
   .lesson-info {
@@ -761,11 +758,6 @@
   
   .lesson-card {
     width: 160px;
-    height: 190px;
-  }
-  
-  .lesson-thumbnail {
-    height: 90px;
   }
   
   .lesson-info {
@@ -896,12 +888,7 @@
   }
   
   .lesson-card {
-    width: 160px;
-    height: 200px;
-  }
-  
-  .lesson-thumbnail {
-    height: 90px;
+    width: 100%;
   }
   
   .lesson-info {
@@ -1012,12 +999,7 @@
   }
   
   .lesson-card {
-    width: 140px;
-    height: 180px;
-  }
-  
-  .lesson-thumbnail {
-    height: 80px;
+    width: 100%;
   }
   
   .lesson-info {
@@ -1078,12 +1060,7 @@
   }
   
   .lesson-card {
-    width: 130px;
-    height: 160px;
-  }
-  
-  .lesson-thumbnail {
-    height: 70px;
+    width: 100%;
   }
   
   .lesson-info {
@@ -1205,12 +1182,7 @@
   }
   
   .lesson-card {
-    width: 120px;
-    height: 140px;
-  }
-  
-  .lesson-thumbnail {
-    height: 60px;
+    width: 100%;
   }
   
   .lesson-info {
@@ -1237,12 +1209,7 @@
   }
   
   .lesson-card {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .lesson-thumbnail {
-    height: 50px;
+    width: 100%;
   }
   
   .lesson-info {
@@ -1260,15 +1227,15 @@
   }
 }
 
-/* Medium Large Desktop (1200px - 1439px) - 4 cards per row */
+/* Medium Large Desktop (1200px - 1439px) - 5 cards per row */
 @media (min-width: 1200px) and (max-width: 1439px) {
   .open-library-page {
     max-width: 1400px;
-    padding: 40px var(--sidebar-width) 120px 0; /* Equal spacing from sidebar and right edge */
+    padding: 40px 50px 120px 50px; /* Maintain 50px gutters from sidebar and right edge */
   }
   
   .main-content-container {
-    padding: 40px 50px;
+    padding: 40px 32px;
   }
   
   .filter-options-row {
@@ -1277,14 +1244,12 @@
   }
   
   .lessons-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 20px;
   }
   
   .lesson-card {
     width: 100%;
-    max-width: 250px;
-    height: 300px;
   }
   
   .lesson-card .lesson-title {
@@ -1302,12 +1267,12 @@
 @media (min-width: 1440px) {
   .open-library-page {
     max-width: 1600px;
-    padding: 40px var(--sidebar-width) 120px 0; /* Equal spacing from sidebar and right edge */
+    padding: 40px 50px 120px 50px; /* Maintain 50px gutters from sidebar and right edge */
   }
   
   .main-content-container {
     margin: 0;
-    padding: 40px 60px;
+    padding: 40px 36px;
   }
   
   .filter-options-row {
@@ -1316,18 +1281,12 @@
   }
   
   .lessons-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 24px;
   }
   
   .lesson-card {
     width: 100%;
-    max-width: 280px;
-    height: 320px;
-  }
-  
-  .lesson-thumbnail {
-    height: 160px;
   }
   
   .lesson-info {
@@ -1349,11 +1308,11 @@
 @media (min-width: 1920px) {
   .open-library-page {
     max-width: 1800px;
-    padding: 40px var(--sidebar-width) 120px 0; /* Equal spacing from sidebar and right edge */
+    padding: 40px 50px 120px 50px; /* Maintain 50px gutters from sidebar and right edge */
   }
   
   .main-content-container {
-    padding: 40px 80px;
+    padding: 40px 40px;
   }
   
   .filter-options-row {
@@ -1362,18 +1321,12 @@
   }
   
   .lessons-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 32px;
   }
   
   .lesson-card {
     width: 100%;
-    max-width: 320px;
-    height: 360px;
-  }
-  
-  .lesson-thumbnail {
-    height: 180px;
   }
   
   .lesson-info {
