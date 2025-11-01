@@ -55,7 +55,7 @@ function App() {
               <Route path="/login/success" element={<LoginSuccess />} />
               <Route path="/lesson-order" element={<LessonOrderForm />} />
               <Route path="/open-library" element={<OpenLibrary />} />
-              <Route path="/lesson/:idx" element={<LessonPage />} />
+              <Route path="/lesson/:id" element={<LessonPage />} />
               
               {/* Protected routes */}
               <Route 
