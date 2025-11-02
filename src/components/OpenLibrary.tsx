@@ -1,18 +1,21 @@
 // src/components/OpenLibrary.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLessonsLite, type LessonLite } from '../services/lessonService';
+import { getLessonsLite, getUserLessonsLite, type LessonLite } from '../services/lessonService';
+import { useAuth } from '../contexts/AuthContext';
 import './OpenLibrary.css';
 import { extractYouTubeId, fetchYouTubeTitle } from '../utils/youtube';
 import { capitalizeFirstLetter } from '../utils/text';
 
 const OpenLibrary: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [lessons, setLessons] = useState<LessonLite[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const titleCacheRef = useRef<Record<string, string>>({});
+    const [viewMode, setViewMode] = useState<'all' | 'my'>('all');
 
     // фильтры
     const [selectedLanguage, setSelectedLanguage] = useState<string>('English');
@@ -32,7 +35,12 @@ const OpenLibrary: React.FC = () => {
         (async () => {
             try {
                 setLoading(true);
-                const data = await getLessonsLite({ page: 0, size: 24, sort: '-createdAt' });
+                let data: LessonLite[];
+                if (viewMode === 'my' && user?.email) {
+                    data = await getUserLessonsLite({ page: 0, size: 24, sort: '-createdAt', email: user.email });
+                } else {
+                    data = await getLessonsLite({ page: 0, size: 24, sort: '-createdAt' });
+                }
                 setLessons(data ?? []);
                 setError(null);
             } catch (e) {
@@ -42,7 +50,7 @@ const OpenLibrary: React.FC = () => {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [viewMode, user?.email]);
 
     // подтягиваем заголовки youtube при необходимости
     useEffect(() => {
@@ -232,13 +240,23 @@ const OpenLibrary: React.FC = () => {
             <div className="open-library-content">
                 <div className="main-content-container">
                     <div className="search-section">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="search-input"
-                        />
+                        <div className="search-header">
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="search-input"
+                            />
+                            {user && (
+                                <button
+                                    className={`my-lessons-button ${viewMode === 'my' ? 'active' : ''}`}
+                                    onClick={() => setViewMode(viewMode === 'all' ? 'my' : 'all')}
+                                >
+                                    My Lessons
+                                </button>
+                            )}
+                        </div>
                         <p className="search-description">
                             Здесь собраны все готовые уроки сервиса — можно искать по языку, уровню, теме, ключевым словам и грамматике.
                         </p>

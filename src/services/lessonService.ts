@@ -241,6 +241,25 @@ export async function getLessonsLite(params: {
     return res.data || []
 }
 
+export async function getUserLessonsLite(params: {
+    page?: number
+    size?: number
+    sort?: string
+    email?: string
+} = {}): Promise<LessonLite[]> {
+    const {
+        page = 0,
+        size = 24,
+        sort = '-createdAt',
+        email,
+    } = params
+
+    const res = await api.get<LessonLite[]>('/lessons/public-lessons', {
+        params: { page, size, sort, email },
+    })
+    return res.data || []
+}
+
 export async function getLessonFull(id: string): Promise<LessonData> {
     const res = await api.get<RawLessonFull>(`/lessons/${id}`)
     return mapRawToLesson(res.data)

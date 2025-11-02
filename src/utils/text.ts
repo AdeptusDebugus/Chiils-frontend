@@ -18,3 +18,4 @@ export const capitalizeFirstLetter = (value?: string | null): string => {
   return `${upperFirst}${trimmed.slice(1)}`;
 };
 
+

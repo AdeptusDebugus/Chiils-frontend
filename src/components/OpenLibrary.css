@@ -88,8 +88,16 @@
   margin-top: 0;
 }
 
+.search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
 .search-input {
-  width: 100%;
+  flex: 1;
   max-width: 600px;
   padding: 0;
   font-size: 24px;
@@ -100,7 +108,7 @@
   border-bottom: 2px solid var(--rt-border);
   background: transparent;
   transition: border-color 0.2s ease;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .search-input:focus {
@@ -110,6 +118,37 @@
 
 .search-input::placeholder {
   color: var(--rt-text-muted);
+}
+
+.my-lessons-button {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 16px;
+  background: var(--rt-bg);
+  color: var(--rt-text);
+  border: 1px solid var(--rt-border);
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-align: center;
+  margin-bottom: 0;
+  height: 33px;
+  min-width: 250px;
+  max-width: 250px;
+  width: 250px;
+}
+
+.my-lessons-button:hover {
+  border-color: var(--rt-accent);
+  transform: translateY(-1px);
+}
+
+.my-lessons-button.active {
+  background: var(--rt-accent);
+  color: var(--rt-bg);
+  border-color: var(--rt-accent);
 }
 
 .search-description {
@@ -519,6 +558,12 @@
     width: 180px;
     min-width: 180px;
   }
+  
+  .my-lessons-button {
+    min-width: 180px;
+    max-width: 180px;
+    width: 180px;
+  }
 }
 
 /* Medium Desktop (1024px - 1199px) - More compact filters */
@@ -581,6 +626,12 @@
   .lesson-card {
     width: 100%;
   }
+  
+  .my-lessons-button {
+    min-width: 160px;
+    max-width: 160px;
+    width: 160px;
+  }
 }
 
 /* Tablet Landscape (1200px - 1400px) */
@@ -634,6 +685,18 @@
   .header-description {
     font-size: 19px;
     line-height: 23px;
+  }
+  
+  .search-header {
+    gap: 16px;
+  }
+  
+  .my-lessons-button {
+    font-size: 13px;
+    padding: 8px 16px;
+    min-width: 220px;
+    max-width: 220px;
+    width: 220px;
   }
   
   .filters-section {
@@ -788,6 +851,25 @@
     max-width: 100%;
   }
   
+  .search-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .my-lessons-button {
+    font-size: 12px;
+    padding: 8px 16px;
+    min-width: 200px;
+    max-width: 200px;
+    width: 200px;
+  }
+  
   .filters-section {
     padding: 16px 0;
     margin-bottom: 24px;
@@ -914,6 +996,10 @@
     padding: 12px 12px 80px 12px; /* Equal spacing for small screens */
   }
   
+  .open-library-header h1 {
+    font-size: 32px;
+  }
+  
   .open-library-content {
     padding: 0;
   }
@@ -922,6 +1008,25 @@
     margin: 0;
     padding: 20px 16px;
     border-radius: 16px;
+  }
+  
+  .search-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .my-lessons-button {
+    font-size: 12px;
+    padding: 8px 16px;
+    min-width: 180px;
+    max-width: 180px;
+    width: 180px;
   }
   
   .filters-section {
@@ -1045,8 +1150,24 @@
     padding: 12px 16px;
   }
   
+  .search-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
   .search-input {
     font-size: 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .my-lessons-button {
+    font-size: 11px;
+    padding: 6px 14px;
+    min-width: 180px;
+    max-width: 180px;
+    width: 180px;
   }
   
   .search-description {
@@ -1086,13 +1207,33 @@
     padding: 8px 8px 60px 8px; /* Equal spacing for extra small screens */
   }
   
+  .open-library-header h1 {
+    font-size: 26px;
+  }
+  
   .main-content-container {
     margin: 0;
     padding: 12px 16px;
   }
   
+  .search-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
   .search-input {
     font-size: 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .my-lessons-button {
+    font-size: 11px;
+    padding: 6px 12px;
+    min-width: 160px;
+    max-width: 160px;
+    width: 160px;
   }
   
   .search-description {
