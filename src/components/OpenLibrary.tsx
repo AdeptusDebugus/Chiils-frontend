@@ -151,28 +151,6 @@ const OpenLibrary: React.FC = () => {
         navigate(`/lesson/${lessonId}`);
     };
 
-    if (loading) {
-        return (
-            <div className="open-library-page">
-                <div className="loading-container">
-                    <div className="loading-spinner"></div>
-                    <p>Loading lessons...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="open-library-page">
-                <div className="error-container">
-                    <h2>Error</h2>
-                    <p>{error}</p>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="open-library-page">
             <div className="open-library-header">
@@ -239,6 +217,18 @@ const OpenLibrary: React.FC = () => {
 
             <div className="open-library-content">
                 <div className="main-content-container">
+                    {loading ? (
+                        <div className="loading-container">
+                            <div className="loading-spinner"></div>
+                            <p>Loading lessons...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="error-container">
+                            <h2>Error</h2>
+                            <p>{error}</p>
+                        </div>
+                    ) : (
+                        <>
                     <div className="search-section">
                         <div className="search-header">
                             <input
@@ -312,6 +302,8 @@ const OpenLibrary: React.FC = () => {
                         <div className="no-results">
                             <p>No lessons found matching "{searchTerm}"</p>
                         </div>
+                    )}
+                        </>
                     )}
                 </div>
             </div>
