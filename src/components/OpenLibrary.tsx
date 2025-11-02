@@ -95,50 +95,139 @@ const OpenLibrary: React.FC = () => {
         return () => { cancelled = true; };
     }, [lessons]);
 
-    const filteredLessons = lessons.filter(lesson => {
-        // поиск
-        if (searchTerm) {
-            const s = searchTerm.toLowerCase();
-            const match =
-                (lesson.lesson_topic || '').toLowerCase().includes(s) ||
-                (lesson.tags?.lesson_theme || '').toLowerCase().includes(s) ||
-                (lesson.tags?.language || '').toLowerCase().includes(s) ||
-                (lesson.tags?.grammar_topics || []).some(t => t.toLowerCase().includes(s)) ||
-                (lesson.tags?.lexical_fields || []).some(t => t.toLowerCase().includes(s)) ||
-                (lesson.tags?.style || '').toLowerCase().includes(s);
-            if (!match) return false;
-        }
+    const filteredLessons = lessons
+        .map(lesson => {
+            // поиск
+            let score = 0;
+            let matchesSearch = true;
 
-        // язык
-        if (
-            selectedLanguage &&
-            (lesson.tags?.language || '').toLowerCase() !== selectedLanguage.toLowerCase()
-        ) return false;
+            if (searchTerm) {
+                // Normalize search term: lowercase, trim, split into words
+                const normalizedSearch = searchTerm.toLowerCase().trim();
+                const searchWords = normalizedSearch.split(/\s+/).filter(w => w.length > 0);
 
-        // уровень
-        if (selectedLevels.length > 0) {
-            const lvl = getLanguageLevel(lesson);
-            if (!selectedLevels.includes(lvl)) return false;
-        }
+                if (searchWords.length > 0) {
+                    matchesSearch = false;
+                    let wordMatches = 0;
 
-        // темы
-        if (selectedTopics.length > 0) {
-            const topics = getTopics(lesson);
-            const has = selectedTopics.some(t =>
-                topics.some(lt => lt.toLowerCase().includes(t.toLowerCase()))
-            );
-            if (!has) return false;
-        }
+                    // For each search word, check all fields
+                    searchWords.forEach(searchWord => {
+                        const fieldMatches = {
+                            videoTitle: false,
+                            lessonTopic: false,
+                            grammarTopics: false,
+                            lexicalTopics: false,
+                            language: false,
+                            level: false
+                        };
 
-        // стиль
-        if (selectedStyle && selectedStyle !== 'All') {
-            const style = (getStyle(lesson) || '').toLowerCase(); // бэк отдаёт "neutral"
-            const want = selectedStyle.toLowerCase();
-            if (want !== 'neutral' && !style.includes(want)) return false;
-        }
+                        // Check video title (you_tube_title)
+                        const videoTitle = (lesson.you_tube_title || '').toLowerCase();
+                        if (videoTitle.includes(searchWord)) {
+                            fieldMatches.videoTitle = true;
+                            score += 10; // High score for title matches
+                        }
 
-        return true;
-    });
+                        // Check lesson topic
+                        const lessonTopic = (lesson.lesson_topic || '').toLowerCase();
+                        if (lessonTopic.includes(searchWord)) {
+                            fieldMatches.lessonTopic = true;
+                            score += 10;
+                        }
+
+                        // Check lesson theme
+                        const lessonTheme = (lesson.tags?.lesson_theme || '').toLowerCase();
+                        if (lessonTheme.includes(searchWord)) {
+                            score += 8;
+                        }
+
+                        // Check grammar topics
+                        const grammarMatches = (lesson.tags?.grammar_topics || []).filter(
+                            t => t.toLowerCase().includes(searchWord)
+                        );
+                        if (grammarMatches.length > 0) {
+                            fieldMatches.grammarTopics = true;
+                            score += 8; // Medium-high score for grammar tags
+                        }
+
+                        // Check lexical topics
+                        const lexicalMatches = (lesson.tags?.lexical_fields || []).filter(
+                            t => t.toLowerCase().includes(searchWord)
+                        );
+                        if (lexicalMatches.length > 0) {
+                            fieldMatches.lexicalTopics = true;
+                            score += 8; // Medium-high score for lexical tags
+                        }
+
+                        // Check language
+                        const language = (lesson.tags?.language || '').toLowerCase();
+                        if (language.includes(searchWord)) {
+                            fieldMatches.language = true;
+                            score += 5;
+                        }
+
+                        // Check level
+                        const level = getLanguageLevel(lesson).toLowerCase();
+                        if (level.includes(searchWord)) {
+                            fieldMatches.level = true;
+                            score += 5;
+                        }
+
+                        // Check style
+                        const style = (getStyle(lesson) || '').toLowerCase();
+                        if (style.includes(searchWord)) {
+                            score += 3;
+                        }
+
+                        // If any field matched this word, count it
+                        const anyMatch = Object.values(fieldMatches).some(Boolean);
+                        if (anyMatch) {
+                            wordMatches++;
+                        }
+                    });
+
+                    // All search words must match for the lesson to be included
+                    matchesSearch = wordMatches === searchWords.length;
+                }
+            }
+
+            return { lesson, score, matchesSearch };
+        })
+        .filter(({ lesson: filteredLesson, matchesSearch }) => {
+            if (!matchesSearch) return false;
+
+            // язык
+            if (
+                selectedLanguage &&
+                (filteredLesson.tags?.language || '').toLowerCase() !== selectedLanguage.toLowerCase()
+            ) return false;
+
+            // уровень
+            if (selectedLevels.length > 0) {
+                const lvl = getLanguageLevel(filteredLesson);
+                if (!selectedLevels.includes(lvl)) return false;
+            }
+
+            // темы
+            if (selectedTopics.length > 0) {
+                const topics = getTopics(filteredLesson);
+                const has = selectedTopics.some(t =>
+                    topics.some(lt => lt.toLowerCase().includes(t.toLowerCase()))
+                );
+                if (!has) return false;
+            }
+
+            // стиль
+            if (selectedStyle && selectedStyle !== 'All') {
+                const style = (getStyle(filteredLesson) || '').toLowerCase(); // бэк отдаёт "neutral"
+                const want = selectedStyle.toLowerCase();
+                if (want !== 'neutral' && !style.includes(want)) return false;
+            }
+
+            return true;
+        })
+        .sort((a, b) => b.score - a.score) // Sort by relevance score
+        .map(({ lesson }) => lesson);
 
     const handleLevelToggle = (level: string) => {
         setSelectedLevels(prev => prev.includes(level) ? prev.filter(l => l !== level) : [...prev, level]);
