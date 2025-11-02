@@ -1,198 +1,247 @@
+// src/services/lessonService.ts
 import api from './api'
 
-export interface GlossaryItem {
-  expression: string
-  quote: string
-  translation: string
-  explanation: string
-  another_example: string
-  time_code: number | null
-}
-
-export interface ExerciseBlock {
-  type: string
-  topic?: string
-  input?: string | null
-  examples: string[]
-}
-
-export interface AnswersBlock {
-  type: string
-  answer: string[]
-}
-
+// ===== Типы карточки (списка) =====
 export interface Tags {
-  lesson_theme: string
-  language: string
-  language_level: string
-  lexical_fields: string[]
-  style: string
-  grammar_topics: string[]
+    lesson_theme: string
+    language: string
+    language_level: string
+    lexical_fields: string[]
+    style: string
+    grammar_topics: string[]
 }
 
-export interface PublicLesson {
-  lesson_topic: string
-  you_tube_url: string
-  you_tube_title?: string
-  tag?: string
-  language?: string
-  tags?: Tags
-  glossary: GlossaryItem[]
-  lexical_exercises: ExerciseBlock[]
-  grammar_exercises: ExerciseBlock[]
-  quizlet: string[]
-  lexical_answers?: AnswersBlock[]
-  grammar_answers?: AnswersBlock[]
+export interface LessonLite {
+    id: string
+    youtube_url: string | null
+    lesson_topic: string | null
+    created_at: string
+    tags?: Tags
+    you_tube_title?: string // будем кэшировать заголовок YouTube на фронте
 }
 
-export const lessonService = {
-      async getPublicLessons(params: {
-        page?: number;     // UI: 1-based
-        size?: number;     // 10/20/50
-        sort?: string;     // '-createdAt' | 'language' | '-language' | 'lesson_topic' | '-lesson_topic'
-        language?: string; // 'ALL' | 'english' | 'russian' | ...
-      } = {}): Promise<PublicLesson[]> {
-    const {
-      page = 1,
-          size = 10,
-          sort = '-createdAt',
-          language,
-        } = params;
+// ===== Сырые типы полного урока (как приходит с бэка) =====
+interface RawLexicalTrueFalseItem { sentence: string; answer: string }
+interface RawLexicalListenItem { sentence: string; answer: string | null }
+interface RawLexicalFillItem { sentence: string; answer: string } // одиночный ответ
 
-        // UI 1-based -> API 0-based
-           const query: Record<string, string | number> = {
-          page: Math.max(0, page - 1),
-          size,
-          sort,
-        };
-    // 'ALL' или undefined не шлём — backend трактует как "без фильтра"
-        if (language && language !== 'ALL') {
-          query.language = language;
+interface RawLessonFull {
+    id: string
+    youtube_url: string | null
+    lesson_topic: string | null
+    tags: Tags
+    grammar_topics?: string[] | null
+    created_at: string
+    data: {
+        language?: string
+        language_level?: string
+        transcript_text?: string
+        language_filter?: {
+            target_language: string
+            ignore_other_languages: boolean
         }
+        tags?: Tags
+        grammar_topics?: string[] | null
+        glossary?: Array<{
+            term: string
+            quote: string
+            translation_ru: string
+            explanation_ru: string
+            another_example: string
+            time_code: number | null
+        }>
+        exercises?: {
+            lexical?: {
+                true_or_false?: {
+                    phrases_paragraph?: string | null
+                    note?: string | null
+                    items: RawLexicalTrueFalseItem[]
+                }
+                listen_and_mark?: {
+                    phrases_paragraph?: string | null
+                    note?: string | null
+                    items: RawLexicalListenItem[]
+                }
+                fill_in_the_blank?: {
+                    phrases_paragraph?: string | null
+                    note?: string | null
+                    items: RawLexicalFillItem[]
+                }
+            }
+            grammar?: Array<{
+                topic: string
+                instructions?: string
+                items: Array<{ sentence: string; answer: string }>
+            }>
+        }
+        quizlet?: string[]
+        you_tube_url?: string
+    }
+}
 
-    const response = await api.get<any[]>('/lessons/public-lessons', { params: query })
-    const rawLessons = response.data || []
+// ===== Ожидаемая «фронтовая» схема для LessonPage =====
+export interface LessonData {
+    id: string
+    you_tube_title?: string
+    youtube_url: string | null
+    lesson_topic: string | null
+    tags: Tags
+    created_at: string
 
-    const toSixUnderscores = (s: string): string => s.replace(/_{2,}/g, '______')
+    // для совместимости со старым кодом
+    you_tube_url?: string | null
 
-    const lessons: PublicLesson[] = rawLessons.map((raw) => {
-      // glossary transform
-      const glossary: GlossaryItem[] = (raw.glossary || []).map((g: any) => ({
-        expression: g.term ?? '',
-        quote: g.quote ?? '',
-        translation: g.translation_ru ?? '',
-        explanation: g.explanation_ru ?? '',
-        another_example: g.another_example ?? '',
-        time_code: typeof g.time_code === 'number' ? g.time_code : null,
-      }))
+    glossary: Array<{
+        expression: string
+        translation: string
+        quote: string
+        explanation: string
+        another_example: string
+        time_code: number | null
+    }>
 
-      // lexical exercises transform
-      const lexical_exercises: ExerciseBlock[] = []
-      const lexical_answers: AnswersBlock[] = []
-      const lex = raw.exercises?.lexical || {}
+    lexical_exercises: Array<{
+        type: string
+        examples: string[]
+        input?: string | null
+    }>
+    lexical_answers?: Array<{
+        type: 'truOrFalseAnswers' | 'fillTheBlankAnswers'
+        answer: string[]
+    }>
 
-      if (lex.true_or_false?.items?.length) {
+    grammar_exercises: Array<{
+        type: string // topic
+        input?: string
+        examples: string[]
+    }>
+    grammar_answers?: Array<{
+        type: string // grammar1Answers, grammar2Answers, ...
+        answer: string[]
+    }>
+
+    quizlet: string[]
+}
+
+// ===== Маппер полного урока Raw -> LessonData =====
+function mapRawToLesson(raw: RawLessonFull): LessonData {
+    const ex = raw.data.exercises ?? {}
+    const lex = ex.lexical ?? {}
+
+    const lexical_exercises: LessonData['lexical_exercises'] = []
+    const lexical_answers: NonNullable<LessonData['lexical_answers']> = []
+
+    // True/False
+    if (lex.true_or_false?.items?.length) {
         lexical_exercises.push({
-          type: 'True / False',
-          input: lex.true_or_false.note ?? null,
-          examples: lex.true_or_false.items.map((it: any) => it.sentence ?? '').filter(Boolean),
+            type: 'True or False',
+            examples: lex.true_or_false.items.map(i => i.sentence),
+            input: lex.true_or_false.note ?? null,
         })
         lexical_answers.push({
-          type: 'truOrFalseAnswers',
-          answer: lex.true_or_false.items.map((it: any) => String(it.answer ?? '')).filter(Boolean),
+            type: 'truOrFalseAnswers',
+            answer: lex.true_or_false.items.map(i => i.answer.trim()),
         })
-      }
+    }
 
-      if (lex.listen_and_mark?.items?.length) {
+    // Listen and mark
+    if (lex.listen_and_mark?.items?.length) {
         lexical_exercises.push({
-          type: 'Послушай и отметь слова из списка',
-          input: lex.listen_and_mark.note ?? null,
-          examples: lex.listen_and_mark.items.map((it: any) => it.sentence ?? '').filter(Boolean),
+            type: 'Послушай и отметь слова из списка',
+            examples: lex.listen_and_mark.items.map(i => i.sentence),
+            input: lex.listen_and_mark.note ?? null,
         })
-      }
+    }
 
-      if (lex.fill_in_the_blank?.items?.length) {
+    // Fill-in-the-blank (одиночные ответы)
+    if (lex.fill_in_the_blank?.items?.length) {
         lexical_exercises.push({
-          type: 'Вставь пропущенное слово',
-          input: lex.fill_in_the_blank.phrases_pool ?? null,
-          examples: lex.fill_in_the_blank.items
-            .map((it: any) => (it.sentence ? toSixUnderscores(String(it.sentence)) : ''))
-            .filter(Boolean),
+            type: 'Вставь пропущенное (fill-in-the-blank)',
+            examples: lex.fill_in_the_blank.items.map(i =>
+                i.sentence.includes('___') || i.sentence.includes('______')
+                    ? i.sentence.replace(/___+/g, '______')
+                    : i.sentence.replace(/(___+)/g, '______')
+            ),
+            input: lex.fill_in_the_blank.note ?? null,
         })
         lexical_answers.push({
-          type: 'fillTheBlankAnswers',
-          answer: lex.fill_in_the_blank.items.map((it: any) => String(it.answer ?? '')).filter(Boolean),
+            type: 'fillTheBlankAnswers',
+            answer: lex.fill_in_the_blank.items.map(i => i.answer.trim()),
         })
-      }
+    }
 
-      // grammar exercises transform (dynamic)
-      const grammar_exercises: ExerciseBlock[] = []
-      const grammar_answers: AnswersBlock[] = []
-      const gr = raw.exercises?.grammar || {}
+    // Грамматика
+    const grammar_exercises: LessonData['grammar_exercises'] = []
+    const grammar_answers: NonNullable<LessonData['grammar_answers']> = []
 
-      const formatTitle = (key: string): string => {
-        const map: Record<string, string> = {
-          articles: 'Артикли',
-          past_perfect: 'Past Perfect',
-          present_continuous: 'Present Continuous',
-        }
-        if (map[key]) return map[key]
-        // Fallback: prettify key
-        const pretty = String(key)
-          .replace(/_/g, ' ')
-          .replace(/\b\w/g, (m) => m.toUpperCase())
-        return pretty
-      }
+    if (ex.grammar?.length) {
+        ex.grammar.forEach((g, idx) => {
+            grammar_exercises.push({
+                type: g.topic,
+                input: g.instructions,
+                examples: g.items.map(i =>
+                    i.sentence.includes('___') || i.sentence.includes('______')
+                        ? i.sentence.replace(/___+/g, '______')
+                        : i.sentence.replace(/\(___*\)|_+/g, '______')
+                ),
+            })
+            grammar_answers.push({
+                type: `grammar${idx + 1}Answers`,
+                answer: g.items.map(i => i.answer.trim()),
+            })
+        })
+    }
 
-      const grammarKeys = Object.keys(gr)
-      grammarKeys.forEach((key, idx) => {
-        const block = gr[key]
-        if (block?.items?.length) {
-          grammar_exercises.push({
-            type: formatTitle(key),
-            topic: block.topic ?? null,
-            input: block.instructions ?? null,
-            examples: block.items
-              .map((it: any) => (it.sentence ? toSixUnderscores(String(it.sentence)) : ''))
-              .filter(Boolean),
-          })
-          grammar_answers.push({
-            type: `grammar${idx + 1}Answers`,
-            answer: block.items.map((it: any) => String(it.answer ?? '')).filter(Boolean),
-          })
-        }
-      })
+    // Глоссарий
+    const glossary = (raw.data.glossary ?? []).map(item => ({
+        expression: item.term,
+        translation: item.translation_ru,
+        quote: item.quote,
+        explanation: item.explanation_ru,
+        another_example: item.another_example,
+        time_code: item.time_code ?? null,
+    }))
 
-      const quizlet: string[] = Array.isArray(raw.quizlet) ? raw.quizlet.slice() : []
+    const quizlet = raw.data.quizlet ?? []
 
-      const lesson: PublicLesson = {
-        lesson_topic: raw.lesson_theme ?? raw.lesson_topic ?? '',
-        you_tube_url: raw.you_tube_url ?? '',
-        you_tube_title: raw.you_tube_title ?? raw.video_title ?? raw.title ?? '',
-        tag: raw.tag ?? raw.lesson_tag ?? '',
-        language: raw.language ?? raw.lesson_language ?? '',
-        tags: raw.tags ? {
-          lesson_theme: raw.tags.lesson_theme ?? '',
-          language: raw.tags.language ?? '',
-          language_level: raw.tags.language_level ?? '',
-          lexical_fields: raw.tags.lexical_fields ?? [],
-          style: raw.tags.style ?? '',
-          grammar_topics: raw.tags.grammar_topics ?? []
-        } : undefined,
+    return {
+        id: raw.id,
+        youtube_url: raw.youtube_url,
+        you_tube_url: raw.youtube_url, // fallback для старого кода
+        lesson_topic: raw.lesson_topic,
+        tags: raw.tags,
+        created_at: raw.created_at,
+
         glossary,
         lexical_exercises,
-        grammar_exercises,
-        quizlet,
-        lexical_answers,
-        grammar_answers,
-      }
-      return lesson
-    })
+        lexical_answers: lexical_answers.length ? lexical_answers : undefined,
 
-    return lessons
-  },
+        grammar_exercises,
+        grammar_answers: grammar_answers.length ? grammar_answers : undefined,
+
+        quizlet,
+    }
 }
 
-export type { PublicLesson as LessonData }
+// ===== API =====
+export async function getLessonsLite(params: {
+    page?: number
+    size?: number
+    sort?: string
+} = {}): Promise<LessonLite[]> {
+    const {
+        page = 0, // бэкенд ждёт 0-based
+        size = 24,
+        sort = '-createdAt',
+    } = params
 
+    const res = await api.get<LessonLite[]>('/lessons/public-lessons', {
+        params: { page, size, sort },
+    })
+    return res.data || []
+}
 
+export async function getLessonFull(id: string): Promise<LessonData> {
+    const res = await api.get<RawLessonFull>(`/lessons/${id}`)
+    return mapRawToLesson(res.data)
+}
