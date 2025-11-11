@@ -1,0 +1,132 @@
+.policy-page {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  background-color: #ffffff;
+  color: #2a2b2a;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 72px 24px 120px;
+  line-height: 1.7;
+}
+
+.policy-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.policy-title {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.policy-updated {
+  font-size: 16px;
+  color: #5a5a59;
+}
+
+.policy-updated strong {
+  color: #2a2b2a;
+  font-weight: 700;
+}
+
+.policy-intro {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.policy-list {
+  margin: 0 0 20px 20px;
+  padding: 0;
+  list-style: disc;
+}
+
+.policy-section {
+  margin-top: 40px;
+}
+
+.policy-section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.policy-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+.policy-section p {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.policy-section ul,
+.policy-section ol {
+  margin: 16px 0 16px 20px;
+  padding: 0;
+}
+
+.policy-section li {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.policy-section address {
+  font-style: normal;
+  line-height: 1.8;
+  margin-top: 16px;
+}
+
+.policy-page a {
+  color: #f26430;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.policy-page a:hover,
+.policy-page a:focus {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .policy-page {
+    padding: 48px 20px 80px;
+  }
+
+  .policy-title {
+    font-size: 28px;
+  }
+
+  .policy-section h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .policy-page {
+    padding: 36px 16px 64px;
+  }
+
+  .policy-header {
+    text-align: left;
+  }
+
+  .policy-title {
+    font-size: 24px;
+    letter-spacing: 0.02em;
+  }
+
+  .policy-updated {
+    font-size: 14px;
+  }
+
+  .policy-section h2 {
+    font-size: 18px;
+  }
+}
+
