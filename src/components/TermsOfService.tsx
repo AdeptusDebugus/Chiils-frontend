@@ -182,7 +182,7 @@ const TermsOfService: React.FC = () => {
         <h2>12. Privacy Policy</h2>
         <p>
           We care about your data privacy and security. Please review our Privacy Policy at{' '}
-          <a href="https://chiils.com/privacy-policy" target="_blank" rel="noopener noreferrer">
+          <a href="https://chiils.com/privacypolicy" target="_blank" rel="noopener noreferrer">
             https://chiils.com/privacy-policy
           </a>
           . By using the Services, you consent to the processing of your data in accordance with that Policy. Our
@@ -266,7 +266,7 @@ const TermsOfService: React.FC = () => {
         <h2>21. Refunds</h2>
         <p>
           Refunds are handled according to our separate Refund Policy (
-          <a href="https://chiils.com/refund-policy" target="_blank" rel="noopener noreferrer">
+          <a href="https://chiils.com/refundpolicy" target="_blank" rel="noopener noreferrer">
             https://chiils.com/refund-policy
           </a>
           ). Once digital content has been delivered or accessed, you waive your right to withdraw under EU Directive
