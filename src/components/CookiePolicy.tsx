@@ -61,9 +61,6 @@ const CookiePolicy = () => {
 
   return (
     <div className="policy-page">
-      <header className="policy-header">
-        <h1 className="policy-title">COOKIE POLICY</h1>
-      </header>
       {isLoading && (
         <p className="policy-intro" aria-live="polite">
           Loading Cookie Policy…
