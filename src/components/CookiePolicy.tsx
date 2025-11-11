@@ -61,11 +61,6 @@ const CookiePolicy = () => {
   return (
     <section className="cookie-policy-page">
       <div className="cookie-policy-content">
-        <h1>Cookie Policy</h1>
-        <p>
-          This policy is provided by Termly and may take a moment to load. If it does not appear,
-          please refresh the page.
-        </p>
         {isLoading && (
           <p className="cookie-policy-loading" aria-live="polite">
             Loading Cookie Policy…
