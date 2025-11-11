@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import './CookiePolicy.css';
 
 // Termly cookie policy constants – separates markup container and script data.
 const TERMLY_POLICY_CONTAINER_NAME = 'termly-embed';
@@ -59,16 +60,17 @@ const CookiePolicy = () => {
   }, []);
 
   return (
-    <section className="cookie-policy-page">
-      <div className="cookie-policy-content">
-        {isLoading && (
-          <p className="cookie-policy-loading" aria-live="polite">
-            Loading Cookie Policy…
-          </p>
-        )}
-        <div ref={containerRef} />
-      </div>
-    </section>
+    <div className="policy-page">
+      <header className="policy-header">
+        <h1 className="policy-title">COOKIE POLICY</h1>
+      </header>
+      {isLoading && (
+        <p className="policy-intro" aria-live="polite">
+          Loading Cookie Policy…
+        </p>
+      )}
+      <div ref={containerRef} className="policy-body" />
+    </div>
   );
 };
 
