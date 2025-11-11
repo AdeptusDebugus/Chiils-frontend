@@ -183,7 +183,7 @@ const TermsOfService: React.FC = () => {
         <p>
           We care about your data privacy and security. Please review our Privacy Policy at{' '}
           <a href="https://chiils.com/privacypolicy" target="_blank" rel="noopener noreferrer">
-            https://chiils.com/privacy-policy
+            https://chiils.com/privacypolicy
           </a>
           . By using the Services, you consent to the processing of your data in accordance with that Policy. Our
           servers are located in the Netherlands, and some processing may occur in Serbia.
