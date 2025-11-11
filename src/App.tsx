@@ -12,19 +12,36 @@ import LessonPage from './components/LessonPage';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import GlobalLessonMonitor from './components/GlobalLessonMonitor';
+import TermsOfService from './components/TermsOfService.tsx';
 import './App.css';
 
 function App() {
   const location = useLocation();
-  
-  // Hide sidebar and footer on login pages
-  const isAuthRoute = ['/', '/login', '/login/success'].includes(location.pathname);
-  const shouldShowSidebar = !isAuthRoute;
-  const shouldShowFooter = !isAuthRoute;
+
+  const authRoutes = ['/', '/login', '/login/success'];
+  const standaloneRoutes = ['/termsofservice'];
+
+  const isAuthRoute = authRoutes.includes(location.pathname);
+  const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
+
+  const shouldShowSidebar = !isAuthRoute && !isStandaloneRoute;
+  const shouldShowFooter = !isAuthRoute && !isStandaloneRoute;
+  const shouldDisableScroll = isAuthRoute;
+
+  const mainContentClasses = ['main-content'];
+  if (!shouldShowSidebar) {
+    mainContentClasses.push('no-sidebar');
+  }
+  if (isAuthRoute) {
+    mainContentClasses.push('auth-layout');
+  }
+  if (isStandaloneRoute) {
+    mainContentClasses.push('standalone');
+  }
 
   // Prevent body scrolling on auth routes (Login pages)
   useEffect(() => {
-    if (isAuthRoute) {
+    if (shouldDisableScroll) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
     } else {
@@ -47,7 +64,7 @@ function App() {
           {shouldShowSidebar && <Sidebar />}
           
           {/* Main content area */}
-          <div className={`main-content ${shouldShowSidebar ? '' : 'full-width'}`}>
+          <div className={mainContentClasses.join(' ')}>
             <Routes>
               {/* Public routes */}
               <Route path="/" element={<Login />} />
@@ -56,6 +73,7 @@ function App() {
               <Route path="/lesson-order" element={<LessonOrderForm />} />
               <Route path="/open-library" element={<OpenLibrary />} />
               <Route path="/lesson/:id" element={<LessonPage />} />
+              <Route path="/termsofservice" element={<TermsOfService />} />
               
               {/* Protected routes */}
               <Route 

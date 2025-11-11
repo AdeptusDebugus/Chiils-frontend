@@ -1,0 +1,110 @@
+.terms-page {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  background-color: #ffffff;
+  color: #2a2b2a;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 72px 24px 120px;
+  line-height: 1.7;
+}
+
+.terms-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.terms-title {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.terms-updated {
+  font-size: 16px;
+  color: #5a5a59;
+}
+
+.terms-updated strong {
+  color: #2a2b2a;
+  font-weight: 700;
+}
+
+.terms-section {
+  margin-bottom: 40px;
+}
+
+.terms-section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.terms-section p {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.terms-section p:last-child {
+  margin-bottom: 0;
+}
+
+.terms-section address {
+  font-style: normal;
+  line-height: 1.8;
+  margin-top: 16px;
+}
+
+.terms-section strong {
+  font-weight: 700;
+}
+
+.terms-page a {
+  color: #f26430;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.terms-page a:hover,
+.terms-page a:focus {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .terms-page {
+    padding: 48px 20px 80px;
+  }
+
+  .terms-title {
+    font-size: 28px;
+  }
+
+  .terms-section h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-page {
+    padding: 36px 16px 64px;
+  }
+
+  .terms-header {
+    text-align: left;
+  }
+
+  .terms-title {
+    font-size: 24px;
+    letter-spacing: 0.02em;
+  }
+
+  .terms-updated {
+    font-size: 14px;
+  }
+
+  .terms-section h2 {
+    font-size: 18px;
+  }
+}
+

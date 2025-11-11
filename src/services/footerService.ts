@@ -111,7 +111,7 @@ class FooterService {
         },
         {
           label: 'Terms & Conditions',
-          path: '/terms',
+          path: '/termsofservice',
         },
       ],
       logo: {

@@ -30,16 +30,29 @@
   z-index: 1;
 }
 
-.main-content.full-width {
+.main-content.no-sidebar {
   width: 100%;
   margin-left: 0;
   padding: 0;
+}
+
+.main-content.auth-layout {
   flex: none;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
+}
+
+.main-content.standalone {
+  background: #ffffff;
+  min-height: 100vh;
+  overflow-y: auto;
+  display: block;
+  padding: 0;
+  background: #ffffff;
+  flex: 1 1 auto;
 }
 
 .main-content::-webkit-scrollbar {
