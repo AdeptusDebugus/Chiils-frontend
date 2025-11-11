@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const { login, user, isAuthenticated, logout } = useAuth();
@@ -235,6 +235,26 @@ const Login: React.FC = () => {
         </svg>
         Continue with Google
       </button>
+
+      <p
+        style={{
+          marginTop: '8px',
+          fontSize: '16px',
+          color: '#787774',
+          textAlign: 'center',
+          maxWidth: '360px',
+          lineHeight: 1.6
+        }}
+      >
+        By continuing with Google, you agree to our{' '}
+        <Link to="/termsofservice" style={{ color: '#787774', textDecoration: 'none' }}>
+          Terms &amp; Conditions
+        </Link>{' '}
+        and{' '}
+        <Link to="/privacypolicy" style={{ color: '#787774', textDecoration: 'none' }}>
+          Privacy Policy
+        </Link>.
+      </p>
     </div>
   );
 };

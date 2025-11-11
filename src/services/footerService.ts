@@ -107,11 +107,15 @@ class FooterService {
       legal: [
         {
           label: 'Privacy policy',
-          path: '/privacy',
+          path: '/privacypolicy',
         },
         {
           label: 'Terms & Conditions',
           path: '/termsofservice',
+        },
+        {
+          label: 'Refund policy',
+          path: '/refundpolicy',
         },
       ],
       logo: {

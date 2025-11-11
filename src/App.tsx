@@ -13,15 +13,16 @@ import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import GlobalLessonMonitor from './components/GlobalLessonMonitor';
 import TermsOfService from './components/TermsOfService.tsx';
+import RefundPolicy from './components/RefundPolicy.tsx';
+import PrivacyPolicy from './components/PrivacyPolicy.tsx';
 import './App.css';
 
 function App() {
   const location = useLocation();
 
   const authRoutes = ['/', '/login', '/login/success'];
-  const standaloneRoutes = ['/termsofservice'];
-
   const isAuthRoute = authRoutes.includes(location.pathname);
+  const standaloneRoutes = ['/termsofservice', '/refundpolicy', '/privacypolicy'];
   const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
 
   const shouldShowSidebar = !isAuthRoute && !isStandaloneRoute;
@@ -74,6 +75,8 @@ function App() {
               <Route path="/open-library" element={<OpenLibrary />} />
               <Route path="/lesson/:id" element={<LessonPage />} />
               <Route path="/termsofservice" element={<TermsOfService />} />
+              <Route path="/refundpolicy" element={<RefundPolicy />} />
+              <Route path="/privacypolicy" element={<PrivacyPolicy />} />
               
               {/* Protected routes */}
               <Route 
