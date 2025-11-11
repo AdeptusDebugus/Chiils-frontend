@@ -15,6 +15,8 @@ import GlobalLessonMonitor from './components/GlobalLessonMonitor';
 import TermsOfService from './components/TermsOfService.tsx';
 import RefundPolicy from './components/RefundPolicy.tsx';
 import PrivacyPolicy from './components/PrivacyPolicy.tsx';
+import CookiePolicy from './components/CookiePolicy.tsx';
+import TermlyBanner from './components/TermlyBanner';
 import './App.css';
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
 
   const authRoutes = ['/', '/login', '/login/success'];
   const isAuthRoute = authRoutes.includes(location.pathname);
-  const standaloneRoutes = ['/termsofservice', '/refundpolicy', '/privacypolicy'];
+  const standaloneRoutes = ['/termsofservice', '/refundpolicy', '/privacypolicy', '/cookies'];
   const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
 
   const shouldShowSidebar = !isAuthRoute && !isStandaloneRoute;
@@ -77,6 +79,7 @@ function App() {
               <Route path="/termsofservice" element={<TermsOfService />} />
               <Route path="/refundpolicy" element={<RefundPolicy />} />
               <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+              <Route path="/cookies" element={<CookiePolicy />} />
               
               {/* Protected routes */}
               <Route 
@@ -98,6 +101,8 @@ function App() {
           
           {/* Global lesson monitor */}
           <GlobalLessonMonitor />
+          {/* Termly banner displayed globally so the consent modal is always available. */}
+          <TermlyBanner />
         </div>
       </NotificationProvider>
     </AuthProvider>
