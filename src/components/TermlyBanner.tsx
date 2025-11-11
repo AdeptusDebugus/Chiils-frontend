@@ -23,16 +23,13 @@ const TermlyBanner = () => {
     script.src = TERMLY_BANNER_SCRIPT_SRC;
     script.async = true;
     document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
 
-  return (
-    <div className="termly-banner">
-      {/* This anchor lets users reopen the Termly consent preferences modal. */}
-      <a className="termly-display-preferences" href="#">
-        Consent Preferences
-      </a>
-    </div>
-  );
+  return null;
 };
 
 export default TermlyBanner;
