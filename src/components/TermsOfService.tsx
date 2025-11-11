@@ -267,7 +267,7 @@ const TermsOfService: React.FC = () => {
         <p>
           Refunds are handled according to our separate Refund Policy (
           <a href="https://chiils.com/refundpolicy" target="_blank" rel="noopener noreferrer">
-            https://chiils.com/refund-policy
+            https://chiils.com/refundpolicy
           </a>
           ). Once digital content has been delivered or accessed, you waive your right to withdraw under EU Directive
           2019/770.
