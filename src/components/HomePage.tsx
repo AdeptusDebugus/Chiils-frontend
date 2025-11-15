@@ -8,6 +8,12 @@ const imgHeroImage = "/assets/9307bd10e88c14ca7ddcf98658faa0c02a9f07ba.png";
 const imgWarmAbstractGlow = "/assets/c27f44e18ef91a27d614b8a2243a51b4411e51b6.png";
 const imgChiilsLogo = "/assets/chiils-white-logo.svg";
 const imgManRelaxingWithLaptop = "/assets/29c825a17f480461ba33a3340904c669b2b2643c.png";
+// Profile images for FAQ section (placeholder paths - these need to be added to assets)
+const imgFAQProfile1 = "/assets/29c825a17f480461ba33a3340904c669b2b2643c.png"; // Portrait with Green Background 3
+const imgFAQProfile2 = "/assets/29c825a17f480461ba33a3340904c669b2b2643c.png"; // Creative Professional at Workspace 1
+const imgFAQProfile3 = "/assets/29c825a17f480461ba33a3340904c669b2b2643c.png"; // Creative Professional at Workspace 2
+const imgFAQProfile4 = "/assets/29c825a17f480461ba33a3340904c669b2b2643c.png"; // Creative Professional at Workspace 3
+const imgJoyfulWomanPortrait = "/assets/29c825a17f480461ba33a3340904c669b2b2643c.png"; // For CTA section
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -48,6 +54,40 @@ const HomePage: React.FC = () => {
           <h1 className="hero-title">Language is a thrill, not a drill</h1>
           <p className="hero-subtitle">Create personalised lessons in minutes and keep your students engaged</p>
           <button className="hero-cta" onClick={handleSignUp}>Start for free</button>
+        </div>
+      </div>
+
+      {/* Feature Cards Section */}
+      <div className="features-cards-section">
+        <div className="feature-card-small">
+          <div className="feature-icon-wrapper">
+            <div className="feature-icon">*</div>
+          </div>
+          <h3 className="feature-card-title">Create personalised lessons in minutes</h3>
+          <p className="feature-card-text">Turn any Youtube video or podcast into a structured lesson with grammar and vocabulary practice.</p>
+        </div>
+        
+        <div className="feature-card-small">
+          <div className="feature-icon-wrapper">
+            <div className="feature-icon">×</div>
+          </div>
+          <h3 className="feature-card-title">Keep your students engaged and motivated</h3>
+          <p className="feature-card-text">Use authentic content that matches their interests, level and goals.</p>
+        </div>
+        
+        <div className="feature-card-large">
+          <div className="feature-icon-wrapper">
+            <div className="feature-icon-large">□</div>
+          </div>
+          <h3 className="feature-card-title">Stand out from other educators</h3>
+          <p className="feature-card-text">
+            Every teacher has a style — but competition keeps growing.
+            <br />
+            Chiils offers you a modern tool to teach smarter, stay current, and show your students what real language learning feels like.
+          </p>
+          <button className="check-library-btn" onClick={handleSignUp}>
+            Check Open Library →
+          </button>
         </div>
       </div>
 
@@ -156,27 +196,47 @@ const HomePage: React.FC = () => {
         </p>
         <div className="faq-grid">
           <div className="faq-card">
-            <h3>Do I need to know how to use AI tools?</h3>
-            <div className="faq-answer">
-              <p>Not at all. Chiils was built to make AI feel invisible, you just bring the content, and we handle the rest.</p>
+            <div className="faq-profile-image">
+              <img src={imgFAQProfile1} alt="Profile" />
+            </div>
+            <div className="faq-content">
+              <h3>Do I need to know how to use AI tools?</h3>
+              <div className="faq-answer">
+                <p>Not at all. Chiils was built to make AI feel invisible, you just bring the content, and we handle the rest.</p>
+              </div>
             </div>
           </div>
           <div className="faq-card">
-            <h3>Are there any limits or rules I should know about?</h3>
-            <div className="faq-answer">
-              <p>Only a few. Chiils supports public YouTube videos and podcasts shorter than 120 minutes. We don't support private links, everything else is wide open.</p>
+            <div className="faq-profile-image">
+              <img src={imgFAQProfile2} alt="Profile" />
+            </div>
+            <div className="faq-content">
+              <h3>Are there any limits or rules I should know about?</h3>
+              <div className="faq-answer">
+                <p>Only a few. Chiils supports public YouTube videos and podcasts shorter than 120 minutes. We don't support private links, everything else is wide open.</p>
+              </div>
             </div>
           </div>
           <div className="faq-card">
-            <h3>How long does it take to create a custom lesson?</h3>
-            <div className="faq-answer">
-              <p>It depends on the length of your video. Usually, it takes around 5–10 minutes, but longer videos (30+ minutes) might require more time.</p>
+            <div className="faq-profile-image">
+              <img src={imgFAQProfile3} alt="Profile" />
+            </div>
+            <div className="faq-content">
+              <h3>How long does it take to create a custom lesson?</h3>
+              <div className="faq-answer">
+                <p>It depends on the length of your video. Usually, it takes around 5–10 minutes, but longer videos (30+ minutes) might require more time.</p>
+              </div>
             </div>
           </div>
           <div className="faq-card">
-            <h3>Can I use any video or podcast to create a lesson?</h3>
-            <div className="faq-answer">
-              <p>At the moment, Chiils supports public YouTube videos only. We don't host or upload content — you just need a link to create your lesson.</p>
+            <div className="faq-profile-image">
+              <img src={imgFAQProfile4} alt="Profile" />
+            </div>
+            <div className="faq-content">
+              <h3>Can I use any video or podcast to create a lesson?</h3>
+              <div className="faq-answer">
+                <p>At the moment, Chiils supports public YouTube videos only. We don't host or upload content — you just need a link to create your lesson.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -185,7 +245,7 @@ const HomePage: React.FC = () => {
       {/* CTA Section */}
       <div className="cta-section">
         <div className="cta-background">
-          {/* Background image placeholder */}
+          <img src={imgJoyfulWomanPortrait} alt="Background" />
         </div>
         <div className="cta-content">
           <h2 className="cta-title">Language is a thrill — and teaching it should feel that way too</h2>
@@ -208,6 +268,7 @@ const HomePage: React.FC = () => {
           <div className="footer-links">
             <a href="#privacy">Privacy policy</a>
             <a href="#terms">Terms & Conditions</a>
+            <a href="#refund">Refund policy</a>
             <p>Copyright © Koala Station DOO Beograd, 2025</p>
           </div>
         </div>
