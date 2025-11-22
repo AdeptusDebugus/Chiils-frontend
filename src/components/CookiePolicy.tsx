@@ -1,18 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import './CookiePolicy.css';
 
-// Termly cookie policy constants – separates markup container and script data.
 const TERMLY_POLICY_CONTAINER_NAME = 'termly-embed';
 const TERMLY_POLICY_CONTAINER_DATA_ID = 'f289a4cc-7033-4433-a6ae-0fd1193b5cfb';
 const TERMLY_POLICY_SCRIPT_ID = 'termly-jssdk';
 const TERMLY_POLICY_SCRIPT_SRC = 'https://app.termly.io/embed-policy.min.js';
 
-/**
- * CookiePolicy
- *
- * Renders the Termly cookie policy embed at `/cookies`.
- * The Termly script hydrates the placeholder div and shows the full policy.
- */
 const CookiePolicy = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
