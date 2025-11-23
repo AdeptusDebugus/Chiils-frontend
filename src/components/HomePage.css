@@ -442,11 +442,12 @@
   padding-bottom: 140px;
 }
 
-.check-library-btn {
+.create-first-lesson {
   background: white;
   border: none;
   border-radius: 18px;
   padding: 6px 20px;
+  width: 320px;
   height: 38px;
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 20px;
@@ -462,7 +463,7 @@
   white-space: nowrap;
 }
 
-.check-library-btn:hover {
+.create-first-lesson:hover {
   background: rgba(255, 255, 255, 0.9);
 }
 
@@ -520,7 +521,7 @@
   margin-bottom: 0;
 }
 
-.about-content .check-library-btn {
+.about-content .create-first-lesson {
   margin-top: 0;
   align-self: flex-start;
 }
@@ -528,11 +529,13 @@
 /* Tools Section */
 .tools-section {
   position: absolute;
-  top: 2000px; /* After features-cards-section with proper spacing to avoid overlap */
+  top: 2000px;
+  /* After features-cards-section with proper spacing to avoid overlap */
   left: 0;
   right: 0;
   width: 100%;
-  padding: 80px 44px 75px; /* 75px bottom padding before next section */
+  padding: 80px 44px 75px;
+  /* 75px bottom padding before next section */
   max-width: 100%;
   margin: 0;
   background: white;
@@ -541,7 +544,8 @@
   flex-direction: column;
   gap: 40px;
   box-sizing: border-box;
-  overflow: visible; /* Allow icon to extend beyond card boundaries */
+  overflow: visible;
+  /* Allow icon to extend beyond card boundaries */
 }
 
 .tools-top-container {
@@ -559,11 +563,11 @@
     max-width: 100%;
     padding: 0;
   }
-  
+
   .tool-card {
     max-width: none;
   }
-  
+
   .stay-tuned-card {
     width: 100%;
     max-width: 100%;
@@ -639,7 +643,8 @@
   list-style: none;
   padding: 0;
   margin: 0 0 20px;
-  padding-right: 180px; /* Increased to prevent overlap with larger icon */
+  padding-right: 180px;
+  /* Increased to prevent overlap with larger icon */
   padding-bottom: 0;
   position: relative;
   z-index: 2;
@@ -687,7 +692,8 @@
 
 .tool-icon-wrapper {
   position: absolute;
-  bottom: 10px; /* Lowered to prevent overlap with text */
+  bottom: 10px;
+  /* Lowered to prevent overlap with text */
   right: 30px;
   width: 160px;
   height: 160px;
@@ -699,8 +705,10 @@
 }
 
 .stay-tuned-card .tool-icon-wrapper {
-  bottom: 30px; /* Same as tool-card padding */
-  right: 30px; /* Same as tool-card padding */
+  bottom: 30px;
+  /* Same as tool-card padding */
+  right: 30px;
+  /* Same as tool-card padding */
   overflow: visible;
 }
 
@@ -715,19 +723,25 @@
   background: white;
   border: 1px solid rgba(255, 255, 255, 0.23);
   border-radius: 22.106px;
-  padding: 30px; /* Same padding as tool-card */
-  width: calc(493px + 20px + 493px); /* Exactly matches width of two tool-cards + gap (1006px) */
+  padding: 30px;
+  /* Same padding as tool-card */
+  width: calc(493px + 20px + 493px);
+  /* Exactly matches width of two tool-cards + gap (1006px) */
   max-width: calc(493px + 20px + 493px);
-  min-height: 250px; /* Height from Figma */
-  margin: 0 0 75px 0; /* 75px bottom margin for white space before next section */
+  min-height: 250px;
+  /* Height from Figma */
+  margin: 0 0 75px 0;
+  /* 75px bottom margin for white space before next section */
   align-self: flex-start;
-  margin-left: calc(324px + 40px); /* Aligns with Open Library card (text-group width + gap) */
+  margin-left: calc(324px + 40px);
+  /* Aligns with Open Library card (text-group width + gap) */
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
   position: relative;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Keep content within card boundaries */
+  overflow: hidden;
+  /* Keep content within card boundaries */
 }
 
 .stay-tuned-card h3 {
@@ -744,7 +758,8 @@
 }
 
 .stay-tuned-card-divider {
-  width: 50%; /* Extends approximately halfway across the card */
+  width: 50%;
+  /* Extends approximately halfway across the card */
   height: 1px;
   background: rgba(0, 0, 0, 0.1);
   margin: 0 0 15px;
@@ -760,27 +775,32 @@
   line-height: 19.738px;
   color: #2a2b2a;
   margin: 0;
-  padding-right: 180px; /* Increased to prevent overlap with icon */
+  padding-right: 180px;
+  /* Increased to prevent overlap with icon */
   padding-bottom: 0;
   position: relative;
   z-index: 2;
   flex: 1;
-  overflow: hidden; /* Ensures text wraps around floated divider */
+  overflow: hidden;
+  /* Ensures text wraps around floated divider */
 }
 
 /* Video Section */
 .video-section {
   position: absolute;
-  top: 2850px; /* After tools-section (2000px start + estimated height ~700px) + 75px margin from tools-section + 75px margin from stay-tuned-card */
+  top: 2850px;
+  /* After tools-section (2000px start + estimated height ~700px) + 75px margin from tools-section + 75px margin from stay-tuned-card */
   left: 0;
   right: 0;
   width: 100%;
   display: flex;
   gap: 40px;
-  padding: 80px 45px; /* Restored bottom padding */
+  padding: 80px 45px;
+  /* Restored bottom padding */
   max-width: 1440px;
   margin: 0 auto;
-  background: #f5f5f5; /* Gray background as in Figma */
+  background: #f5f5f5;
+  /* Gray background as in Figma */
   z-index: 2;
 }
 
@@ -821,25 +841,27 @@
 
 .video-description {
   font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 15.79px;
+  font-size: 20px;
   font-weight: 400;
-  line-height: 19.738px;
+  line-height: 25px;
   color: #2a2b2a;
   margin: 0;
+  max-width: 479px;
 }
 
 /* Pricing Section */
 .pricing-section {
   position: absolute;
-  top: 3474px; /* After video-section (2850px start + 80px top padding + 464px placeholder + 80px bottom padding) - starts immediately after video-section */
+  top: 3500px;
   left: 0;
   right: 0;
   width: 100%;
-  min-height: 930px;
-  padding: 0;
-  margin-top: 0;
-  overflow: hidden;
+  min-height: 800px;
   z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 80px 44px;
+  box-sizing: border-box;
 }
 
 .pricing-background {
@@ -855,15 +877,16 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
 }
 
 .pricing-content {
   position: relative;
   z-index: 2;
-  padding: 120px 41px;
+  width: 100%;
   max-width: 1440px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
 }
 
 .pricing-title {
@@ -872,47 +895,73 @@
   font-weight: 700;
   line-height: 50px;
   color: white;
-  margin: 0 0 60px;
-  max-width: 400px;
+  margin: 0;
 }
 
 .pricing-cards {
   display: flex;
+  flex-direction: row;
   gap: 20px;
-  margin-top: 40px;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .pricing-card {
-  background: rgba(42, 43, 42, 0.5);
-  backdrop-filter: blur(0px);
-  border-radius: 22.106px;
-  padding: 42px 20px;
   width: 325px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  height: 439px;
+  border-radius: 22.106px;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  backdrop-filter: blur(0px);
+}
+
+/* Card variants */
+
+.pricing-card:nth-child(n+1) {
+  background: rgba(42, 43, 42, 0.5);
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
+.pricing-card:nth-child(n+1) h3,
+.pricing-card:nth-child(n+1) .price,
+.pricing-card:nth-child(n+1) .price span,
+.pricing-card:nth-child(n+1) .price-features li {
+  color: white;
+}
+
+.pricing-card:nth-child(n+1) .pricing-divider {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .pricing-card h3 {
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 24px;
   font-weight: 400;
-  line-height: normal;
-  color: white;
-  margin: 0 0 20px;
-  white-space: pre;
+  margin: 0 0 15px 0;
 }
 
-.pricing-card .price {
+.pricing-divider {
+  width: 100%;
+  height: 1px;
+  margin-bottom: 15px;
+}
+
+.price {
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 80px;
   font-weight: 700;
   line-height: 18.566px;
-  color: white;
-  margin: 0 0 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 20px 0 30px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
 }
 
-.pricing-card .price span {
+.price span {
+  font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 20px;
   font-weight: 400;
   line-height: 25px;
@@ -921,17 +970,17 @@
 .price-features {
   list-style: none;
   padding: 0;
-  margin: 0 0 30px;
+  margin: 0;
+  flex: 1;
 }
 
 .price-features li {
   font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 15.79px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 19.738px;
-  color: white;
+  line-height: 20px;
   margin-bottom: 10px;
-  padding-left: 23.685px;
+  padding-left: 20px;
   position: relative;
 }
 
@@ -942,40 +991,42 @@
 }
 
 .get-started-btn {
-  background: white;
-  border: none;
-  border-radius: 18px;
-  padding: 6px 20px;
+  width: 156px;
   height: 33px;
+  border-radius: 18px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  cursor: pointer;
+  margin-top: auto;
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  color: #2a2b2a;
-  cursor: pointer;
-  width: 156px;
-  transition: all 0.3s ease;
 }
 
-.get-started-btn:hover {
-  background: rgba(255, 255, 255, 0.9);
+.pricing-card:nth-child(n+1) .get-started-btn {
+  background: white;
+  color: #2a2b2a;
 }
+
+.btn-icon {
+  width: 24px;
+  height: 24px;
+}
+
 
 /* FAQ Section */
 .faq-section {
   position: absolute;
-  top: 4404px; /* After pricing-section (3474px start + 930px min-height) */
+  top: 4350px;
   left: 0;
   right: 0;
   width: 100%;
   padding: 80px 44px;
   max-width: 1440px;
   margin: 0 auto;
-  background: white;
-  min-height: 946px;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
 }
 
 .faq-section-header {
@@ -1011,7 +1062,8 @@
   gap: 25px;
   flex: 1;
   max-width: 843px;
-  margin-right: 44px; /* Standard padding from right edge matching section padding */
+  margin-right: 44px;
+  /* Standard padding from right edge matching section padding */
 }
 
 .faq-card {
@@ -1071,7 +1123,8 @@
 /* CTA Section */
 .cta-section {
   position: absolute;
-  top: 5350px; /* After faq-section (4404px start + 946px min-height) */
+  top: 5350px;
+  /* After faq-section (4404px start + 946px min-height) */
   left: 0;
   right: 0;
   width: 100%;
@@ -1154,7 +1207,8 @@
 /* Footer */
 .footer {
   position: absolute;
-  top: 6139px; /* After cta-section (5350px start + 789px min-height) */
+  top: 6139px;
+  /* After cta-section (5350px start + 789px min-height) */
   left: 0;
   right: 0;
   width: 100%;
@@ -1241,54 +1295,55 @@
     flex-direction: column;
     gap: 30px;
   }
-  
+
   .tools-text-group {
     max-width: 100%;
   }
-  
+
   .tools-cards-group {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .tool-card {
     width: 100%;
     max-width: 100%;
   }
-  
+
   .stay-tuned-card {
     width: 100%;
     max-width: 100%;
-    margin-left: 0; /* Reset alignment on mobile */
+    margin-left: 0;
+    /* Reset alignment on mobile */
   }
-  
+
   .tool-icon-wrapper {
     bottom: 20px;
     right: 20px;
   }
-  
+
   .tool-icon-img {
     width: 80px;
     height: auto;
     max-width: 100%;
   }
-  
+
   .video-section {
     flex-direction: column;
   }
-  
+
   .video-placeholder {
     width: 100%;
   }
-  
+
   .pricing-cards {
     flex-direction: column;
   }
-  
+
   .pricing-card {
     width: 100%;
   }
-  
+
   .faq-grid {
     margin-left: 0;
   }
@@ -1300,191 +1355,412 @@
     gap: 20px;
     padding: 20px;
   }
-  
+
   .nav-menu {
     position: static;
     transform: none;
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .hero-section {
     height: 600px;
   }
-  
+
   .hero-content {
     padding: 0 20px 40px;
   }
-  
+
   .hero-text-block {
     max-width: 100%;
   }
-  
+
   .hero-title-row {
     flex-direction: column;
     gap: 20px;
     margin-bottom: 20px;
   }
-  
+
   .hero-title {
     font-size: 48px;
     line-height: 56px;
   }
-  
+
   .hero-subtitle-lines {
     align-self: flex-start;
     padding-top: 0;
   }
-  
+
   .hero-subtitle-line {
     font-size: 20px;
   }
-  
+
   .hero-cta {
     align-self: flex-start;
   }
-  
+
   .features-cards-section {
     padding: 20px;
     left: 0;
     width: 100%;
   }
-  
+
   .features-cards-row {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .feature-card-small,
   .feature-card-large {
     width: 100%;
     min-width: 100%;
   }
-  
+
   .feature-icon-img {
     width: 80px;
     height: auto;
     max-width: 100%;
   }
-  
+
   .feature-icon-wrapper {
     bottom: 20px;
     right: 20px;
   }
-  
+
   .feature-card-small {
     padding: 20px;
   }
-  
+
   .feature-card-small .feature-card-text {
     padding-right: 100px;
     padding-bottom: 100px;
   }
-  
+
   .feature-card-large {
     padding: 20px;
     width: 100%;
     min-width: 100%;
   }
-  
+
   .feature-card-large .feature-card-text {
     padding-right: 150px;
     padding-bottom: 120px;
   }
-  
+
   .feature-card-large .feature-icon-wrapper {
     bottom: 20px;
     right: 20px;
   }
-  
+
   .feature-icon-wrapper {
     bottom: 20px;
     right: 20px;
   }
-  
+
   .feature-icon-img-large {
     width: 80px;
     height: auto;
     max-width: 100%;
   }
-  
+
   .feature-icon-img {
     width: 80px;
     height: auto;
     max-width: 100%;
   }
-  
+
   .features-cards-section {
     padding: 20px;
     left: 0;
     width: 100%;
   }
-  
+
   .features-cards-container {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .features-cards-row {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .feature-card-small,
   .feature-card-large {
     width: 100%;
     min-width: 100%;
   }
-  
+
   .feature-icon-img {
     width: 80px;
     height: auto;
     max-width: 100%;
   }
-  
+
   .feature-icon-wrapper {
     bottom: 20px;
     right: 20px;
   }
-  
+
   .feature-card-small .feature-card-text {
     padding-right: 100px;
     padding-bottom: 100px;
   }
-  
+
   .feature-card-large .feature-card-text {
     padding-right: 150px;
     padding-bottom: 120px;
   }
-  
+
   .feature-icon-img-large {
     width: 80px;
     height: auto;
     max-width: 100%;
   }
-  
+
   .about-content {
     align-items: flex-start;
     width: 100%;
     max-width: 100%;
     margin-top: 30px;
   }
-  
+
   .about-content-wrapper {
     max-width: 100%;
   }
-  
+
   .section-title {
     font-size: 32px;
     line-height: 40px;
   }
-  
+
+
+  .pricing-card {
+    width: 100%;
+  }
+
+  .faq-grid {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .nav-menu {
+    position: static;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-section {
+    height: 600px;
+  }
+
+  .hero-content {
+    padding: 0 20px 40px;
+  }
+
+  .hero-text-block {
+    max-width: 100%;
+  }
+
+  .hero-title-row {
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  .hero-subtitle-lines {
+    align-self: flex-start;
+    padding-top: 0;
+  }
+
+  .hero-subtitle-line {
+    font-size: 20px;
+  }
+
+  .hero-cta {
+    align-self: flex-start;
+  }
+
+  .features-cards-section {
+    padding: 20px;
+    left: 0;
+    width: 100%;
+  }
+
+  .features-cards-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .feature-icon-img {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .feature-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .feature-card-small {
+    padding: 20px;
+  }
+
+  .feature-card-small .feature-card-text {
+    padding-right: 100px;
+    padding-bottom: 100px;
+  }
+
+  .feature-card-large {
+    padding: 20px;
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .feature-card-large .feature-card-text {
+    padding-right: 150px;
+    padding-bottom: 120px;
+  }
+
+  .feature-card-large .feature-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .feature-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .feature-icon-img-large {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .feature-icon-img {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .features-cards-section {
+    padding: 20px;
+    left: 0;
+    width: 100%;
+  }
+
+  .features-cards-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .features-cards-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .feature-icon-img {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .feature-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .feature-card-small .feature-card-text {
+    padding-right: 100px;
+    padding-bottom: 100px;
+  }
+
+  .feature-card-large .feature-card-text {
+    padding-right: 150px;
+    padding-bottom: 120px;
+  }
+
+  .feature-icon-img-large {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .about-content {
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 30px;
+  }
+
+  .about-content-wrapper {
+    max-width: 100%;
+  }
+
+  .section-title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
   .cta-title {
     font-size: 48px;
     line-height: 56px;
   }
-  
+
   .footer-content {
     flex-direction: column;
   }
+}
+
+/* Compare Plan Button */
+.compare-plan-btn {
+  background: transparent;
+  border: 1px solid black;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 38px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: black;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin: 40px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 325px;
+}
+
+.compare-plan-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
