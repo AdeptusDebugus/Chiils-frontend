@@ -2,6 +2,8 @@
 
 .home-page {
   width: 100%;
+  height: 6495px;
+  /* Matches total height of absolute sections */
   margin: 0;
   padding: 0;
   background: white;
@@ -1191,115 +1193,210 @@
   font-size: 20px;
   font-weight: 400;
   line-height: 25px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  cursor: pointer;
+  margin-top: auto;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+}
+
+.pricing-card:nth-child(n+1) .get-started-btn {
+  background: white;
+  color: #2a2b2a;
+}
+
+.btn-icon {
+  width: 24px;
+  height: 24px;
+}
+
+
+/* FAQ Section */
+.faq-section {
+  position: absolute;
+  top: 4350px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 80px 44px;
+  max-width: 1440px;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.faq-section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.faq-section-left {
+  flex: 0 0 auto;
+  max-width: 324px;
+}
+
+.faq-section .section-title {
+  color: #2a2b2a;
+  margin: 0 0 20px 0;
+}
+
+.faq-intro {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #2a2b2a;
+  margin: 0;
+}
+
+.faq-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
+  max-width: 843px;
+  margin-right: 44px;
+  /* Standard padding from right edge matching section padding */
+}
+
+.faq-card {
+  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  border-radius: 22.106px;
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+  min-height: 180px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.faq-profile-image {
+  flex-shrink: 0;
+  width: 135px;
+  height: 135px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.faq-profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.faq-content {
+  flex: 1;
+}
+
+.faq-card h3 {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: #2a2b2a;
+  margin: 0 0 15px;
+}
+
+.faq-answer {
+  background: #f5f5f5;
+  border-radius: 22px;
+  padding: 20px;
+  min-height: 87px;
+}
+
+.faq-answer p {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 15.79px;
+  font-weight: 400;
+  line-height: 19.738px;
+  color: #2a2b2a;
+  margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+  position: absolute;
+  top: 5350px;
+  /* After faq-section (4404px start + 946px min-height) */
+  left: 0;
+  right: 0;
+  width: 100%;
+  min-height: 789px;
+  padding: 0;
+  margin-top: 0;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.cta-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cta-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+  padding: 120px 40px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 85px;
+  color: white;
+  margin: 0 0 30px;
+  max-width: 1187px;
+}
+
+.cta-description {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: white;
+  margin: 0 0 30px;
+  max-width: 493px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.cta-button {
+  background: white;
+  border: none;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 38px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
   color: #2a2b2a;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.3s ease;
   margin-left: auto;
   margin-right: 0;
-  display: block;
 }
 
-.cta-button:hover {
-  background: rgba(255, 255, 255, 0.9);
-}
-
-/* Footer */
-.footer {
-  position: absolute;
-  top: 6139px;
-  /* After cta-section (5350px start + 789px min-height) */
-  left: 0;
-  right: 0;
-  width: 100%;
-  background: #2a2b2a;
-  padding: 80px 42px;
-  margin-top: 0;
-  z-index: 2;
-}
-
-.footer-content {
-  max-width: 1440px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 40px;
-}
-
-.footer-logo {
-  flex: 1;
-  min-width: 200px;
-}
-
-.footer-logo img {
-  height: 89px;
-  width: auto;
-}
-
-.footer-contact {
-  flex: 1;
-  min-width: 200px;
-}
-
-.email-btn {
-  background: #f5f5f5;
-  border: none;
-  border-radius: 18px;
-  padding: 8px 20px;
-  height: 33px;
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  color: #2a2b2a;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.footer-links {
-  flex: 1;
-  min-width: 200px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.footer-links a {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  color: white;
-  text-decoration: none;
-  white-space: pre;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
-}
-
-.footer-links p {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  color: white;
-  margin: 20px 0 0;
-}
-
-/* Responsive Design */
 @media (max-width: 1200px) {
-  .tools-top-container {
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .tools-text-group {
-    max-width: 100%;
-  }
-
   .tools-cards-group {
     flex-direction: column;
     width: 100%;
@@ -1729,14 +1826,119 @@
     line-height: 40px;
   }
 
-  .cta-title {
-    font-size: 48px;
-    line-height: 56px;
+  .pricing-card {
+    width: 100%;
   }
 
-  .footer-content {
-    flex-direction: column;
+  .faq-grid {
+    margin-left: 0;
   }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .nav-menu {
+    position: static;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-section {
+    height: 600px;
+  }
+
+  .hero-content {
+    padding: 0 20px 40px;
+  }
+
+  .hero-text-block {
+    max-width: 100%;
+  }
+
+}
+
+/* CTA Section */
+.cta-section {
+  position: absolute;
+  top: 5350px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  min-height: 789px;
+  padding: 0;
+  margin-top: 0;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.cta-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cta-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+  padding: 120px 40px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 85px;
+  color: white;
+  margin: 0 0 30px;
+  max-width: 1187px;
+}
+
+.cta-description {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: white;
+  margin: 0 0 30px;
+  max-width: 493px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.cta-button {
+  background: white;
+  border: none;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 38px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #2a2b2a;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin-left: auto;
+  margin-right: 0;
 }
 
 /* Compare Plan Button */
@@ -1763,4 +1965,13 @@
 
 .compare-plan-btn:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.footer {
+  position: absolute;
+  top: 6139px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 10;
 }

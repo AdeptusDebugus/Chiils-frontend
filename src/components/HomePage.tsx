@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
+import Footer from './Footer';
 
 //IMAGES
 const imgHeroImage = "/assets/home/about-hero-human.png";
@@ -364,26 +365,13 @@ const HomePage: React.FC = () => {
           <p className="cta-description">
             Turn real content into ready-to-teach lessons and focus on what you love. Ready to join the community?
           </p>
-          <button className="cta-button" onClick={handleSignUp}>Start for free</button>
+          <button className="cta-button" onClick={handleSignUp}>Start for free →</button>
         </div>
       </div>
 
       {/* Footer */}
       <div className="footer">
-        <div className="footer-content">
-          <div className="footer-logo">
-            <img src={imgChiilsLogo} alt="Chiils" />
-          </div>
-          <div className="footer-contact">
-            <button className="email-btn">team@chiils.com</button>
-          </div>
-          <div className="footer-links">
-            <Link to="/privacypolicy">Privacy policy</Link>
-            <Link to="/termsofservice">Terms & Conditions</Link>
-            <Link to="/refundpolicy">Refund policy</Link>
-            <p>Copyright © Koala Station DOO Beograd, 2025</p>
-          </div>
-        </div>
+        <Footer />
       </div>
     </div>
   );
