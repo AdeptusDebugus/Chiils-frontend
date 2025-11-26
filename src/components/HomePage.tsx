@@ -65,15 +65,12 @@ const HomePage: React.FC = () => {
             <div className="hero-text-block">
               <div className="hero-title-row">
                 <h1 className="hero-title">
-                  Language is a thrill,<br />
-                  <span className="hero-title-second-line">
-                    not a drill
-                    <div className="hero-subtitle-lines">
-                      <p className="hero-subtitle-line">Create personalised lessons in minutes and keep</p>
-                      <p className="hero-subtitle-line">your students engaged</p>
-                    </div>
-                  </span>
+                  Teach real language.<br />No busywork.
                 </h1>
+                <div className="hero-subtitle-lines">
+                  <p className="hero-subtitle-line">Turn any video into a ready-to-teach lesson</p>
+                  <p className="hero-subtitle-line">in a couple of clicks.</p>
+                </div>
               </div>
             </div>
             <button className="hero-cta" onClick={handleSignUp}>Start for free</button>
