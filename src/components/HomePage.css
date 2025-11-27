@@ -2,7 +2,7 @@
 
 .home-page {
   width: 100%;
-  height: 6495px;
+  height: 7100px;
   /* Matches total height of absolute sections */
   margin: 0;
   padding: 0;
@@ -84,10 +84,16 @@
 }
 
 /* Sign up Button Container */
-.header-sign-up {
+
+.header-buttons {
   position: absolute;
-  left: 75%;
-  top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: auto;
+  right: 40px;
+  top: 48px;
+  gap: 15px;
 }
 
 .sign-up-btn {
@@ -194,7 +200,6 @@
   bottom: 0;
   z-index: 3;
   padding: 0 40px 0;
-  max-width: 1440px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -276,12 +281,13 @@
   text-align: left;
 }
 
-.hero-cta {
+.first-lesson-btn {
   background: white;
   border: none;
   border-radius: 18px;
   padding: 10px 40px;
-  height: 38px;
+  height: 37px;
+  width: 325px;
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 20px;
   font-weight: 400;
@@ -290,13 +296,52 @@
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   flex-shrink: 0;
-  align-self: flex-end;
+  align-self: flex-start;
 }
 
-.hero-cta:hover {
+.first-lesson-btn:hover {
   background: rgba(255, 255, 255, 0.9);
+}
+
+/* Second button */
+.community-lessons-btn {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 37px;
+  width: 325px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin: 0;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.community-lessons-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Container for hero buttons */
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
 }
 
 /* Feature Cards Section */
@@ -308,8 +353,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
+  align-items: center;
+  gap: 60px;
   padding: 44px;
   max-width: 100%;
   margin: 0;
@@ -318,26 +363,53 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 900px;
+  min-height: 1400px;
   box-sizing: border-box;
+}
+
+/* Video Placeholder */
+.video-demo-placeholder {
+  width: 1348px;
+  height: 648px;
+  background: #F5F5F5;
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  max-width: 100%;
+}
+
+.video-demo-text {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  color: #a5a5a5;
+  text-align: center;
+}
+
+/* Section Title */
+.focus-on-teaching-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 50px;
+  color: white;
+  text-align: left;
+  width: 100%;
+  max-width: 1348px;
+  margin: 0;
 }
 
 .features-cards-container {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 14px;
   width: 100%;
+  max-width: 1348px;
   align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-.features-cards-row {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  flex-wrap: wrap;
-  flex: 1;
-  min-width: 0;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 .feature-card-small {
@@ -348,7 +420,7 @@
   border-radius: 22.106px;
   padding: 30px;
   width: 325px;
-  min-width: 325px;
+  height: 420px;
   flex-shrink: 0;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
@@ -365,10 +437,10 @@
   border-radius: 22.106px;
   padding: 30px;
   width: 670px;
-  min-width: 670px;
+  height: 420px;
   flex-shrink: 0;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
-  box-sizing: border-box;
+  box-sizing: border-sizing;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -435,38 +507,40 @@
 }
 
 .feature-card-small .feature-card-text {
-  padding-right: 120px;
+  padding-right: 20px;
   padding-bottom: 110px;
 }
 
 .feature-card-large .feature-card-text {
-  padding-right: 220px;
-  padding-bottom: 140px;
+  padding-right: 20px;
+  padding-bottom: 80px;
+  max-width: 100%;
 }
 
-.create-first-lesson {
-  background: white;
-  border: none;
+.create-first-lesson-btn {
+  background: transparent;
+  border: 1px solid white;
   border-radius: 18px;
   padding: 6px 20px;
   width: 320px;
-  height: 38px;
+  height: 42px;
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 20px;
   font-weight: 400;
-  line-height: 25px;
-  color: #2a2b2a;
+  color: white;
   cursor: pointer;
-  margin-top: 20px;
   transition: all 0.3s ease;
-  position: relative;
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
-  align-self: flex-start;
-  white-space: nowrap;
 }
 
-.create-first-lesson:hover {
-  background: rgba(255, 255, 255, 0.9);
+.create-first-lesson-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* About Content (now inside features-cards-section) */
@@ -531,13 +605,11 @@
 /* Tools Section */
 .tools-section {
   position: absolute;
-  top: 2000px;
-  /* After features-cards-section with proper spacing to avoid overlap */
+  top: 2300px;
   left: 0;
   right: 0;
   width: 100%;
   padding: 80px 44px 75px;
-  /* 75px bottom padding before next section */
   max-width: 100%;
   margin: 0;
   background: white;
@@ -547,79 +619,73 @@
   gap: 40px;
   box-sizing: border-box;
   overflow: visible;
-  /* Allow icon to extend beyond card boundaries */
+  min-height: 1000px;
 }
 
-.tools-top-container {
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-  align-items: flex-start;
+.tools-section-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 50px;
+  color: #2a2b2a;
+  margin: 0 0 20px;
+  text-align: left;
   width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
+  max-width: 1348px;
 }
 
-@media (min-width: 1441px) {
-  .tools-top-container {
-    max-width: 100%;
-    padding: 0;
-  }
-
-  .tool-card {
-    max-width: none;
-  }
-
-  .stay-tuned-card {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-.tools-text-group {
+.tools-container {
   display: flex;
   flex-direction: column;
-  flex: 0 0 auto;
-  max-width: 324px;
-}
-
-.tools-section .section-title {
-  color: #2a2b2a;
-  margin-bottom: 20px;
-}
-
-.section-description {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  color: #2a2b2a;
-  margin: 0;
-}
-
-.tools-cards-group {
-  display: flex;
-  flex-direction: row;
   gap: 20px;
-  flex: 1;
-  min-width: 0;
+  width: 100%;
+  max-width: 1348px;
 }
 
-.tool-card {
+.tool-card-large {
   background: white;
-  border: 1px solid rgba(255, 255, 255, 0.23);
   border-radius: 22.106px;
-  padding: 30px;
-  flex: 1;
-  min-width: 0;
-  max-width: 493px;
+  padding: 0;
+  width: 100%;
+  height: 373px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  overflow: hidden;
 }
 
-.tool-card h3 {
+/* Remove background from main card wrapper */
+.tool-card-large:nth-child(1),
+.tool-card-large:nth-child(2) {
+  background: white;
+}
+
+/* Apply background to content area only */
+.tool-card-large:nth-child(1) .tool-card-content {
+  background-image: url('/assets/home/open-library-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.tool-card-large:nth-child(2) .tool-card-content {
+  background-image: url('/assets/home/lesson-builder-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.tool-card-content {
+  flex: 0 0 540px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+
+.tool-card-large h3 {
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 24px;
   font-weight: 400;
@@ -633,176 +699,80 @@
 }
 
 .tool-card-divider {
-  width: 100%;
+  width: 453px;
   height: 1px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 1);
   margin: 0 0 15px;
   position: relative;
   z-index: 2;
 }
 
-.tool-features {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 20px;
-  padding-right: 180px;
-  /* Increased to prevent overlap with larger icon */
-  padding-bottom: 0;
-  position: relative;
-  z-index: 2;
-  flex: 1;
-}
-
-.tool-features li {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 15.79px;
-  font-weight: 400;
-  line-height: 19.738px;
-  color: #2a2b2a;
-  margin-bottom: 10px;
-  padding-left: 23.685px;
-  position: relative;
-}
-
-.tool-features li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-}
-
-.explore-btn {
-  background: #f26430;
-  border: none;
-  border-radius: 18px;
-  padding: 7px 20px;
-  height: 29.273px;
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 15.79px;
-  font-weight: 400;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  align-self: flex-start;
-}
-
-.explore-btn:hover {
-  background: #e05520;
-}
-
-.tool-icon-wrapper {
-  position: absolute;
-  bottom: 10px;
-  /* Lowered to prevent overlap with text */
-  right: 30px;
-  width: 160px;
-  height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  z-index: 1;
-}
-
-.stay-tuned-card .tool-icon-wrapper {
-  bottom: 30px;
-  /* Same as tool-card padding */
-  right: 30px;
-  /* Same as tool-card padding */
-  overflow: visible;
-}
-
-.tool-icon-img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
-}
-
-.stay-tuned-card {
-  background: white;
-  border: 1px solid rgba(255, 255, 255, 0.23);
-  border-radius: 22.106px;
-  padding: 30px;
-  /* Same padding as tool-card */
-  width: calc(493px + 20px + 493px);
-  /* Exactly matches width of two tool-cards + gap (1006px) */
-  max-width: calc(493px + 20px + 493px);
-  min-height: 250px;
-  /* Height from Figma */
-  margin: 0 0 75px 0;
-  /* 75px bottom margin for white space before next section */
-  align-self: flex-start;
-  margin-left: calc(324px + 40px);
-  /* Aligns with Open Library card (text-group width + gap) */
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  /* Keep content within card boundaries */
-}
-
-.stay-tuned-card h3 {
+.tool-card-description {
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 24px;
   font-weight: 400;
   line-height: normal;
   color: #2a2b2a;
-  margin: 0 0 15px;
-  padding-bottom: 0;
-  border-bottom: none;
-  position: relative;
-  z-index: 2;
-}
-
-.stay-tuned-card-divider {
-  width: 50%;
-  /* Extends approximately halfway across the card */
-  height: 1px;
-  background: rgba(0, 0, 0, 0.1);
-  margin: 0 0 15px;
-  float: left;
-  position: relative;
-  z-index: 2;
-}
-
-.stay-tuned-card p {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 15.79px;
-  font-weight: 400;
-  line-height: 19.738px;
-  color: #2a2b2a;
   margin: 0;
-  padding-right: 180px;
-  /* Increased to prevent overlap with icon */
-  padding-bottom: 0;
-  position: relative;
-  z-index: 2;
-  flex: 1;
-  overflow: hidden;
-  /* Ensures text wraps around floated divider */
+  max-width: 460px;
 }
 
-/* Video Section */
+.tool-card-arrow-btn {
+  position: absolute;
+  top: 65%;
+  left: 30px;
+  transform: translateY(-50%);
+  width: 49px;
+  height: 49px;
+  background: #2a2b2a;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  color: white;
+  line-height: 1;
+}
+
+.tool-card-arrow-btn:hover {
+  background: #404040;
+  /* Slight hover effect */
+  transform: translateY(-50%) scale(1.05);
+}
+
+.tool-card-image-placeholder {
+  flex: 1;
+  background: #d9d9d9;
+  margin: 0;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+}
+
+/* Video Section - Update Top Position */
 .video-section {
   position: absolute;
-  top: 2850px;
-  /* After tools-section (2000px start + estimated height ~700px) + 75px margin from tools-section + 75px margin from stay-tuned-card */
+  top: 3300px;
+  /* Adjusted based on new tools section height */
   left: 0;
   right: 0;
   width: 100%;
   display: flex;
   gap: 40px;
   padding: 80px 45px;
-  /* Restored bottom padding */
   max-width: 1440px;
   margin: 0 auto;
   background: #f5f5f5;
-  /* Gray background as in Figma */
   z-index: 2;
 }
 
@@ -854,7 +824,7 @@
 /* Pricing Section */
 .pricing-section {
   position: absolute;
-  top: 3500px;
+  top: 3400px;
   left: 0;
   right: 0;
   width: 100%;
@@ -1021,188 +991,6 @@
 /* FAQ Section */
 .faq-section {
   position: absolute;
-  top: 4350px;
-  left: 0;
-  right: 0;
-  width: 100%;
-  padding: 80px 44px;
-  max-width: 1440px;
-  margin: 0 auto;
-  z-index: 2;
-}
-
-.faq-section-header {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 40px;
-  margin-bottom: 40px;
-}
-
-.faq-section-left {
-  flex: 0 0 auto;
-  max-width: 324px;
-}
-
-.faq-section .section-title {
-  color: #2a2b2a;
-  margin: 0 0 20px 0;
-}
-
-.faq-intro {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  color: #2a2b2a;
-  margin: 0;
-}
-
-.faq-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  flex: 1;
-  max-width: 843px;
-  margin-right: 44px;
-  /* Standard padding from right edge matching section padding */
-}
-
-.faq-card {
-  background: white;
-  border: 1px solid rgba(255, 255, 255, 0.23);
-  border-radius: 22.106px;
-  padding: 24px;
-  display: flex;
-  gap: 20px;
-  min-height: 180px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
-}
-
-.faq-profile-image {
-  flex-shrink: 0;
-  width: 135px;
-  height: 135px;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.faq-profile-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.faq-content {
-  flex: 1;
-}
-
-.faq-card h3 {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 24px;
-  font-weight: 400;
-  line-height: normal;
-  color: #2a2b2a;
-  margin: 0 0 15px;
-}
-
-.faq-answer {
-  background: #f5f5f5;
-  border-radius: 22px;
-  padding: 20px;
-  min-height: 87px;
-}
-
-.faq-answer p {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 15.79px;
-  font-weight: 400;
-  line-height: 19.738px;
-  color: #2a2b2a;
-  margin: 0;
-}
-
-/* CTA Section */
-.cta-section {
-  position: absolute;
-  top: 5350px;
-  /* After faq-section (4404px start + 946px min-height) */
-  left: 0;
-  right: 0;
-  width: 100%;
-  min-height: 789px;
-  padding: 0;
-  margin-top: 0;
-  overflow: hidden;
-  z-index: 2;
-}
-
-.cta-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.cta-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.cta-content {
-  position: relative;
-  z-index: 2;
-  padding: 120px 40px;
-  max-width: 1440px;
-  margin: 0 auto;
-}
-
-.cta-title {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 80px;
-  font-weight: 700;
-  line-height: 85px;
-  color: white;
-  margin: 0 0 30px;
-  max-width: 1187px;
-}
-
-.cta-description {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 24px;
-  font-weight: 400;
-  line-height: normal;
-  color: white;
-  margin: 0 0 30px;
-  max-width: 493px;
-  margin-left: auto;
-  margin-right: 0;
-}
-
-.cta-button {
-  background: white;
-  border: none;
-  border-radius: 18px;
-  padding: 10px 40px;
-  height: 38px;
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
-  cursor: pointer;
-  margin-top: auto;
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-}
-
-.pricing-card:nth-child(n+1) .get-started-btn {
   background: white;
   color: #2a2b2a;
 }
@@ -1317,84 +1105,7 @@
   margin: 0;
 }
 
-/* CTA Section */
-.cta-section {
-  position: absolute;
-  top: 5350px;
-  /* After faq-section (4404px start + 946px min-height) */
-  left: 0;
-  right: 0;
-  width: 100%;
-  min-height: 789px;
-  padding: 0;
-  margin-top: 0;
-  overflow: hidden;
-  z-index: 2;
-}
 
-.cta-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.cta-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.cta-content {
-  position: relative;
-  z-index: 2;
-  padding: 120px 40px;
-  max-width: 1440px;
-  margin: 0 auto;
-}
-
-.cta-title {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 80px;
-  font-weight: 700;
-  line-height: 85px;
-  color: white;
-  margin: 0 0 30px;
-  max-width: 1187px;
-}
-
-.cta-description {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 24px;
-  font-weight: 400;
-  line-height: normal;
-  color: white;
-  margin: 0 0 30px;
-  max-width: 493px;
-  margin-left: auto;
-  margin-right: 0;
-}
-
-.cta-button {
-  background: white;
-  border: none;
-  border-radius: 18px;
-  padding: 10px 40px;
-  height: 38px;
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 25px;
-  color: #2a2b2a;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.3s ease;
-  margin-left: auto;
-  margin-right: 0;
-}
 
 @media (max-width: 1200px) {
   .tools-cards-group {
@@ -1492,7 +1203,7 @@
     font-size: 20px;
   }
 
-  .hero-cta {
+  .first-lesson-btn {
     align-self: flex-start;
   }
 
@@ -1687,7 +1398,7 @@
     font-size: 20px;
   }
 
-  .hero-cta {
+  .first-lesson-btn {
     align-self: flex-start;
   }
 
@@ -1864,9 +1575,10 @@
 }
 
 /* CTA Section */
+/* CTA Section */
 .cta-section {
   position: absolute;
-  top: 5350px;
+  top: 5800px;
   left: 0;
   right: 0;
   width: 100%;
@@ -1969,7 +1681,7 @@
 
 .footer {
   position: absolute;
-  top: 6139px;
+  top: 6589px;
   left: 0;
   right: 0;
   width: 100%;

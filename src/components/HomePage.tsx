@@ -16,6 +16,7 @@ const imgFAQProfile1 = "/assets/home/portrait-1.png";
 const imgFAQProfile2 = "/assets/home/portrait-2.png";
 const imgFAQProfile3 = "/assets/home/portrait-3.png";
 const imgFAQProfile4 = "/assets/home/portrait-4.png";
+const imgFAQProfile5 = "/assets/home/portrait-5.png";
 const imgJoyfulWomanPortrait = "/assets/home/cta-background.png";
 
 const HomePage: React.FC = () => {
@@ -29,30 +30,18 @@ const HomePage: React.FC = () => {
     navigate('/login');
   };
 
+  const handleOpenLib = () => {
+    navigate('/open-library');
+  };
+
+  const handleLessonBuilder = () => {
+    navigate('/lesson-order');
+  };
+
   return (
     <div className="home-page" data-name="Public Space">
       {/* Navigation Header - Matching Figma Design */}
-      <div className="header" data-name="Header">
-        {/* Logo */}
-        <div className="header-logo" data-name="Logo">
-          <img alt="Chiils" src={imgChiilsLogo} className="logo-chiils-img" />
-        </div>
 
-        {/* Navigation Links */}
-        <a href="#about" className="nav-link nav-about">About</a>
-        <a href="#tools" className="nav-link nav-tools">Tools</a>
-        <a href="#pricing" className="nav-link nav-pricing">Pricing</a>
-
-        {/* Sign up Button */}
-        <div className="header-sign-up" data-name="Sign up">
-          <button className="sign-up-btn" onClick={handleSignUp}>Sign up</button>
-        </div>
-
-        {/* Sign in Button */}
-        <div className="header-sign-in" data-name="Sign in">
-          <button className="sign-in-btn" onClick={handleSignIn}>Sign in</button>
-        </div>
-      </div>
 
       {/* Hero Section */}
       <div className="hero-section">
@@ -61,6 +50,22 @@ const HomePage: React.FC = () => {
         </div>
         <div className="hero-overlay"></div>
         <div className="hero-content">
+          <div className="header" data-name="Header">
+            {/* Logo */}
+            <div className="header-logo" data-name="Logo">
+              <img alt="Chiils" src={imgChiilsLogo} className="logo-chiils-img" />
+            </div>
+
+            {/* Navigation Links */}
+            <a href="#about" className="nav-link nav-about">About</a>
+            <a href="#tools" className="nav-link nav-tools">Tools</a>
+            <a href="#pricing" className="nav-link nav-pricing">Pricing</a>
+
+            <div className="header-buttons">
+              <button className="sign-up-btn" onClick={handleSignUp}>Sign up</button>
+              <button className="sign-in-btn" onClick={handleSignIn}>Sign in</button>
+            </div>
+          </div>
           <div className="hero-bottom-container">
             <div className="hero-text-block">
               <div className="hero-title-row">
@@ -73,138 +78,102 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
             </div>
-            <button className="hero-cta" onClick={handleSignUp}>Start for free</button>
+            <div className="hero-buttons">
+              <button className="first-lesson-btn" onClick={handleLessonBuilder}>Create your first lesson free</button>
+              <button className="community-lessons-btn" onClick={handleOpenLib}>See 500+ community lessons</button>
+            </div>
+
           </div>
         </div>
       </div>
 
       {/* Feature Cards Section */}
       <div className="features-cards-section" id="about">
-        <div className="features-cards-container">
-          <div className="features-cards-row">
-            <div className="feature-card-small">
-              <h3 className="feature-card-title">Create personalised lessons in minutes</h3>
-              <div className="feature-card-divider"></div>
-              <p className="feature-card-text">Turn any Youtube video or podcast into a structured lesson with grammar and vocabulary practice.</p>
-              <div className="feature-icon-wrapper">
-                <img src={imgFeatureCardSmall1} alt="Feature icon" className="feature-icon-img" />
-              </div>
-            </div>
 
-            <div className="feature-card-small">
-              <h3 className="feature-card-title">Keep your students engaged and motivated</h3>
-              <div className="feature-card-divider"></div>
-              <p className="feature-card-text">Use authentic content that matches their interests, level and goals.</p>
-              <div className="feature-icon-wrapper">
-                <img src={imgFeatureCardSmall2} alt="Feature icon" className="feature-icon-img" />
-              </div>
-            </div>
-          </div>
-
-          {/* About Content */}
-          <div className="about-content">
-            <div className="about-content-wrapper">
-              <h2 className="section-title">
-                Focus on teaching<br />
-                — we handle the prep
-              </h2>
-              <div className="about-text-container">
-                <p className="about-text">
-                  Chiils is an AI partner and platform that helps freelance language teachers save time, stay inspired, and keep students engaged.
-                </p>
-                <p className="about-text">
-                  We turn hours of preparation into minutes — so you can focus on what truly matters: creating meaningful lessons and keeping your students motivated. Because language is a thrill — and teaching it should feel that way too.
-                </p>
-                <p className="about-text">
-                  We believe language teaching isn't just about grammar or structure — it's about meaning, connection, and discovery. Chiils helps teachers stay creative, motivated, and efficient, so every lesson feels alive and rewarding.
-                </p>
-              </div>
-              <button className="create-first-lesson" onClick={handleSignUp}>
-                Create your first lesson
-              </button>
-            </div>
-          </div>
+        {/* Video Demo Placeholder */}
+        <div className="video-demo-placeholder">
+          <p className="video-demo-text">Product Demo Video</p>
         </div>
 
-        <div className="feature-card-large">
-          <h3 className="feature-card-title">Stand out from other educators</h3>
-          <div className="feature-card-divider"></div>
-          <p className="feature-card-text">
-            Every teacher has a style — but competition keeps growing.
-            <br />
-            Chiils offers you a modern tool to teach smarter, stay current, and show your students what real language learning feels like.
-          </p>
-          <div className="feature-icon-wrapper">
-            <img src="/assets/home/feature-card-large.svg" alt="Feature icon" className="feature-icon-img-large" />
+        {/* Section Title */}
+        <h2 className="focus-on-teaching-title">
+          Focus on teaching <br />— we handle the prep.
+        </h2>
+
+        <div className="features-cards-container">
+          {/* Card 1 */}
+          <div className="feature-card-small">
+            <h3 className="feature-card-title">Create custom lessons in a couple of clicks</h3>
+            <div className="feature-card-divider"></div>
+            <p className="feature-card-text">Spend less time preparing and more time actually teaching.</p>
+            <div className="feature-icon-wrapper">
+              <img src={imgFeatureCardSmall1} alt="Feature icon" className="feature-icon-img" />
+            </div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="feature-card-small">
+            <h3 className="feature-card-title">Keep your students motivated longer</h3>
+            <div className="feature-card-divider"></div>
+            <p className="feature-card-text">Use authentic content that matches their interests, level and goals.</p>
+            <div className="feature-icon-wrapper">
+              <img src={imgFeatureCardSmall2} alt="Feature icon" className="feature-icon-img" />
+            </div>
+          </div>
+
+          {/* Card 3 (Large) */}
+          <div className="feature-card-large">
+            <h3 className="feature-card-title">Stand out and keep your schedule full</h3>
+            <div className="feature-card-divider"></div>
+            <p className="feature-card-text">
+              Build a teaching experience students want to return to. Chiils offers you a modern tool to teach smarter, stay current, and show your students what real language learning feels like.
+            </p>
+            <button className="create-first-lesson-btn" onClick={handleSignUp}>
+              Create your first lesson
+            </button>
+            <div className="feature-icon-wrapper">
+              <img src="/assets/home/feature-card-large.svg" alt="Feature icon" className="feature-icon-img-large" />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Tools Section */}
       <div className="tools-section" id="tools">
-        <div className="tools-top-container">
-          <div className="tools-text-group">
-            <h2 className="section-title">Keep the spark for languages alive with our tools</h2>
-            <p className="section-description">
-              We build tools that take care of the prep, so you can focus on what makes teaching exciting — connection, curiosity, and real communication. Keep your students inspired too. Let them feel your passion for language.
-            </p>
-          </div>
+        <h2 className="tools-section-title">
+          Spark chills in every lesson.<br />Explore our tools.
+        </h2>
 
-          <div className="tools-cards-group">
-            <div className="tool-card">
+        <div className="tools-container">
+          {/* Open Library Card */}
+          <div className="tool-card-large">
+            <div className="tool-card-content">
               <h3>Open Library</h3>
               <div className="tool-card-divider"></div>
-              <ul className="tool-features">
-                <li>Explore ready-to-use lessons created by other users</li>
-                <li>Use tags to filter them by target language, level, topic, or speaking style to fit your students' goals</li>
-                <li>Search by grammar topics</li>
-                <li>Stay tuned — the library keeps growing</li>
-              </ul>
-              <button className="explore-btn">Explore</button>
-              <div className="tool-icon-wrapper">
-                <img src={imgToolCardOpenLibrary} alt="Open Library icon" className="tool-icon-img" />
-              </div>
+              <p className="tool-card-description">A growing library of ready-to-use lessons you can teach right away.</p>
+              <button className="tool-card-arrow-btn" onClick={handleOpenLib}>
+                →
+              </button>
             </div>
+            <div className="tool-card-image-placeholder">
+              <p>Product Screenshot Placeholder</p>
+            </div>
+          </div>
 
-            <div className="tool-card">
+          {/* Lesson Builder Card */}
+          <div className="tool-card-large">
+            <div className="tool-card-content">
               <h3>Lesson Builder</h3>
-              <ul className="tool-features">
-                <li>Create custom lessons from any YouTube video or podcast in minutes</li>
-                <li>Tailor each one to your students' level, goals, and interests</li>
-                <li>Request up to 3 custom grammar topics per lesson</li>
-                <li>Save hours on prep and focus on what really inspires you to teach</li>
-              </ul>
-              <button className="explore-btn">Explore</button>
-              <div className="tool-icon-wrapper">
-                <img src={imgToolCardLessonBuilder} alt="Lesson Builder icon" className="tool-icon-img" />
-              </div>
+              <div className="tool-card-divider"></div>
+              <p className="tool-card-description">A video-to-lesson tool for creating custom lessons in a couple of clicks.</p>
+              <button className="tool-card-arrow-btn" onClick={handleLessonBuilder}>
+                →
+              </button>
+            </div>
+            <div className="tool-card-image-placeholder">
+              <p>Product Screenshot Placeholder</p>
             </div>
           </div>
-        </div>
-
-        <div className="stay-tuned-card">
-          <h3>Stay tuned for more</h3>
-          <div className="stay-tuned-card-divider"></div>
-          <p>We're always building new tools to make<br />
-            teaching feel even more inspiring and<br />
-            effortless. Stay tuned — there's more<br />
-            coming soon.</p>
-          <div className="tool-icon-wrapper">
-            <img src={imgStayTunedCard} alt="Stay tuned icon" className="tool-icon-img" />
-          </div>
-        </div>
-      </div>
-
-      {/* Video Section */}
-      <div className="video-section">
-        <div className="video-placeholder">
-          <p className="video-label">VIDEO SCREENCAST</p>
-        </div>
-        <div className="video-info">
-          <h2 className="video-title">From link to lesson — in minutes</h2>
-          <p className="video-description">
-            See a quick walkthrough of the Open Library and Lesson Builder. Discover how easy it is to find lessons or turn any video into one of your own.
-          </p>
         </div>
       </div>
 
@@ -300,6 +269,17 @@ const HomePage: React.FC = () => {
             </p>
           </div>
           <div className="faq-grid">
+              <div className="faq-card">
+                  <div className="faq-profile-image">
+                      <img src={imgFAQProfile5} alt="Profile" />
+                  </div>
+                  <div className="faq-content">
+                      <h3>How is it different from Chat GPT?</h3>
+                      <div className="faq-answer">
+                          <p>Chiils delivers a complete, beautifully structured lesson — from engaging lead-in to production — packed with every exercise type you need, perfectly balanced, no prompts required. All that in a couple of clicks. </p>
+                      </div>
+                  </div>
+              </div>
             <div className="faq-card">
               <div className="faq-profile-image">
                 <img src={imgFAQProfile1} alt="Profile" />
