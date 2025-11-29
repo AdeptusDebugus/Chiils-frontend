@@ -57,33 +57,32 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Navigation Links */}
-            <a href="#about" className="nav-link nav-about">About</a>
-            <a href="#tools" className="nav-link nav-tools">Tools</a>
-            <a href="#pricing" className="nav-link nav-pricing">Pricing</a>
+            <div className="nav-links">
+              <a href="#about" className="nav-link nav-about">About</a>
+              <a href="#tools" className="nav-link nav-tools">Tools</a>
+              <a href="#pricing" className="nav-link nav-pricing">Pricing</a>
+            </div>
 
             <div className="header-buttons">
               <button className="sign-up-btn" onClick={handleSignUp}>Sign up</button>
               <button className="sign-in-btn" onClick={handleSignIn}>Sign in</button>
             </div>
           </div>
-          <div className="hero-bottom-container">
-            <div className="hero-text-block">
-              <div className="hero-title-row">
+          <div className="hero-text-block">
+             <div className="hero-title-row">
                 <h1 className="hero-title">
                   Teach real language.<br />No busywork.
                 </h1>
                 <div className="hero-subtitle-lines">
                   <p className="hero-subtitle-line">Turn any video into a ready-to-teach lesson</p>
                   <p className="hero-subtitle-line">in a couple of clicks.</p>
+                    </div>
                 </div>
-              </div>
             </div>
             <div className="hero-buttons">
               <button className="first-lesson-btn" onClick={handleLessonBuilder}>Create your first lesson free</button>
               <button className="community-lessons-btn" onClick={handleOpenLib}>See 500+ community lessons</button>
             </div>
-
-          </div>
         </div>
       </div>
 
@@ -183,7 +182,14 @@ const HomePage: React.FC = () => {
           <img src={imgPricingBackground} alt="Pricing Background" />
         </div>
         <div className="pricing-content">
-          <h2 className="pricing-title">Comfortable subscription plans<br />to keep you inspired</h2>
+          <div className="pricing-header">
+              <h2 className="pricing-title">Plans that keep the thrill alive.</h2>
+              <p className="pricing-text">
+                  Minutes are counted by actual video length. 1 minute of video = 1 minute used.
+                  <br/>
+                  Start / Plus / Pro plans include a 7-day free trial. Cancel anytime.
+              </p>
+          </div>
           <div className="pricing-cards">
             {/* Open Library Card */}
             <div className="pricing-card">
@@ -208,7 +214,7 @@ const HomePage: React.FC = () => {
               <ul className="price-features">
                 <li>Access to the Open Library</li>
                 <li>Lesson Builder for creating your own lessons</li>
-                <li>300 minutes of YouTube content included</li>
+                <li>300  minutes / month of YouTube content included</li>
                 <li>7-day free trial</li>
               </ul>
               <button className="get-started-btn" onClick={handleSignUp}>
@@ -218,13 +224,16 @@ const HomePage: React.FC = () => {
 
             {/* Plus Card */}
             <div className="pricing-card">
-              <h3>Plus</h3>
+              <div className="recommended-header">
+                  <h3>Plus</h3>
+                  <p className="recommended">Recommended 🔥</p>
+              </div>
               <div className="pricing-divider"></div>
               <p className="price">€20<span>/ month</span></p>
               <ul className="price-features">
                 <li>Access to the Open Library</li>
                 <li>Lesson Builder for creating your own lessons</li>
-                <li>600 minutes of YouTube content included</li>
+                <li>600  minutes / month of YouTube content included</li>
                 <li>7-day free trial</li>
               </ul>
               <button className="get-started-btn" onClick={handleSignUp}>
@@ -240,7 +249,7 @@ const HomePage: React.FC = () => {
               <ul className="price-features">
                 <li>Access to the Open Library</li>
                 <li>Lesson Builder for creating your own lessons</li>
-                <li>800 minutes of YouTube content included</li>
+                <li>800  minutes / month of YouTube content included</li>
                 <li>7 days free trial</li>
               </ul>
               <button className="get-started-btn" onClick={handleSignUp}>
@@ -269,17 +278,17 @@ const HomePage: React.FC = () => {
             </p>
           </div>
           <div className="faq-grid">
-              <div className="faq-card">
-                  <div className="faq-profile-image">
-                      <img src={imgFAQProfile5} alt="Profile" />
-                  </div>
-                  <div className="faq-content">
-                      <h3>How is it different from Chat GPT?</h3>
-                      <div className="faq-answer">
-                          <p>Chiils delivers a complete, beautifully structured lesson — from engaging lead-in to production — packed with every exercise type you need, perfectly balanced, no prompts required. All that in a couple of clicks. </p>
-                      </div>
-                  </div>
+            <div className="faq-card">
+              <div className="faq-profile-image">
+                <img src={imgFAQProfile5} alt="Profile" />
               </div>
+              <div className="faq-content">
+                <h3>How is it different from Chat GPT?</h3>
+                <div className="faq-answer">
+                  <p>Chiils delivers a complete, beautifully structured lesson — from engaging lead-in to production — packed with every exercise type you need, perfectly balanced, no prompts required. All that in a couple of clicks. </p>
+                </div>
+              </div>
+            </div>
             <div className="faq-card">
               <div className="faq-profile-image">
                 <img src={imgFAQProfile1} alt="Profile" />
@@ -339,10 +348,17 @@ const HomePage: React.FC = () => {
             — and teaching it should
             <br />
             feel that way too</h2>
-          <p className="cta-description">
-            Turn real content into ready-to-teach lessons and focus on what you love. Ready to join the community?
-          </p>
-          <button className="cta-button" onClick={handleSignUp}>Start for free →</button>
+        </div>
+
+        <div className="cta-bottom-bar">
+          <div className="cta-bar-inner">
+            <div className="cta-text-group">
+              <p>Start teaching smarter today.</p>
+              <p>Your first lesson is free.</p>
+              <button className="cta-button" onClick={handleSignUp}>Create your first lesson</button>
+            </div>
+
+          </div>
         </div>
       </div>
 
