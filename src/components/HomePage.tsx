@@ -135,7 +135,7 @@ const HomePage: React.FC = () => {
               <p className="feature-card-text">
                 Build a teaching experience students want to return to. Chiils offers you a modern tool to teach smarter, stay current, and show your students what real language learning feels like.
               </p>
-              <button className="create-first-lesson-btn" onClick={handleSignUp}>
+              <button className="create-first-lesson-btn" onClick={handleLessonBuilder}>
                 Create your first lesson
               </button>
               <div className="feature-icon-wrapper">
@@ -378,7 +378,7 @@ const HomePage: React.FC = () => {
             <div className="cta-text-group">
               <p>Start teaching smarter today.</p>
               <p>Your first lesson is free.</p>
-              <button className="cta-button" onClick={handleSignUp}>Create your first lesson</button>
+              <button className="cta-button" onClick={handleLessonBuilder}>Create your first lesson</button>
             </div>
           </div>
         </div>
