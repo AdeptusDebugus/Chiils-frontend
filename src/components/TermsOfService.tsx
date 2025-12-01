@@ -337,3 +337,8 @@ const TermsOfService: React.FC = () => {
 
 export default TermsOfService;
 
+
+
+
+
+

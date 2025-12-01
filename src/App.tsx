@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import HomePage from './components/HomePage';
 import Login from './components/Login';
 import LoginSuccess from './components/LoginSuccess';
 import Profile from './components/Profile';
@@ -22,9 +23,9 @@ import './App.css';
 function App() {
   const location = useLocation();
 
-  const authRoutes = ['/', '/login', '/login/success'];
+  const authRoutes = ['/login', '/login/success'];
   const isAuthRoute = authRoutes.includes(location.pathname);
-  const standaloneRoutes = ['/termsofservice', '/refundpolicy', '/privacypolicy', '/cookies'];
+  const standaloneRoutes = ['/', '/termsofservice', '/refundpolicy', '/privacypolicy', '/cookies'];
   const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
 
   const shouldShowSidebar = !isAuthRoute && !isStandaloneRoute;
@@ -70,7 +71,7 @@ function App() {
           <div className={mainContentClasses.join(' ')}>
             <Routes>
               {/* Public routes */}
-              <Route path="/" element={<Login />} />
+              <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/login/success" element={<LoginSuccess />} />
               <Route path="/lesson-order" element={<LessonOrderForm />} />

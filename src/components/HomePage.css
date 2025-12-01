@@ -1,207 +1,1632 @@
+/* Home Page Styles - Matching Figma Design */
+
 .home-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-  height: 100vh;
   width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: white;
+  font-family: 'TeX Gyre Heros', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Vertically center content if height < viewport */
+}
+
+/* Global Centered Container */
+.main-container {
+  width: 100%;
+  max-width: 1440px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 0 auto;
+}
+
+.hero-content .main-container {
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Header/Navigation */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  margin: 0;
+  padding: 32px 0;
+  /* Padding moved to container */
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Logo Container */
+.header-logo {
+  position: relative;
+  width: 166.203px;
+  height: 51.426px;
+  flex-shrink: 0;
+}
+
+.logo-group {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.logo-chiils-img {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: block;
+  z-index: 2;
+}
+
+.nav-links {
+  display: flex;
+  gap: 120px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.nav-link {
+  position: relative;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Sign up Button Container */
+.header-buttons {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.sign-up-btn {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 18px;
+  padding: 4px 39px;
+  height: 33px;
+  width: auto;
+  min-width: 156px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-up-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: black;
+}
+
+.sign-in-btn {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 18px;
+  padding: 4px 32px;
+  height: 33px;
+  width: auto;
+  min-width: 153px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-in-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: black;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 900px;
+  /* Or min-height: 100vh if we want full viewport */
   overflow: hidden;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Vertically center content */
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(30px);
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Center vertically */
+}
+
+
+.hero-title-row {
+  display: grid;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.hero-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 50px;
+  color: white;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.hero-subtitle-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  max-width: 405px;
+}
+
+.hero-subtitle-line {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  margin: 0;
+  text-align: left;
+}
+
+.first-lesson-btn {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 37px;
+  width: 325px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.first-lesson-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: black;
+}
+
+/* Second button */
+.community-lessons-btn {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 37px;
+  width: 325px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.community-lessons-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: black;
+}
+
+/* Container for hero buttons */
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-end;
+  /* Align with text */
+  position: absolute;
+  bottom: 35px;
+  right: 20px;
+  width: auto;
+}
+
+/* Feature Cards Section */
+.features-cards-section {
+  position: relative;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 60px;
+  padding: 44px 0;
+  /* Vertical padding only */
+  max-width: 100%;
+  margin: 0;
+  z-index: 3;
+  background-image: url('/assets/home/about-hero-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 1400px;
   box-sizing: border-box;
 }
 
-.hero-section {
-  text-align: center;
-  padding: 2rem 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 16px;
-  margin-bottom: 2rem;
-  flex-shrink: 0;
+/* Video Placeholder */
+.video-demo-placeholder {
   width: 100%;
+  height: 648px;
+  background: #F5F5F5;
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  max-width: 100%;
+}
+
+.video-demo-text {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  color: #a5a5a5;
+  text-align: center;
+}
+
+/* Section Title */
+.focus-on-teaching-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 50px;
+  color: white;
+  text-align: left;
+  width: 100%;
+  padding: 60px 0;
+  margin: 0;
+}
+
+.features-cards-container {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  width: 100%;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  /* Allow wrapping */
+  justify-content: space-between;
+}
+
+.feature-card-small {
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(0px);
+  ;
+  border: 1px solid rgba(255, 255, 255, 0.01);
+  border-radius: 22.106px;
+  padding: 30px;
+  width: calc(33.33% - 10px);
+  /* Responsive width */
+  min-width: 300px;
+  height: 420px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.feature-card-large {
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(0px);
+  ;
+  border: 1px solid rgba(255, 255, 255, 0.01);
+  border-radius: 22.106px;
+  padding: 30px;
+  width: calc(66.66% - 10px);
+  /* Responsive width */
+  min-width: 300px;
+  height: 420px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+}
+
+/* Adjust card widths for specific layout if needed, but flex-wrap handles it */
+/* Actually, the design has 2 small cards and 1 large card in a row? 
+   Wait, the previous code had them in a row. 
+   If they are in a row: Small (325) + Small (325) + Large (670) = 1320 + gaps.
+   1280px container might be tight.
+   Let's check the math. 1280px max-width.
+   325 + 325 + 670 = 1320. It won't fit in 1280px.
+   I need to adjust widths to be percentages or fit within 1280px.
+   Let's use flex-grow or percentages.
+   Small cards ~25%, Large card ~50%.
+*/
+
+
+.feature-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0;
+  z-index: 1;
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.feature-icon-img {
+  width: 105px;
+  height: 103px;
+  display: block;
+  object-fit: contain;
+}
+
+.feature-icon-img-large {
+  width: 105px;
+  height: 103px;
+  display: block;
+  object-fit: contain;
+}
+
+.feature-card-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: white;
+  margin: 0 0 15px;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+}
+
+.feature-card-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 0 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.feature-card-text {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  margin: 0;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.feature-card-small .feature-card-text {
+  padding-right: 0;
+  padding-bottom: 20px;
+}
+
+.feature-card-large .feature-card-text {
+  padding-right: 0;
+  padding-bottom: 20px;
+  max-width: 100%;
+}
+
+.create-first-lesson-btn {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 18px;
+  padding: 6px 20px;
+  width: 320px;
+  height: 42px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.create-first-lesson-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: black;
+}
+
+/* About Content (now inside features-cards-section) */
+.about-content {
+  max-width: 479px;
+  width: 100%;
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.about-content-wrapper {
+  max-width: 479px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.section-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 50px;
+  color: white;
+  margin: 0 0 30px;
+  text-align: left;
+  width: 100%;
+  align-self: flex-start;
+}
+
+.about-text-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-self: flex-start;
+  margin-bottom: 30px;
+}
+
+.about-text {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  margin: 0 0 20px;
+  text-align: left;
+}
+
+.about-text:last-child {
+  margin-bottom: 0;
+}
+
+.about-content .create-first-lesson {
+  margin-top: 0;
+  align-self: flex-start;
+}
+
+/* Tools Section */
+.tools-section {
+  position: relative;
+  width: 100%;
+  padding: 80px 0 75px;
+  /* Vertical padding only */
+  max-width: 100%;
+  margin: 0;
+  background: white;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  box-sizing: border-box;
+  overflow: visible;
+  min-height: 1000px;
+}
+
+.tools-section-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 50px;
+  color: #2a2b2a;
+  margin: 0 0 20px;
+  text-align: left;
+  width: 100%;
+}
+
+.tools-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.tool-card-large {
+  background: white;
+  border-radius: 22.106px;
+  padding: 0;
+  width: 100%;
+  height: 373px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* Remove background from main card wrapper */
+.tool-card-large:nth-child(1),
+.tool-card-large:nth-child(2) {
+  background: white;
+}
+
+/* Apply background to content area only */
+.tool-card-large:nth-child(1) .tool-card-content {
+  background-image: url('/assets/home/open-library-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.tool-card-large:nth-child(2) .tool-card-content {
+  background-image: url('/assets/home/lesson-builder-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.tool-card-content {
+  flex: 0 0 540px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+
+.tool-card-large h3 {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: #2a2b2a;
+  margin: 0 0 15px;
+  padding-bottom: 0;
+  border-bottom: none;
+  position: relative;
+  z-index: 2;
+}
+
+.tool-card-divider {
+  width: 453px;
+  height: 1px;
+  background: rgba(0, 0, 0, 1);
+  margin: 0 0 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.tool-card-description {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: #2a2b2a;
+  margin: 0;
+  max-width: 460px;
+}
+
+.tool-card-arrow-btn {
+  width: 49px;
+  height: 49px;
+  background: #2a2b2a;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  color: white;
+  line-height: 1;
+  margin-top: 50px;
+  align-self: flex-start;
+}
+
+.tool-card-arrow-btn:hover {
+  background: #404040;
+  /* Slight hover effect */
+  transform: scale(1.05);
+}
+
+.tool-card-image-placeholder {
+  flex: 1;
+  background: #d9d9d9;
+  margin: 0;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+}
+
+/* Video Section Removed */
+
+.video-description {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #2a2b2a;
+  margin: 0;
+  max-width: 479px;
+}
+
+.video-description {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #2a2b2a;
+  margin: 0;
+  max-width: 479px;
+}
+
+/* Pricing Section */
+.pricing-section {
+  position: relative;
+  width: 100%;
+  min-height: 800px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 80px 0;
+  /* Vertical padding only */
   box-sizing: border-box;
 }
 
-.hero-section h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.pricing-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
-.hero-subtitle {
-  font-size: 1.1rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.9;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+.pricing-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.cta-buttons {
+.pricing-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.pricing-header {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pricing-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 50px;
+  color: white;
+  margin: 0;
+}
+
+.pricing-text {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  margin: 0;
+}
+
+.pricing-cards {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+  width: 100%;
   flex-wrap: wrap;
+  /* Allow wrapping */
+}
+
+.pricing-card {
+  width: calc(25% - 15px);
+  /* Responsive width */
+  min-width: 280px;
+  height: 439px;
+  border-radius: 22.106px;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  backdrop-filter: blur(0px);
+  border: 2px solid transparent;
+  transition: border-color .2s;
+  flex-grow: 1;
+}
+
+/* Card variants */
+.pricing-card:nth-child(1) {
+  background: rgb(255, 255, 255, 0.5);
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
+.pricing-card:nth-child(n+2) {
+  background: rgba(42, 43, 42, 0.5);
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
+.pricing-card:nth-child(n+1) h3,
+.pricing-card:nth-child(n+1) .price,
+.pricing-card:nth-child(n+1) .price span,
+.pricing-card:nth-child(n+1) .price-features li {
+  color: white;
+}
+
+.pricing-card:nth-child(n+1) .pricing-divider {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.pricing-card:hover {
+  border-color: white;
+}
+
+.pricing-card h3 {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0 0 15px 0;
+}
+
+.pricing-divider {
+  width: 100%;
+  height: 1px;
+  margin-bottom: 15px;
+}
+
+.recommended-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recommended {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 25px;
+  color: white;
+  margin: 0 0 15px 0;
+}
+
+.price {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 18.566px;
+  margin: 20px 0 30px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.price span {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+}
+
+.price-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.price-features li {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.price-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+}
+
+.get-started-btn {
+  height: 33px;
+  border-radius: 18px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  cursor: pointer;
+  margin-top: auto;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+}
+
+.pricing-card:nth-child(n+1) .get-started-btn {
+  background: white;
+  color: #2a2b2a;
+}
+
+.btn-icon {
+  width: 24px;
+  height: 24px;
+}
+
+
+/* FAQ Section */
+
+
+/* FAQ Section */
+.faq-section {
+  position: relative;
+  width: 100%;
+  padding: 80px 0;
+  /* Vertical padding only */
+  max-width: 100%;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.faq-section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
+  margin-bottom: 40px;
+  width: 100%;
+  /* Ensure full width */
+}
+
+.faq-section-left {
+  flex: 0 0 324px;
+  /* Fixed width for left column */
+  max-width: 324px;
+}
+
+.faq-section .section-title {
+  color: #2a2b2a;
+  margin: 0 0 20px 0;
+}
+
+.faq-intro {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #2a2b2a;
+  margin: 0;
+}
+
+.faq-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
+  /* max-width: 843px;  Remove fixed max-width, let it fill */
+  margin-right: 0;
+  /* Remove margin */
+}
+
+.faq-card {
+  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  border-radius: 22.106px;
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+  min-height: 180px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.faq-profile-image {
+  flex-shrink: 0;
+  width: 135px;
+  height: 135px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.faq-profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.faq-content {
+  flex: 1;
+}
+
+.faq-card h3 {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: #2a2b2a;
+  margin: 0 0 15px;
+}
+
+.faq-answer {
+  background: #f5f5f5;
+  border-radius: 22px;
+  padding: 20px;
+  min-height: 87px;
+}
+
+.faq-answer p {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 15.79px;
+  font-weight: 400;
+  line-height: 19.738px;
+  color: #2a2b2a;
+  margin: 0;
+}
+
+
+
+@media (max-width: 1200px) {
+  .tools-cards-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .tool-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .stay-tuned-card {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .tool-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .tool-icon-img {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .pricing-cards {
+    flex-direction: column;
+  }
+
+  .pricing-card {
+    width: 100%;
+  }
+
+  .faq-grid {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .nav-links {
+    position: static;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .hero-section {
+    height: 600px;
+  }
+
+  .hero-content {
+    padding: 0 20px 40px;
+  }
+
+  .hero-title-row {
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  .hero-subtitle-lines {
+    align-self: flex-start;
+    padding-top: 0;
+  }
+
+  .hero-subtitle-line {
+    font-size: 20px;
+  }
+
+  .first-lesson-btn {
+    align-self: flex-start;
+  }
+
+  .features-cards-section {
+    padding: 20px;
+    left: 0;
+    width: 100%;
+  }
+
+  .features-cards-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 100%;
+    padding: 20px;
+  }
+
+  .feature-card-small .feature-card-text {
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+
+  .feature-card-large .feature-card-text {
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+
+  .feature-icon-img,
+  .feature-icon-img-large {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .feature-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .about-content {
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 30px;
+  }
+
+  .about-content-wrapper {
+    max-width: 100%;
+  }
+
+  .section-title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .pricing-card {
+    width: 100%;
+  }
+
+  .faq-grid {
+    margin-left: 0;
+  }
+}
+
+/* CTA Section */
+/* CTA Section */
+.cta-section {
+  position: relative;
+  width: 100%;
+  min-height: 789px;
+  padding: 0;
+  margin-top: 0;
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.cta-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cta-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+  padding: 59px 0 40px;
+  /* Vertical padding only */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+.cta-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 85px;
+  color: white;
+  margin: 0 0 30px;
+  max-width: 1187px;
+}
+
+.cta-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 227px;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    box-sizing: border-box;
+    z-index: 5;
+}
+
+.cta-bottom-bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: black;
+    opacity: 0.52;
+    backdrop-filter: blur(30px);
+    z-index: -1;
+}
+
+.cta-bar-inner {
+  width: 100%;
+  max-width: 1280px;
+  /* Match main container */
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+}
+
+.cta-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: fit-content;
+}
+
+.cta-text-group p {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: white;
+  margin: 0;
+  text-align: left;
 }
 
 .cta-button {
-  display: inline-block;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.1rem;
+  background: white;
+  border: none;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 38px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #2a2b2a;
+  cursor: pointer;
+  white-space: nowrap;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 325px;
+  box-sizing: border-box;
 }
 
-.cta-button.primary {
-  background: white;
-  color: #667eea;
-  border-color: white;
-}
-
-.cta-button.primary:hover {
+/* Compare Plan Button */
+.compare-plan-btn {
   background: transparent;
-  color: white;
-  border-color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid black;
+  border-radius: 18px;
+  padding: 10px 40px;
+  height: 38px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  color: black;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin: 40px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 325px;
 }
 
-.cta-button.secondary {
-  background: transparent;
-  color: white;
-  border-color: white;
+.compare-plan-btn:hover {
+  background: rgba(255, 255, 255, 1);
 }
 
-.cta-button.secondary:hover {
-  background: white;
-  color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.features-section {
-  text-align: center;
-  flex-shrink: 1;
-  overflow: hidden;
+.footer {
+  position: relative;
   width: 100%;
-}
-
-.features-section h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.feature-card {
+  z-index: 10;
   background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e9ecef;
-  transition: all 0.3s ease;
 }
 
-.feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
+/* Media Queries */
 
-.feature-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.feature-card h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-.feature-card p {
-  color: #666;
-  line-height: 1.5;
-  font-size: 0.95rem;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .home-page {
-    padding: 1rem;
-    overflow: hidden;
-  }
-  
-  .hero-section {
-    padding: 2rem 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .hero-section h1 {
-    font-size: 2.5rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.1rem;
-  }
-  
-  .cta-buttons {
+@media (max-width: 1200px) {
+  .tools-cards-group {
     flex-direction: column;
+    width: 100%;
+  }
+
+  .tool-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .stay-tuned-card {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .tool-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .tool-icon-img {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .pricing-cards {
+    flex-direction: column;
+  }
+
+  .pricing-card {
+    width: 100%;
+  }
+
+  .faq-grid {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 20px 0;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .nav-links {
+    position: static;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .header-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-section {
+    height: auto;
+    min-height: 600px;
+  }
+
+  .hero-content {
+    padding: 40px 0;
+  }
+
+
+  .hero-title-row {
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  .hero-subtitle-lines {
+    align-self: flex-start;
+    padding-top: 0;
+  }
+
+  .hero-subtitle-line {
+    font-size: 20px;
+  }
+
+  .first-lesson-btn {
+    align-self: flex-start;
+    width: 100%;
+    /* Full width on mobile */
+  }
+
+  .community-lessons-btn {
+    width: 100%;
+    /* Full width on mobile */
+  }
+
+  .hero-buttons {
+    width: 100%;
+    align-items: center;
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin-top: 20px;
+  }
+
+  .features-cards-section {
+    padding: 20px 0;
+  }
+
+  .features-cards-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 100%;
+    padding: 20px;
+  }
+
+  .feature-card-small .feature-card-text {
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+
+  .feature-card-large .feature-card-text {
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+
+  .feature-icon-img,
+  .feature-icon-img-large {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .feature-icon-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .about-content {
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 30px;
+  }
+
+  .about-content-wrapper {
+    max-width: 100%;
+  }
+
+  .section-title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .pricing-card {
+    width: 100%;
+  }
+
+  .pricing-cards {
+    gap: 20px;
+  }
+
+  .faq-section-header {
+    flex-direction: column;
+  }
+
+  .faq-section-left {
+    max-width: 100%;
+    flex: none;
+  }
+
+  .faq-grid {
+    margin-left: 0;
+  }
+
+  .cta-title {
+    font-size: 40px;
+    line-height: 48px;
+  }
+
+  .cta-bottom-bar {
+    height: auto;
+    padding: 40px 0;
+    position: relative;
+    /* Stack on mobile */
+  }
+
+  .cta-bar-inner {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cta-text-group {
     align-items: center;
   }
-  
+
+  .cta-text-group p {
+    text-align: center;
+  }
+
   .cta-button {
     width: 100%;
-    max-width: 300px;
-  }
-  
-  .features-section {
-    overflow: hidden;
-  }
-  
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .feature-card {
-    padding: 1.5rem;
   }
 }
-
-@media (max-width: 480px) {
-  .home-page {
-    padding: 0.5rem;
-  }
-  
-  .hero-section {
-    padding: 1.5rem 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .hero-section h1 {
-    font-size: 2rem;
-  }
-  
-  .features-section h2 {
-    font-size: 2rem;
-  }
-  
-  .features-section {
-    overflow: hidden;
-  }
-}
-

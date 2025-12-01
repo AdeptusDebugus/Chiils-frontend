@@ -1,30 +1,66 @@
 import React, { useEffect, useState } from 'react'
-import { footerService, FooterContent } from '../services/footerService'
 import './Footer.css'
 
+const footerLogo = "/assets/chiils-white-logo.svg"
+
+const  footerContent = {
+    navigation: [
+        {
+            label: 'Home',
+            path: '/',
+            requiresAuth: false,
+        },
+        {
+            label: 'Open library',
+            path: '/open-library',
+            requiresAuth: false,
+        },
+        {
+            label: 'Lesson builder',
+            path: '/lesson-order',
+            requiresAuth: false,
+        },
+        {
+            label: 'Profile',
+            path: '/profile',
+            requiresAuth: true,
+        },
+        {
+            label: 'Contacts',
+            path: '/contacts',
+            requiresAuth: false,
+        },
+    ],
+    company: {
+        name: 'Chiils',
+        legalName: 'Koala Station DOO Beograd',
+        year: new Date().getFullYear(),
+    },
+    contact: {
+        email: 'team@chiils.com',
+        emailLabel: 'team@chiils.com',
+    },
+    legal: [
+        {
+            label: 'Privacy policy',
+            path: '/privacypolicy',
+        },
+        {
+            label: 'Terms & Conditions',
+            path: '/termsofservice',
+        },
+        {
+            label: 'Refund policy',
+            path: '/refundpolicy',
+        },
+    ],
+    logo: {
+        src: '/assets/chiils-footer-logo.svg',
+        alt: 'Chiils',
+    },
+}
+
 const Footer: React.FC = () => {
-  const [footerContent, setFooterContent] = useState<FooterContent | null>(null)
-
-  // Fetch footer content from MCP service
-  useEffect(() => {
-    // Initialize and subscribe to content updates
-    footerService.initialize().then((content) => {
-      setFooterContent(content)
-    })
-
-    const unsubscribe = footerService.subscribe((content) => {
-      setFooterContent(content)
-    })
-
-    return () => {
-      unsubscribe()
-    }
-  }, [])
-
-  // Don't render if content hasn't loaded yet
-  if (!footerContent) {
-    return null
-  }
 
   return (
     <div className="figma-footer">
@@ -57,11 +93,11 @@ const Footer: React.FC = () => {
             </span>
           </div>
           
-          {/* Chiils Logo - From MCP service */}
+
           {footerContent.logo && (
             <div className="footer-logo-container">
               <img 
-                src={footerContent.logo.src}
+                src={footerLogo}
                 alt={footerContent.logo.alt} 
                 className="footer-logo-svg"
               />

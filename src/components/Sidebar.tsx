@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
       {/* Chiils Logo */}
       <div className="sidebar-logo">
         <div className="logo-container">
-          <img alt="Chiils" className="logo-img" src="/assets/chiils-logo.svg" />
+          <img alt="Chiils" className="logo-img" src="/assets/chiils-black-logo.svg" />
         </div>
       </div>
       
