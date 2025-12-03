@@ -5,17 +5,17 @@ import Footer from './Footer';
 import ComparePlansPopup from './ComparePlansPopup';
 
 //IMAGES
-const imgHeroImage = "/assets/home/about-hero-human.png";
+const imgHeroImage = "/assets/home/about-hero-human.webp";
 const imgChiilsLogo = "/assets/chiils-white-logo.svg";
 const imgFeatureCardSmall1 = "/assets/home/feature-card-small-1.svg";
 const imgFeatureCardSmall2 = "/assets/home/feature-card-small-2.svg";
-const imgPricingBackground = "/assets/home/pricing-background.png";
-const imgFAQProfile1 = "/assets/home/portrait-1.png";
-const imgFAQProfile2 = "/assets/home/portrait-2.png";
-const imgFAQProfile3 = "/assets/home/portrait-3.png";
-const imgFAQProfile4 = "/assets/home/portrait-4.png";
-const imgFAQProfile5 = "/assets/home/portrait-5.png";
-const imgJoyfulWomanPortrait = "/assets/home/cta-background.png";
+const imgPricingBackground = "/assets/home/pricing-background.webp";
+const imgFAQProfile1 = "/assets/home/portrait-1.webp";
+const imgFAQProfile2 = "/assets/home/portrait-2.webp";
+const imgFAQProfile3 = "/assets/home/portrait-3.webp";
+const imgFAQProfile4 = "/assets/home/portrait-4.webp";
+const imgFAQProfile5 = "/assets/home/portrait-5.webp";
+const imgJoyfulWomanPortrait = "/assets/home/cta-background.webp";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
