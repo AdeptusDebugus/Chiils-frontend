@@ -2,15 +2,13 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import Footer from './Footer';
+import ComparePlansPopup from './ComparePlansPopup';
 
 //IMAGES
 const imgHeroImage = "/assets/home/about-hero-human.png";
 const imgChiilsLogo = "/assets/chiils-white-logo.svg";
 const imgFeatureCardSmall1 = "/assets/home/feature-card-small-1.svg";
 const imgFeatureCardSmall2 = "/assets/home/feature-card-small-2.svg";
-const imgToolCardOpenLibrary = "/assets/home/open-libriary.svg";
-const imgToolCardLessonBuilder = "/assets/home/lesson-builder.svg";
-const imgStayTunedCard = "/assets/home/for-more.svg";
 const imgPricingBackground = "/assets/home/pricing-background.png";
 const imgFAQProfile1 = "/assets/home/portrait-1.png";
 const imgFAQProfile2 = "/assets/home/portrait-2.png";
@@ -21,6 +19,7 @@ const imgJoyfulWomanPortrait = "/assets/home/cta-background.png";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const [showComparePopup, setShowComparePopup] = React.useState(false);
 
   const handleSignUp = () => {
     navigate('/login');
@@ -77,19 +76,19 @@ const HomePage: React.FC = () => {
 
         <div className="hero-content">
           <div className="main-container">
-              <div className="hero-title-row">
-                <h1 className="hero-title">
-                  Teach real language.<br />No busywork.
-                </h1>
-                <div className="hero-subtitle-lines">
-                  <p className="hero-subtitle-line">Turn any video into a ready-to-teach lesson</p>
-                  <p className="hero-subtitle-line">in a couple of clicks.</p>
-                </div>
+            <div className="hero-title-row">
+              <h1 className="hero-title">
+                Teach real language.<br />No busywork.
+              </h1>
+              <div className="hero-subtitle-lines">
+                <p className="hero-subtitle-line">Turn any video into a ready-to-teach lesson</p>
+                <p className="hero-subtitle-line">in a couple of clicks.</p>
               </div>
-              <div className="hero-buttons">
-                <button className="first-lesson-btn" onClick={handleLessonBuilder}>Create your first lesson free</button>
-                <button className="community-lessons-btn" onClick={handleOpenLib}>See 500+ community lessons</button>
-              </div>
+            </div>
+            <div className="hero-buttons">
+              <button className="first-lesson-btn" onClick={handleLessonBuilder}>Create your first lesson free</button>
+              <button className="community-lessons-btn" onClick={handleOpenLib}>See 500+ community lessons</button>
+            </div>
           </div>
         </div>
       </div>
@@ -99,7 +98,7 @@ const HomePage: React.FC = () => {
         <div className="main-container">
           {/* Video Demo Placeholder */}
           <div className="video-demo-placeholder">
-            <p className="video-demo-text">Product Demo Video</p>
+            <p className="video-demo-text">Video demo coming soon</p>
           </div>
 
           {/* Section Title */}
@@ -135,10 +134,10 @@ const HomePage: React.FC = () => {
               <p className="feature-card-text">
                 Build a teaching experience students want to return to. Chiils offers you a modern tool to teach smarter, stay current, and show your students what real language learning feels like.
               </p>
-              <button className="create-first-lesson-btn" onClick={handleLessonBuilder}>
-                Create your first lesson
-              </button>
-              <div className="feature-icon-wrapper">
+              <div className="feature-large-card-icon-wrapper">
+                  <button className="create-first-lesson-btn" onClick={handleLessonBuilder}>
+                      Create your first lesson
+                  </button>
                 <img src="/assets/home/feature-card-large.svg" alt="Feature icon" className="feature-icon-img-large" />
               </div>
             </div>
@@ -165,7 +164,7 @@ const HomePage: React.FC = () => {
                 </button>
               </div>
               <div className="tool-card-image-placeholder">
-                <p>Product Screenshot Placeholder</p>
+                <p>Demo coming soon</p>
               </div>
             </div>
 
@@ -180,7 +179,7 @@ const HomePage: React.FC = () => {
                 </button>
               </div>
               <div className="tool-card-image-placeholder">
-                <p>Product Screenshot Placeholder</p>
+                <p>Demo coming soon</p>
               </div>
             </div>
           </div>
@@ -209,9 +208,11 @@ const HomePage: React.FC = () => {
                 <div className="pricing-divider"></div>
                 <p className="price">€5<span>/ month</span></p>
                 <ul className="price-features">
-                  <li>Full access to the Open Library</li>
-                  <li>Ready-made lessons curated by Chiils community</li>
-                  <li>Interactive exercises included in each lesson</li>
+                    <li>Full access to the Open Library</li>
+                    <li>Ready-made lessons created by Chiils community</li>
+                    <li>Interactive exercises</li>
+                    <li>Interactive flashcards</li>
+                    <li>Grammar hints</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Sign up</span>
@@ -224,10 +225,10 @@ const HomePage: React.FC = () => {
                 <div className="pricing-divider"></div>
                 <p className="price">€10<span>/ month</span></p>
                 <ul className="price-features">
-                  <li>Access to the Open Library</li>
-                  <li>Lesson Builder for creating your own lessons</li>
-                  <li>300  minutes / month of YouTube content included</li>
                   <li>7-day free trial</li>
+                  <li>Everything in Open Library</li>
+                  <li>Lesson Builder for creating your own lessons</li>
+                  <li>300 minutes / month of YouTube videos included</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Start for free</span>
@@ -243,10 +244,11 @@ const HomePage: React.FC = () => {
                 <div className="pricing-divider"></div>
                 <p className="price">€20<span>/ month</span></p>
                 <ul className="price-features">
-                  <li>Access to the Open Library</li>
-                  <li>Lesson Builder for creating your own lessons</li>
-                  <li>600  minutes / month of YouTube content included</li>
-                  <li>7-day free trial</li>
+                  <li>7 days free trial</li>
+                  <li>Everything in Start</li>
+                  <li>600 minutes / month of YouTube videos included</li>
+                  <li>Personal collections</li>
+                  <li>2 generation modes</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Start for free</span>
@@ -259,17 +261,17 @@ const HomePage: React.FC = () => {
                 <div className="pricing-divider"></div>
                 <p className="price">€30<span>/ month</span></p>
                 <ul className="price-features">
-                  <li>Access to the Open Library</li>
-                  <li>Lesson Builder for creating your own lessons</li>
-                  <li>800  minutes / month of YouTube content included</li>
                   <li>7 days free trial</li>
+                  <li>Everything in Plus</li>
+                  <li>800 minutes / month of YouTube content included</li>
+                  <li>Student progress</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Start for free</span>
                 </button>
               </div>
             </div>
-            <button className="compare-plan-btn">Compare plans →</button>
+            <button className="compare-plan-btn" onClick={() => setShowComparePopup(true)}>Compare plans →</button>
           </div>
         </div>
       </div>
@@ -286,7 +288,7 @@ const HomePage: React.FC = () => {
                 Here are some answers to frequently asked questions that might help you get started.
                 <br />
                 <br />
-                If you don't find what you're looking for, just email us at team@chiils.com
+                If you don't find what you're looking for, just email us at <strong>team@chiils.com</strong>
                 <br />
                 — we'll be happy to help.
               </p>
@@ -341,9 +343,9 @@ const HomePage: React.FC = () => {
                   <img src={imgFAQProfile4} alt="Profile" />
                 </div>
                 <div className="faq-content">
-                  <h3>Can I use any video or podcast to create a lesson?</h3>
+                  <h3>Can I share my lessons with students?</h3>
                   <div className="faq-answer">
-                    <p>At the moment, Chiils supports public YouTube videos only. We don't host or upload content — you just need a link to create your lesson.</p>
+                    <p>Yes! You can instantly share your full lesson with students via a simple public link. No sign-up, no login, no extra steps required.</p>
                   </div>
                 </div>
               </div>
@@ -388,6 +390,8 @@ const HomePage: React.FC = () => {
       <div className="footer">
         <Footer />
       </div>
+
+      {showComparePopup && <ComparePlansPopup onClose={() => setShowComparePopup(false)} />}
     </div>
   );
 };
