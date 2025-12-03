@@ -10,6 +10,9 @@ const imgChiilsLogo = "/assets/chiils-white-logo.svg";
 const imgFeatureCardSmall1 = "/assets/home/feature-card-small-1.svg";
 const imgFeatureCardSmall2 = "/assets/home/feature-card-small-2.svg";
 const imgPricingBackground = "/assets/home/pricing-background.webp";
+const imgAboutBackground = "/assets/home/about-background.webp";
+const imgLessonBuilderBackground = "/assets/home/lesson-builder-background.webp";
+const imgOpenLibBackground = "/assets/home/open-library-background.webp";
 const imgFAQProfile1 = "/assets/home/portrait-1.webp";
 const imgFAQProfile2 = "/assets/home/portrait-2.webp";
 const imgFAQProfile3 = "/assets/home/portrait-3.webp";
@@ -40,9 +43,6 @@ const HomePage: React.FC = () => {
   return (
     <div className="home-page" data-name="Public Space">
       {/* Navigation Header - Matching Figma Design */}
-
-
-      {/* Hero Section */}
       {/* Hero Section */}
       <div className="hero-section">
         <div className="hero-background">
@@ -95,6 +95,9 @@ const HomePage: React.FC = () => {
 
       {/* Feature Cards Section */}
       <div className="features-cards-section" id="about">
+          <div className="about-background">
+              <img src={imgAboutBackground} alt="Hero" className="hero-image" />
+          </div>
         <div className="main-container">
           {/* Video Demo Placeholder */}
           <div className="video-demo-placeholder">
@@ -156,6 +159,9 @@ const HomePage: React.FC = () => {
             {/* Open Library Card */}
             <div className="tool-card-large">
               <div className="tool-card-content">
+                  <div className="about-background">
+                      <img src={imgOpenLibBackground} alt="Hero" className="hero-image" />
+                  </div>
                 <h3>Open Library</h3>
                 <div className="tool-card-divider"></div>
                 <p className="tool-card-description">A growing library of ready-to-use lessons you can teach right away.</p>
@@ -171,6 +177,9 @@ const HomePage: React.FC = () => {
             {/* Lesson Builder Card */}
             <div className="tool-card-large">
               <div className="tool-card-content">
+                  <div className="about-background">
+                      <img src={imgLessonBuilderBackground} alt="Hero" className="hero-image" />
+                  </div>
                 <h3>Lesson Builder</h3>
                 <div className="tool-card-divider"></div>
                 <p className="tool-card-description">A video-to-lesson tool for creating custom lessons in a couple of clicks.</p>
