@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLessonBuilder } from '../contexts/LessonBuilderContext';
 import './HomePage.css';
 import Footer from './Footer';
 import ComparePlansPopup from './ComparePlansPopup';
@@ -22,6 +23,7 @@ const imgJoyfulWomanPortrait = "/assets/home/cta-background.webp";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { openLessonBuilder } = useLessonBuilder();
   const [showComparePopup, setShowComparePopup] = React.useState(false);
 
   const handleSignUp = () => {
@@ -37,7 +39,8 @@ const HomePage: React.FC = () => {
   };
 
   const handleLessonBuilder = () => {
-    navigate('/lesson-order');
+    navigate('/open-library');
+    openLessonBuilder();
   };
 
   return (
@@ -95,9 +98,9 @@ const HomePage: React.FC = () => {
 
       {/* Feature Cards Section */}
       <div className="features-cards-section" id="about">
-          <div className="about-background">
-              <img src={imgAboutBackground} alt="Hero" className="hero-image" />
-          </div>
+        <div className="about-background">
+          <img src={imgAboutBackground} alt="Hero" className="hero-image" />
+        </div>
         <div className="main-container">
           {/* Video Demo Placeholder */}
           <div className="video-demo-placeholder">
@@ -138,9 +141,9 @@ const HomePage: React.FC = () => {
                 Build a teaching experience students want to return to. Chiils offers you a modern tool to teach smarter, stay current, and show your students what real language learning feels like.
               </p>
               <div className="feature-large-card-icon-wrapper">
-                  <button className="create-first-lesson-btn" onClick={handleLessonBuilder}>
-                      Create your first lesson
-                  </button>
+                <button className="create-first-lesson-btn" onClick={handleLessonBuilder}>
+                  Create your first lesson
+                </button>
                 <img src="/assets/home/feature-card-large.svg" alt="Feature icon" className="feature-icon-img-large" />
               </div>
             </div>
@@ -159,9 +162,9 @@ const HomePage: React.FC = () => {
             {/* Open Library Card */}
             <div className="tool-card-large">
               <div className="tool-card-content">
-                  <div className="about-background">
-                      <img src={imgOpenLibBackground} alt="Hero" className="hero-image" />
-                  </div>
+                <div className="about-background">
+                  <img src={imgOpenLibBackground} alt="Hero" className="hero-image" />
+                </div>
                 <h3>Open Library</h3>
                 <div className="tool-card-divider"></div>
                 <p className="tool-card-description">A growing library of ready-to-use lessons you can teach right away.</p>
@@ -177,9 +180,9 @@ const HomePage: React.FC = () => {
             {/* Lesson Builder Card */}
             <div className="tool-card-large">
               <div className="tool-card-content">
-                  <div className="about-background">
-                      <img src={imgLessonBuilderBackground} alt="Hero" className="hero-image" />
-                  </div>
+                <div className="about-background">
+                  <img src={imgLessonBuilderBackground} alt="Hero" className="hero-image" />
+                </div>
                 <h3>Lesson Builder</h3>
                 <div className="tool-card-divider"></div>
                 <p className="tool-card-description">A video-to-lesson tool for creating custom lessons in a couple of clicks.</p>
@@ -217,11 +220,11 @@ const HomePage: React.FC = () => {
                 <div className="pricing-divider"></div>
                 <p className="price">€5<span>/ month</span></p>
                 <ul className="price-features">
-                    <li>Full access to the Open Library</li>
-                    <li>Ready-made lessons created by Chiils community</li>
-                    <li>Interactive exercises</li>
-                    <li>Interactive flashcards</li>
-                    <li>Grammar hints</li>
+                  <li>Full access to the Open Library</li>
+                  <li>Ready-made lessons created by Chiils community</li>
+                  <li>Interactive exercises</li>
+                  <li>Interactive flashcards</li>
+                  <li>Grammar hints</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Sign up</span>
