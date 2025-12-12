@@ -2,12 +2,13 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
+import { LessonBuilderProvider, useLessonBuilder } from './contexts/LessonBuilderContext';
+import LessonBuilderPopup from './components/LessonBuilderPopup';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
 import LoginSuccess from './components/LoginSuccess';
 import Profile from './components/Profile';
-import LessonOrderForm from './components/LessonOrderForm';
 import OpenLibrary from './components/OpenLibrary';
 import LessonPage from './components/LessonPage';
 import Sidebar from './components/Sidebar';
@@ -19,6 +20,11 @@ import PrivacyPolicy from './components/PrivacyPolicy.tsx';
 import CookiePolicy from './components/CookiePolicy.tsx';
 import TermlyBanner from './components/TermlyBanner';
 import './App.css';
+
+const LessonBuilderPopupWrapper = () => {
+  const { isOpen, closeLessonBuilder } = useLessonBuilder();
+  return isOpen ? <LessonBuilderPopup isOpen={isOpen} onClose={closeLessonBuilder} /> : null;
+};
 
 function App() {
   const location = useLocation();
@@ -63,48 +69,51 @@ function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
-        <div className="app">
-          {/* Sidebar first in DOM order */}
-          {shouldShowSidebar && <Sidebar />}
-          
-          {/* Main content area */}
-          <div className={mainContentClasses.join(' ')}>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/login/success" element={<LoginSuccess />} />
-              <Route path="/lesson-order" element={<LessonOrderForm />} />
-              <Route path="/open-library" element={<OpenLibrary />} />
-              <Route path="/lesson/:id" element={<LessonPage />} />
-              <Route path="/termsofservice" element={<TermsOfService />} />
-              <Route path="/refundpolicy" element={<RefundPolicy />} />
-              <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-              <Route path="/cookies" element={<CookiePolicy />} />
-              
-              {/* Protected routes */}
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* Catch all route */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+        <LessonBuilderProvider>
+          <div className="app">
+            {/* Sidebar first in DOM order */}
+            {shouldShowSidebar && <Sidebar />}
+
+            {/* Main content area */}
+            <div className={mainContentClasses.join(' ')}>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/login/success" element={<LoginSuccess />} />
+
+                <Route path="/open-library" element={<OpenLibrary />} />
+                <Route path="/lesson/:id" element={<LessonPage />} />
+                <Route path="/termsofservice" element={<TermsOfService />} />
+                <Route path="/refundpolicy" element={<RefundPolicy />} />
+                <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+                <Route path="/cookies" element={<CookiePolicy />} />
+
+                {/* Protected routes */}
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Catch all route */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </div>
+
+            {/* Footer last in DOM order */}
+            {shouldShowFooter && <Footer />}
+
+            {/* Global lesson monitor */}
+            <GlobalLessonMonitor />
+            {/* Termly banner displayed globally so the consent modal is always available. */}
+            <TermlyBanner />
+            <LessonBuilderPopupWrapper />
           </div>
-          
-          {/* Footer last in DOM order */}
-          {shouldShowFooter && <Footer />}
-          
-          {/* Global lesson monitor */}
-          <GlobalLessonMonitor />
-          {/* Termly banner displayed globally so the consent modal is always available. */}
-          <TermlyBanner />
-        </div>
+        </LessonBuilderProvider>
       </NotificationProvider>
     </AuthProvider>
   )
