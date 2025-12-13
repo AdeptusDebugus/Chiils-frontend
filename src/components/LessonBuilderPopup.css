@@ -175,11 +175,6 @@
     color: #999999;
 }
 
-.lb-input:focus {
-    background: #ffffff;
-    border: 1px solid #2a2b2a;
-    box-shadow: 0 0 0 2px rgba(42, 43, 42, 0.1);
-}
 
 .lb-input.has-error {
     border-color: #f44336;
@@ -207,6 +202,14 @@
 
 .lb-helper-text.orange {
     color: #f26430;
+}
+
+.lb-error-text {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #f44336;
+    margin: 5px 0 0 10px;
 }
 
 /* Actions */

@@ -7,6 +7,7 @@ import {
     LANGUAGES, CEFR_LEVELS, SCENARIOS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
     type CefrLevel
 } from '../utils/filters';
+import { extractYouTubeId } from '../utils/youtube';
 
 interface LessonBuilderPopupProps {
     isOpen: boolean;
@@ -23,7 +24,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
 
     // Filter States
     const [selectedLanguage, setSelectedLanguage] = useState<string>();
-    const [selectedCefrLevels, setSelectedCefrLevels] = useState<string[]>([]); // Default B1
+    const [selectedCefrLevels, setSelectedCefrLevels] = useState<string[]>([]);
     const [selectedScenarios, setSelectedScenarios] = useState<string[]>([]);
     const [selectedGrammar, setSelectedGrammar] = useState<string[]>([]);
     const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -60,7 +61,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
     };
 
     const handleScenarioToggle = (scenario: string) => {
-        setSelectedScenarios(prev => prev.includes(scenario) ? prev.filter(s => s !== scenario) : [...prev, scenario]);
+        setSelectedScenarios([scenario]);
     };
 
     const handleGrammarToggle = (topic: string) => {
@@ -91,13 +92,15 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
         const newErrors: { [key: string]: boolean } = {};
         if (!selectedLanguage) newErrors.language = true;
         if (selectedCefrLevels.length === 0) newErrors.level = true;
-        if (!youtubeLink) newErrors.link = true;
+        if (!youtubeLink) {
+            newErrors.link = true;
+        } else if (!extractYouTubeId(youtubeLink)) {
+            newErrors.link = true;
+        }
         if (selectedGrammar.length === 0) newErrors.grammar = true;
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            // Removed status message error as requested
-            // setStatus({ type: 'error', message: 'Please fill in all required fields.' });
             return;
         }
 
@@ -161,21 +164,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
 
                     </div>
 
-                    {status.message && status.type !== 'error' && ( // Only show success (or idle?) message, hide generic error
-                        <div className={`status-message ${status.type}`}>
-                            {status.message}
-                        </div>
-                    )}
-                    {/* Keep general error only if it's NOT validation related (e.g. backend error)
-                        Or user said "Remove the status-message error" entirely? 
-                        The validation error used to be "Please fill in all..."
-                        Backend errors might still be useful to see? "Failed to create..."
-                        I will verify if status.type is 'error' and show it ONLY if it's from backend catch block.
-                        The backend error sets status.message, my validation sets empty message.
-                        Wait, I am currently not setting status message for validation.
-                        So simply: {status.message && ...} should work if I don't set it in validation.
-                    */}
-                    {status.message && (
+                    {status.message && status.type !== 'error' && (
                         <div className={`status-message ${status.type}`}>
                             {status.message}
                         </div>
@@ -196,6 +185,10 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                         activeCount={selectedLanguage ? 1 : 0}
                                         isDefault={!selectedLanguage}
                                         error={errors.language}
+                                        onClear={() => {
+                                            setSelectedLanguage(undefined);
+                                            setErrors(prev => ({ ...prev, language: false }));
+                                        }}
                                     >
                                         <div className="filters-row">
                                             {LANGUAGES.map(lang => (
@@ -225,6 +218,10 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                         activeCount={selectedCefrLevels.length}
                                         isDefault={selectedCefrLevels.length === 0}
                                         error={errors.level}
+                                        onClear={() => {
+                                            setSelectedCefrLevels([]);
+                                            setErrors(prev => ({ ...prev, level: false }));
+                                        }}
                                     >
                                         <div className="filters-row">
                                             {CEFR_LEVELS.map(level => (
@@ -250,6 +247,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                         onToggle={() => toggleDropdown('scenario')}
                                         activeCount={selectedScenarios.length}
                                         isDefault={selectedScenarios.length === 0}
+                                        onClear={() => setSelectedScenarios([])}
                                     >
                                         <div className="filters-row">
                                             {SCENARIOS.map(s => (
@@ -274,13 +272,22 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                 <div className="lb-field-container">
                                     <p className="lb-helper-text">Your video must be under 120 minutes</p>
                                     <input
-                                        className={`lb-input ${errors.link ? 'has-error' : ''}`}
-                                        value={youtubeLink}
+                                        className="lb-input"
+                                        value={errors.link ? "Please enter a valid YouTube link" : youtubeLink}
                                         onChange={e => {
                                             setYoutubeLink(e.target.value);
-                                            if (errors.link) setErrors(prev => ({ ...prev, link: false }));
+                                            if (errors.link) {
+                                                setErrors(prev => ({ ...prev, link: false }));
+                                            }
+                                        }}
+                                        onFocus={e => {
+                                            if (errors.link) {
+                                                setYoutubeLink('');
+                                                setErrors(prev => ({ ...prev, link: false }));
+                                            }
                                         }}
                                         placeholder="Paste Youtube link"
+                                        style={errors.link ? { color: '#f44336' } : {}}
                                     />
                                 </div>
                             </div>
@@ -300,6 +307,10 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                         disabled={!selectedLanguage || selectedCefrLevels.length === 0}
                                         isDefault={selectedGrammar.length === 0}
                                         error={errors.grammar}
+                                        onClear={() => {
+                                            setSelectedGrammar([]);
+                                            setErrors(prev => ({ ...prev, grammar: false }));
+                                        }}
                                     >
                                         <div className="filters-row topics-grid">
                                             {availableGrammarTopics.map(t => (

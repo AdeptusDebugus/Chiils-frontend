@@ -94,7 +94,6 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: #37352f;
-  box-shadow: 0 0 0 1px #37352f;
 }
 
 .dark input,

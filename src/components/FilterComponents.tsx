@@ -30,9 +30,10 @@ interface FilterDropdownProps {
     isDefault?: boolean;
     disabled?: boolean;
     error?: boolean;
+    onClear?: () => void;
 }
 
-export const FilterDropdown = ({ label, children, isOpen, onToggle, activeCount = 0, isDefault = false, disabled = false, error = false }: FilterDropdownProps) => {
+export const FilterDropdown = ({ label, children, isOpen, onToggle, activeCount = 0, isDefault = false, disabled = false, error = false, onClear }: FilterDropdownProps) => {
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -45,8 +46,21 @@ export const FilterDropdown = ({ label, children, isOpen, onToggle, activeCount 
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isOpen, onToggle]);
 
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        // Check for Backspace or Delete key
+        if ((event.key === 'Backspace' || event.key === 'Delete') && onClear && activeCount && activeCount > 0) {
+            event.preventDefault();
+            onClear();
+        }
+    };
+
     return (
-        <div className={`filter-dropdown ${isOpen ? 'open' : ''} ${isDefault ? 'is-default' : ''} ${disabled ? 'disabled' : ''} ${error ? 'has-error' : ''}`} ref={dropdownRef}>
+        <div
+            className={`filter-dropdown ${isOpen ? 'open' : ''} ${isDefault ? 'is-default' : ''} ${disabled ? 'disabled' : ''} ${error ? 'has-error' : ''}`}
+            ref={dropdownRef}
+            onKeyDown={handleKeyDown}
+            tabIndex={-1}
+        >
             <button className="filter-dropdown-trigger" onClick={disabled ? undefined : onToggle} disabled={disabled}>
                 <span className="dropdown-label">{label}</span>
                 <span className="dropdown-arrow"><ChevronDown /></span>

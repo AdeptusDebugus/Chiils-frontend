@@ -80,12 +80,34 @@
   gap: 12px;
 }
 
+.lesson-builder-button.expanded {
+  width: 195px;
+  /* Keep expanded when popup is open */
+  background-color: #f9f9f9;
+  gap: 12px;
+}
+
 .lesson-builder-button svg {
   width: 34px;
   height: 34px;
   flex-shrink: 0;
   filter: grayscale(100%) brightness(0);
   /* Force black color */
+  animation: rotate360 15s linear infinite;
+}
+
+@keyframes rotate360 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  6.67% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .button-text {
@@ -100,6 +122,11 @@
 }
 
 .lesson-builder-button:hover .button-text {
+  opacity: 1;
+  max-width: 120px;
+}
+
+.lesson-builder-button.expanded .button-text {
   opacity: 1;
   max-width: 120px;
 }
@@ -197,10 +224,6 @@
   user-select: none;
 }
 
-.search-input:focus {
-  outline: none;
-  border-bottom-color: var(--rt-accent);
-}
 
 .search-input::placeholder {
   color: black;
@@ -323,13 +346,12 @@
 
 /* Disabled State */
 .filter-dropdown.disabled {
-  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .filter-dropdown.disabled .filter-dropdown-trigger {
   cursor: not-allowed;
-  background: #f0f0f0;
+  background: white;
 }
 
 .grammar-warning-text {
@@ -377,7 +399,6 @@
 /* Trigger Hover */
 .filter-dropdown-trigger:hover {
   background: #f9f9f9;
-  border-color: #d0d0d0;
 }
 
 .dropdown-arrow {

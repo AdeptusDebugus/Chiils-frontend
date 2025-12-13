@@ -286,7 +286,7 @@ const OpenLibrary: React.FC = () => {
     const [showSearchHelp, setShowSearchHelp] = useState(false);
 
     // Global Popup
-    const { openLessonBuilder } = useLessonBuilder();
+    const { openLessonBuilder, isOpen } = useLessonBuilder();
 
     const toggleDropdown = (name: string) => {
         setOpenDropdown(prev => prev === name ? null : name);
@@ -321,7 +321,7 @@ const OpenLibrary: React.FC = () => {
                         All community-created lessons in one place — use tags to find what you need just in a few clicks.
                     </p>
                 </div>
-                <button className="lesson-builder-button" onClick={openLessonBuilder}>
+                <button className={`lesson-builder-button ${isOpen ? 'expanded' : ''}`} onClick={openLessonBuilder}>
                     <span className="button-text">Lesson Builder</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="106" height="104" viewBox="0 0 106 104" fill="none">
                         <g opacity="1">
@@ -351,6 +351,7 @@ const OpenLibrary: React.FC = () => {
                                 onToggle={() => toggleDropdown('language')}
                                 activeCount={selectedLanguage !== 'English' ? 1 : 0}
                                 isDefault={!selectedLanguage}
+                                onClear={() => setSelectedLanguage('')}
                             >
                                 <div className="filters-row">
                                     {LANGUAGES.map(lang => (
@@ -374,6 +375,7 @@ const OpenLibrary: React.FC = () => {
                                 onToggle={() => toggleDropdown('level')}
                                 activeCount={selectedCefrLevels.length}
                                 isDefault={selectedCefrLevels.length === 0}
+                                onClear={() => setSelectedCefrLevels([])}
                             >
                                 <div className="filters-row">
                                     {CEFR_LEVELS.map(level => (
@@ -397,6 +399,7 @@ const OpenLibrary: React.FC = () => {
                                 onToggle={() => toggleDropdown('scenario')}
                                 activeCount={selectedScenarios.length}
                                 isDefault={selectedScenarios.length === 0}
+                                onClear={() => setSelectedScenarios([])}
                             >
                                 <div className="filters-row">
                                     {SCENARIOS.map(scenario => (
@@ -429,6 +432,7 @@ const OpenLibrary: React.FC = () => {
                                 activeCount={selectedGrammar.length}
                                 isDefault={selectedGrammar.length === 0}
                                 disabled={!selectedLanguage || selectedCefrLevels.length === 0}
+                                onClear={() => setSelectedGrammar([])}
                             >
                                 <div className="filters-row topics-grid">
                                     {availableGrammarTopics.map(topic => (
@@ -455,6 +459,7 @@ const OpenLibrary: React.FC = () => {
                                 onToggle={() => toggleDropdown('topics')}
                                 activeCount={selectedTopics.length}
                                 isDefault={selectedTopics.length === 0}
+                                onClear={() => setSelectedTopics([])}
                             >
                                 <div className="filters-row topics-grid">
                                     {TOPICS.map(topic => (
@@ -562,9 +567,9 @@ const OpenLibrary: React.FC = () => {
                                 ))}
                             </div>
 
-                            {filteredLessons.length === 0 && searchTerm && (
+                            {filteredLessons.length === 0 && (
                                 <div className="no-results">
-                                    <p>No lessons found matching "{searchTerm}"</p>
+                                    <p>Seems like nothing matches your filters. Try adjusting them.</p>
                                 </div>
                             )}
                         </>
