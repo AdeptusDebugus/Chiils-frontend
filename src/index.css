@@ -72,7 +72,7 @@ button:hover {
 
 button:focus,
 button:focus-visible {
-  outline: 2px auto black;
+  outline: 1px auto black;
 }
 
 input,

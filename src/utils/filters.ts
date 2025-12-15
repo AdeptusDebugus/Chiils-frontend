@@ -1,4 +1,4 @@
-export const LANGUAGES = ['English', 'French'] as const;
+export const LANGUAGES = ['English'] as const;
 export type Language = typeof LANGUAGES[number];
 
 export const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
