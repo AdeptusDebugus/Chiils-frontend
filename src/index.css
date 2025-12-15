@@ -70,10 +70,7 @@ button:hover {
   border-color: black;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 1px auto black;
-}
+
 
 input,
 textarea,
