@@ -7,13 +7,13 @@ const RefundPolicy: React.FC = () => {
       <header className="policy-header">
         <h1 className="policy-title">REFUND POLICY</h1>
         <p className="policy-updated">
-          <span>Last updated</span> <strong>November 5, 2025</strong>
+          <span>Last updated</span> <strong>December 31, 2025</strong>
         </p>
       </header>
 
       <p className="policy-intro">
         This Refund Policy explains how refunds are handled for purchases made through <strong>Chiils</strong>,
-        operated by <strong>Koala Station DOO Beograd</strong> (“Company,” “we,” “us,” or “our”).
+        operated by <strong>Koala Station DOO Beograd</strong> ("Company," "we," "us," or "our").
       </p>
       <p className="policy-intro">
         All payments for Chiils are processed securely by <strong>Paddle</strong>, our payment partner and{' '}
@@ -22,34 +22,17 @@ const RefundPolicy: React.FC = () => {
       </p>
 
       <section className="policy-section">
-        <h2>1. Digital Services and Right of Withdrawal</h2>
+        <h2>1. Refunds</h2>
         <p>
-          Chiils provides digital educational services and automatically generated learning materials.
+          Refunds are provided at the sole discretion of Paddle (Merchant of Record) and on a case-by-case basis and may be refused. Paddle will refuse a refund request if we find evidence of fraud, refund abuse, or other manipulative behaviour that entitles Paddle to counterclaim the refund.
         </p>
         <p>
-          Because our content is digital and delivered immediately after purchase,{' '}
-          <strong>
-            refunds are generally not available once access to the digital content has been granted or lesson generation
-            has begun
-          </strong>
-          .
-        </p>
-        <p>
-          Under <strong>EU Directive 2019/770 on digital content</strong>, consumers waive their right of withdrawal
-          once the delivery of digital content begins, provided they have given prior consent during checkout.
-        </p>
-        <p>
-          By completing your purchase, you expressly consent to the immediate delivery of digital content and acknowledge
-          that you lose your right to withdraw once access starts.
+          This does not affect your rights as a Consumer in relation to Products which are not as described, faulty or not fit for purpose.
         </p>
       </section>
 
       <section className="policy-section">
         <h2>2. How Refunds Are Handled</h2>
-        <p>
-          All transactions, billing, and refund processing for Chiils are managed exclusively by <strong>Paddle</strong>,
-          our Merchant of Record.
-        </p>
         <p>
           Chiils does not handle refund requests directly and cannot issue refunds or modify payment details.
         </p>
@@ -63,7 +46,7 @@ const RefundPolicy: React.FC = () => {
             https://paddle.net/
           </a>
         </p>
-        <p>You may also find Paddle’s official Refund Policy and Buyer Terms here:</p>
+        <p>You may also find Paddle's official Refund Policy and Buyer Terms here:</p>
         <p>
           🔗{' '}
           <a
@@ -107,45 +90,22 @@ const RefundPolicy: React.FC = () => {
       </section>
 
       <section className="policy-section">
-        <h2>5. Refund Processing</h2>
-        <p>
-          If your refund request is approved, the refund will be issued through <strong>Paddle</strong> to the{' '}
-          <strong>original payment method</strong> used for the purchase.
-        </p>
-        <p>
-          Processing times may vary depending on your payment provider, but refunds are typically completed within{' '}
-          <strong>5–10 business days</strong>.
-        </p>
-        <p>Chiils and Paddle are not responsible for any delays caused by banks or payment networks.</p>
-      </section>
-
-      <section className="policy-section">
-        <h2>6. Contact Information</h2>
+        <h2>5. Contact Information</h2>
         <p>
           If you have any questions about this Refund Policy or need assistance with your purchase, please contact us at:
         </p>
-        <address>
+        <p>
           Koala Station DOO Beograd
           <br />
           Kneza Mihaila 3, Beograd 11000, Serbia
           <br />
-          11000
-          <br />
-          Serbia
-          <br />
           Phone: (+381)677661622
           <br />
           <a href="mailto:team@chiils.com">team@chiils.com</a>
-        </address>
+        </p>
       </section>
     </div>
   );
 };
 
 export default RefundPolicy;
-
-
-
-
-
-

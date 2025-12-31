@@ -7,7 +7,7 @@ const TermsOfService: React.FC = () => {
       <header className="terms-header">
         <h1 className="terms-title">TERMS &amp; CONDITIONS</h1>
         <p className="terms-updated">
-          <span>Last updated</span> <strong>November 05, 2025</strong>
+          <span>Last updated</span> <strong>December 31, 2025</strong>
         </p>
       </header>
 
@@ -263,23 +263,69 @@ const TermsOfService: React.FC = () => {
       </section>
 
       <section className="terms-section">
-        <h2>21. Refunds</h2>
+        <h2>21. Consumer Right to Cancel</h2>
         <p>
-          Refunds are handled according to our separate Refund Policy (
-          <a href="https://chiils.com/refundpolicy" target="_blank" rel="noopener noreferrer">
-            https://chiils.com/refundpolicy
+          If you are a Consumer and unless the below exception applies, you have the right to cancel this Agreement and return the Product within 14 days without giving any reason. The cancellation period will expire after 14 days from the day after completion of the Transaction. To meet the cancellation deadline, it is sufficient that you send Paddle your communication concerning your exercise of the cancellation right before the expiration of the 14 day period.
+        </p>
+        <p>
+          To cancel your order, you must inform Paddle of your decision. To ensure immediate processing, please do so by contacting Paddle{' '}
+          <a href="https://paddle.net/" target="_blank" rel="noopener noreferrer">
+            here
           </a>
-          ). Once digital content has been delivered or accessed, you waive your right to withdraw under EU Directive
-          2019/770.
+          . Please note that in respect of subscription services your right to cancel is only present following the initial subscription and not upon each automatic renewal.
+        </p>
+        <p>
+          You also have the right to inform us using the model cancellation form below or by making any other clear, unambiguous statement through our available communication channels. If you use our{' '}
+          <a href="https://paddle.net/" target="_blank" rel="noopener noreferrer">
+            "Contact Us" form online
+          </a>
+          , we will communicate acknowledgment of receipt of your cancellation request to you without delay.
+        </p>
+        <p style={{ fontStyle: 'italic', marginTop: '20px' }}>
+          <em>To Paddle, Buyer Support Team</em>
+          <br />
+          <br />
+          <em>I hereby give notice that I cancel my contract of sale of the following Products</em>
+          <br />
+          <br />
+          <em>Ordered on</em>
+          <br />
+          <br />
+          <em>Name of consumer(s),</em>
+          <br />
+          <br />
+          <em>Address of consumer(s),</em>
+          <br />
+          <br />
+          <em>Signature of consumer(s) (only if this form is notified on paper),</em>
+          <br />
+          <br />
+          <em>Date</em>
+        </p>
+        <h3 style={{ fontSize: '18px', fontWeight: '700', marginTop: '24px', marginBottom: '12px' }}>Effect of Cancellation</h3>
+        <p>
+          If you cancel this Agreement as permitted above, Paddle will reimburse to you all payments received from you.
+        </p>
+        <p>
+          Paddle will make the reimbursement without undue delay, and not later than 14 days after the day on which we are informed about your decision to cancel this Agreement.
+        </p>
+        <p>
+          Paddle will make the reimbursement using the same means of payment as you used for the initial transaction and you will not incur any fees as a result of the reimbursement.
+        </p>
+        <h3 style={{ fontSize: '18px', fontWeight: '700', marginTop: '24px', marginBottom: '12px' }}>Exception to the Right to Cancel</h3>
+        <p>
+          Your right as a Consumer to cancel your order does not apply to the supply of Digital Content that you have started to download, stream or otherwise acquire and to Products which you have had the benefit of.
         </p>
       </section>
 
       <section className="terms-section">
-        <h2>22. AI-generated Content Disclaimer</h2>
+        <h2>22. Refund Policy</h2>
         <p>
-          Lessons and materials generated through Chiils are produced automatically using artificial intelligence. While
-          we aim for accuracy, generated outputs may contain errors or omissions. Chiils does not guarantee that
-          generated materials are complete, accurate, or suitable for any particular learning purpose.
+          Refunds are provided at the sole discretion of Paddle and on a case-by-case basis and may be refused. Paddle will refuse a refund request if we find evidence of fraud, refund abuse, or other manipulative behaviour that entitles Paddle to counterclaim the refund. This does not affect your rights as a Consumer in relation to Products which are not as described, faulty or not fit for purpose. If you wish to learn more on our refund policy, use this link{' '}
+          <a href="https://www.chiils.com/refundpolicy" target="_blank" rel="noopener noreferrer">
+            https://www.chiils.com/refundpolicy
+          </a>
+          .
         </p>
       </section>
 
