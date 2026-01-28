@@ -197,7 +197,7 @@ const FolderManagementPopup: React.FC<FolderManagementPopupProps> = ({ onClose, 
                                                         </div>
                                                         <div className="folder-info">
                                                             <h3>{folder.name}</h3>
-                                                            <p>{folder.lessonCount} {folder.lessonCount === 1 ? 'lesson' : 'lessons'}</p>
+                                                            <p>{folder.lesson_count} {folder.lesson_count === 1 ? 'lesson' : 'lessons'}</p>
                                                         </div>
                                                     </div>
                                                     <div className="folder-actions">
