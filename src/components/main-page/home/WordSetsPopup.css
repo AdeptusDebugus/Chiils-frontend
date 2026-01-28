@@ -1,0 +1,416 @@
+.word-sets-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 180px;
+    width: calc(100vw - 180px);
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+@media (max-width: 768px) {
+    .word-sets-popup-overlay {
+        left: 0;
+        width: 100vw;
+    }
+}
+
+.word-sets-popup-content {
+    width: 90%;
+    max-width: 1200px;
+    max-height: 85vh;
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
+    position: relative;
+}
+
+.word-sets-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.word-sets-popup-header h2 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #222222;
+    margin: 0;
+}
+
+.word-sets-popup-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.word-sets-popup-controls button {
+    width: 40px;
+    height: 32px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    border: 1px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.word-sets-popup-controls button:hover {
+    background: #F5F5F5;
+    border-color: #222222;
+}
+
+.word-sets-popup-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Row Structure */
+.word-sets-row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.row-title {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #222222;
+    margin: 0;
+}
+
+.word-sets-row-content {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 8px 4px 12px 4px;
+    margin-top: -8px;
+}
+
+.word-sets-row-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* Collection Item - Reusing styles from CollectionsPopup but localizing just in case */
+.collection-item {
+    background: #F8F8F8;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    min-width: 185px;
+    height: 185px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    flex-shrink: 0;
+}
+
+.collection-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.collection-info {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.collection-info h3 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 18.57px;
+    color: #222222;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.collection-info p {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #999999;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.collection-icon-wrapper {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.collection-item .collection-icon {
+    margin: 0;
+}
+
+.folder-menu-btn {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    color: #666666;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    padding: 0;
+    position: relative;
+    order: -1;
+}
+
+.folder-menu-btn:hover {
+    background: #F0F0F0;
+}
+
+.folder-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 4px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 10;
+    min-width: 120px;
+}
+
+.folder-menu button {
+    width: 100%;
+    padding: 10px 16px;
+    background: white;
+    border: none;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #222222;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.folder-menu button:hover {
+    background: #F5F5F5;
+}
+
+.folder-menu button:last-child {
+    color: #D32F2F;
+}
+
+/* Delete Confirmation Modal */
+.delete-confirmation-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    border-radius: 22px;
+}
+
+.delete-confirmation-modal {
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 32px 40px;
+    width: 90%;
+    max-width: 620px;
+    min-height: 131px;
+    box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.delete-confirmation-modal h2 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #222222;
+    margin: 0;
+    text-align: center;
+}
+
+.delete-confirmation-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.delete-confirmation-actions button {
+    padding: 8px 32px;
+    height: 36px;
+    border-radius: 20px;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-confirmation-actions .cancel-btn {
+    background: #FFFFFF;
+    border: 1px solid #222222;
+    color: #222222;
+}
+
+.delete-confirmation-actions .cancel-btn:hover {
+    background: #F5F5F5;
+}
+
+.delete-confirmation-actions .confirm-delete {
+    background: #222222;
+    border: 1px solid #222222;
+    color: #FFFFFF;
+}
+
+.delete-confirmation-actions .confirm-delete:hover {
+    background: #333333;
+}
+
+/* Detail View */
+.word-set-detail-view {
+    padding-bottom: 24px;
+}
+
+.words-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 4px;
+}
+
+.word-set-detail-view .vocab-sidebar-card {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.word-set-detail-view .vocab-sidebar-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: #D0D0D0;
+}
+
+.word-set-detail-view .vocab-sidebar-content h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    color: #222222;
+}
+
+.word-set-detail-view .translation {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-orange, #FF6B00);
+    margin: 0;
+}
+
+.word-set-detail-view .quote {
+    font-size: 13.5px;
+    font-style: italic;
+    color: #444;
+    margin: 4px 0 0 0;
+    line-height: 1.4;
+}
+
+.word-set-detail-view .explanation {
+    font-size: 13.5px;
+    color: #666;
+    margin: 4px 0 0 0;
+    line-height: 1.4;
+}
+
+.word-set-detail-view .example {
+    font-size: 13px;
+    color: #888;
+    margin: 4px 0 0 0;
+    line-height: 1.4;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+    padding: 40px;
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+}
+
+.error-state {
+    color: #c43232;
+}
+
+/* Add Set Item */
+.add-set-item {
+    border: 1px #BBBBBB;
+    background: #F9F9F9;
+}
+
+.add-set-item:hover {
+    background: #F0F0F0;
+    border-color: #999999;
+}
+
+.add-set-item .collection-info h3 {
+    color: #666666;
+}
+
+.add-icon {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

@@ -10,9 +10,11 @@ interface SavedMonitoring {
 class GlobalLessonMonitoring {
   private static instance: GlobalLessonMonitoring;
   private notificationCallback: ((notification: any) => void) | null = null;
+  private listeners: Set<(lessonId: string) => void> = new Set();
+  private silentMode: boolean = false;
   private readonly STORAGE_KEY = 'active_lesson_monitoring';
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): GlobalLessonMonitoring {
     if (!GlobalLessonMonitoring.instance) {
@@ -21,13 +23,31 @@ class GlobalLessonMonitoring {
     return GlobalLessonMonitoring.instance;
   }
 
+  // Подписка на событие готовности урока
+  subscribe(callback: (lessonId: string) => void) {
+    this.listeners.add(callback);
+    return () => this.listeners.delete(callback);
+  }
+
+  private notifyListeners(lessonId: string) {
+    this.listeners.forEach(cb => cb(lessonId));
+  }
+
   // Устанавливаем callback для показа уведомлений
   setNotificationCallback(callback: (notification: any) => void) {
     this.notificationCallback = callback;
   }
 
+  setSilentMode(silent: boolean) {
+    this.silentMode = silent;
+  }
+
   // Показываем уведомление через callback
   private showNotification(notification: any) {
+    if (this.silentMode) {
+      console.log('Global: Silent mode active, suppressing notification', notification);
+      return;
+    }
     if (this.notificationCallback) {
       this.notificationCallback(notification);
     } else {
@@ -42,7 +62,7 @@ class GlobalLessonMonitoring {
       lessonName,
       startTime: Date.now()
     };
-    
+
     const active = this.getActiveMonitoring();
     active.push(saved);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(active));
@@ -74,10 +94,10 @@ class GlobalLessonMonitoring {
   // Запускаем мониторинг урока
   startMonitoring(lessonId: string, lessonName: string) {
     console.log('Global: Starting monitoring for lesson:', lessonId);
-    
+
     // Сохраняем в localStorage
     this.saveActiveMonitoring(lessonId, lessonName);
-    
+
     lessonMonitoringService.startMonitoring({
       lessonId,
       lessonName,
@@ -85,11 +105,13 @@ class GlobalLessonMonitoring {
         console.log('Global: Lesson ready:', id, name);
         this.removeActiveMonitoring(id);
         this.showNotification(createLessonReadyNotification(id, name));
+        this.notifyListeners(id);
       },
       onError: (id: string, error: string) => {
         console.log('Global: Lesson error:', id, error);
         this.removeActiveMonitoring(id);
         this.showNotification(createLessonErrorNotification(id, error));
+        this.notifyListeners(id);
       },
       initialDelayMs: 300000, // Начальная задержка 5 минут перед первой проверкой
       intervalMs: 30000,      // Проверяем каждые 30 секунд
@@ -115,19 +137,19 @@ class GlobalLessonMonitoring {
   restoreMonitoring() {
     const active = this.getActiveMonitoring();
     console.log('Global: Restoring monitoring for', active.length, 'lessons');
-    
+
     active.forEach(({ lessonId, lessonName, startTime }) => {
       // Проверяем, что мониторинг не старше 2 часов
       const twoHours = 2 * 60 * 60 * 1000;
       const elapsedTime = Date.now() - startTime;
-      
+
       if (elapsedTime < twoHours) {
         console.log('Global: Restoring monitoring for lesson:', lessonId);
-        
+
         // Если прошло больше 5 минут, начинаем мониторинг без задержки
         const fiveMinutes = 5 * 60 * 1000;
         const shouldSkipDelay = elapsedTime > fiveMinutes;
-        
+
         if (shouldSkipDelay) {
           console.log('Global: Skipping initial delay for restored lesson:', lessonId);
           lessonMonitoringService.startMonitoring({
@@ -137,11 +159,13 @@ class GlobalLessonMonitoring {
               console.log('Global: Lesson ready:', id, name);
               this.removeActiveMonitoring(id);
               this.showNotification(createLessonReadyNotification(id, name));
+              this.notifyListeners(id);
             },
             onError: (id: string, error: string) => {
               console.log('Global: Lesson error:', id, error);
               this.removeActiveMonitoring(id);
               this.showNotification(createLessonErrorNotification(id, error));
+              this.notifyListeners(id);
             },
             initialDelayMs: 0,  // Без задержки для восстановленных уроков
             intervalMs: 30000,  // Проверяем каждые 30 секунд

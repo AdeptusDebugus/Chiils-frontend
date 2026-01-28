@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useNotification } from '../contexts/NotificationContext';
-import { globalLessonMonitoring } from '../services/globalLessonMonitoring';
+import { useNotification } from '../../../contexts/NotificationContext.tsx';
+import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 
 const GlobalLessonMonitor: React.FC = () => {
   const { showNotification } = useNotification();

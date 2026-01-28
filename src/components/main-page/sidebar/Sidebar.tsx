@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { useLessonBuilder } from '../contexts/LessonBuilderContext'
+import { useAuth } from '../../../contexts/AuthContext.tsx'
+import { useLessonBuilder } from '../../../contexts/LessonBuilderContext.tsx'
 import './Sidebar.css'
 
 const Sidebar: React.FC = () => {
@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
 
       {/* Navigation Items - Text Only */}
       <div className="sidebar-nav">
-        <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+        <NavLink to="/home" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
           Home
         </NavLink>
 

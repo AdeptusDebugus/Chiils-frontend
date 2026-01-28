@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext.tsx';
 
 // Utility function to properly decode JWT with UTF-8 support
 const decodeJWT = (token: string): any => {

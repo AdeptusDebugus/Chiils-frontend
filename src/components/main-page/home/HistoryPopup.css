@@ -1,0 +1,177 @@
+/* HistoryPopup.css */
+
+.history-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 180px;
+    /* Offset by sidebar width */
+    width: calc(100vw - 180px);
+    /* Fill remaining width */
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .history-popup-overlay {
+        left: 0;
+        width: 100vw;
+    }
+}
+
+.history-popup-content {
+    background: #FFFFFF;
+    width: 90%;
+    max-width: 1200px;
+    height: 92vh;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: popupFadeIn 0.3s ease;
+}
+
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.history-popup-content .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.history-popup-content .popup-header h2 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #222222;
+    margin: 0
+}
+
+.history-popup-content .close-btn {
+    background: none;
+    border: none;
+    font-size: 32px;
+    color: #999999;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.history-popup-content .close-btn:hover {
+    color: #222222;
+}
+
+.history-popup-content .popup-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.history-popup-content .popup-grid-container {
+    flex: 1;
+    overflow-y: auto;
+    /* Allow height to expand */
+    padding-right: 4px;
+    scrollbar-width: none;
+}
+
+.history-popup-content .popup-grid-container::-webkit-scrollbar {
+    display: none;
+}
+
+.history-popup-content .popup-lessons-grid {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 24px;
+    width: 100%;
+}
+
+.history-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.history-group-title {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #999;
+    margin: 0 0 16px 0;
+}
+
+.history-group-items {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: none;
+    padding-left: 2px;
+    /* Slight offset for shadows */
+    padding-right: 2px;
+    scroll-behavior: smooth;
+}
+
+.history-group-items::-webkit-scrollbar {
+    display: none;
+}
+
+.history-popup-content .popup-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.history-popup-content .popup-controls .nav-arrow,
+.history-popup-content .popup-controls .close-btn {
+    width: 40px;
+    height: 32px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.history-popup-content .popup-controls .nav-arrow:hover,
+.history-popup-content .popup-controls .close-btn:hover {
+    background: #F5F5F5;
+    border-color: #222222;
+}
+
+.history-popup-content .popup-controls .nav-arrow img,
+.history-popup-content .popup-controls .close-btn img {
+    width: 21px;
+    height: 21px;
+    object-fit: contain;
+    filter: none;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 16px;
+    color: #666;
+}

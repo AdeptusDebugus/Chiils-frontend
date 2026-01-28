@@ -1,10 +1,10 @@
 // src/components/LessonPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { getLessonFull, type LessonData } from '../services/lessonService';
+import { getLessonFull, openLesson, addLessonWords, type LessonData } from '../../../services/lessonService.ts';
 import { useParams } from 'react-router-dom';
 import './LessonPage.css';
-import { extractYouTubeId, fetchYouTubeTitle } from '../utils/youtube';
-import { capitalizeFirstLetter } from '../utils/text';
+import { extractYouTubeId, fetchYouTubeTitle } from '../../../utils/youtube.ts';
+import { capitalizeFirstLetter } from '../../../utils/text.ts';
 
 const calculateInputWidth = (text: string): number => {
     const canvas = document.createElement('canvas')
@@ -52,7 +52,7 @@ const LessonPage: React.FC = () => {
                 tag.src = 'https://www.youtube.com/iframe_api'
                 document.body.appendChild(tag)
             }
-            ;(w as any).onYouTubeIframeAPIReady = () => resolve()
+            ; (w as any).onYouTubeIframeAPIReady = () => resolve()
         })
     }
 
@@ -111,6 +111,14 @@ const LessonPage: React.FC = () => {
         })()
     }, [id])
 
+    // Track lesson opening and add words to word bank
+    useEffect(() => {
+        if (id) {
+            openLesson(id).catch(err => console.error('Failed to track lesson open', err))
+            addLessonWords(id).catch(err => console.error('Failed to add lesson words', err))
+        }
+    }, [id])
+
     useEffect(() => {
         if (!lesson) return
         const youUrl = lesson.youtube_url || lesson.you_tube_url || ''
@@ -145,10 +153,10 @@ const LessonPage: React.FC = () => {
                     const allWords = ansBlock.answer.flatMap(a => a.split(',').map(x => x.trim()))
                     const unused = allWords.filter(w => !usedCorrectWords.includes(w.toLowerCase()))
                     const extra = [
-                        'always','never','sometimes','often','usually','rarely',
-                        'quickly','slowly','carefully','easily','hardly','barely',
-                        'here','there','everywhere','nowhere','somewhere','anywhere',
-                        'today','yesterday','tomorrow','tonight','morning','evening'
+                        'always', 'never', 'sometimes', 'often', 'usually', 'rarely',
+                        'quickly', 'slowly', 'carefully', 'easily', 'hardly', 'barely',
+                        'here', 'there', 'everywhere', 'nowhere', 'somewhere', 'anywhere',
+                        'today', 'yesterday', 'tomorrow', 'tonight', 'morning', 'evening'
                     ]
                     const all = [...unused, ...extra.slice(0, Math.max(2, unused.length))]
                     return all.sort(() => Math.random() - 0.5)
@@ -175,12 +183,12 @@ const LessonPage: React.FC = () => {
         }
 
         let cancelled = false
-        ;(async () => {
-            const t = await fetchYouTubeTitle(lesson.youtube_url!)
-            if (cancelled || !t) return
-            titleCacheRef.current[lesson.youtube_url!] = t
-            setLesson(prev => (prev ? { ...prev, you_tube_title: t } : prev))
-        })()
+            ; (async () => {
+                const t = await fetchYouTubeTitle(lesson.youtube_url!)
+                if (cancelled || !t) return
+                titleCacheRef.current[lesson.youtube_url!] = t
+                setLesson(prev => (prev ? { ...prev, you_tube_title: t } : prev))
+            })()
 
         return () => { cancelled = true }
     }, [lesson])
@@ -282,8 +290,8 @@ const LessonPage: React.FC = () => {
                                                     <p className="instruction-text">Постарайся услышать новую лексику в видео. Помечай слова по мере того, как услышишь их в видео.</p>
                                                     <div className="question checkbox-list">
                                                         {(block.examples.length === 1
-                                                                ? block.examples[0].split(/[,;\n]+/).map(w => w.trim()).filter(Boolean)
-                                                                : block.examples
+                                                            ? block.examples[0].split(/[,;\n]+/).map(w => w.trim()).filter(Boolean)
+                                                            : block.examples
                                                         ).map((word, i) => (
                                                             <label key={`lex-check-${i}`} className="checkbox-label">
                                                                 <input
@@ -353,11 +361,10 @@ const LessonPage: React.FC = () => {
                                                                                             })
                                                                                         }
                                                                                     }}
-                                                                                    className={`true-false-btn true-btn ${userSelection === 'true' ? 'selected' : ''} ${
-                                                                                        isSubmitted && userSelection === 'true'
-                                                                                            ? (correctAnswer === 'true' ? 'correct' : 'incorrect')
-                                                                                            : ''
-                                                                                    }`}
+                                                                                    className={`true-false-btn true-btn ${userSelection === 'true' ? 'selected' : ''} ${isSubmitted && userSelection === 'true'
+                                                                                        ? (correctAnswer === 'true' ? 'correct' : 'incorrect')
+                                                                                        : ''
+                                                                                        }`}
                                                                                 >
                                                                                     True
                                                                                 </button>
@@ -381,11 +388,10 @@ const LessonPage: React.FC = () => {
                                                                                             })
                                                                                         }
                                                                                     }}
-                                                                                    className={`true-false-btn false-btn ${userSelection === 'false' ? 'selected' : ''} ${
-                                                                                        isSubmitted && userSelection === 'false'
-                                                                                            ? (correctAnswer === 'false' ? 'correct' : 'incorrect')
-                                                                                            : ''
-                                                                                    }`}
+                                                                                    className={`true-false-btn false-btn ${userSelection === 'false' ? 'selected' : ''} ${isSubmitted && userSelection === 'false'
+                                                                                        ? (correctAnswer === 'false' ? 'correct' : 'incorrect')
+                                                                                        : ''
+                                                                                        }`}
                                                                                 >
                                                                                     False
                                                                                 </button>
@@ -453,8 +459,8 @@ const LessonPage: React.FC = () => {
                                                             <div className="word-list-container">
                                                                 {words.map((word, wi) => (
                                                                     <span key={`word-display-${wi}`} className="word-list-item">
-                                    {word}{wi < words.length - 1 ? ', ' : '.'}
-                                  </span>
+                                                                        {word}{wi < words.length - 1 ? ', ' : '.'}
+                                                                    </span>
                                                                 ))}
                                                             </div>
 
@@ -478,44 +484,44 @@ const LessonPage: React.FC = () => {
                                                                                 <div>
                                                                                     <p className="fill-blank-sentence">
                                                                                         {i + 1}. {(() => {
-                                                                                        const parts = ex.split('______')
-                                                                                        const nodes: React.ReactNode[] = []
-                                                                                        parts.forEach((part, pi) => {
-                                                                                            if (part.trim()) nodes.push(<span key={`text-${pi}`}>{part}</span>)
-                                                                                            if (pi < parts.length - 1) {
-                                                                                                const sel = userSelections[pi] || ''
-                                                                                                const ok = wordCorrectness[pi]
-                                                                                                nodes.push(
-                                                                                                    <input
-                                                                                                        key={`input-${pi}`}
-                                                                                                        type="text"
-                                                                                                        value={sel}
-                                                                                                        style={{ width: `${calculateInputWidth(sel)}px` }}
-                                                                                                        onChange={(e) => {
-                                                                                                            const val = e.target.value
-                                                                                                            setSelectedWords(prev => {
-                                                                                                                const next = prev.map(b => b.map(exArr => [...exArr]))
-                                                                                                                if (!next[originalIndex]) next[originalIndex] = []
-                                                                                                                if (!next[originalIndex][i]) next[originalIndex][i] = []
-                                                                                                                next[originalIndex][i][pi] = val
-                                                                                                                return next
-                                                                                                            })
-                                                                                                            if (isSubmitted) {
-                                                                                                                setSubmittedLexical(prev => {
-                                                                                                                    const next = prev.map(arr => [...arr])
+                                                                                            const parts = ex.split('______')
+                                                                                            const nodes: React.ReactNode[] = []
+                                                                                            parts.forEach((part, pi) => {
+                                                                                                if (part.trim()) nodes.push(<span key={`text-${pi}`}>{part}</span>)
+                                                                                                if (pi < parts.length - 1) {
+                                                                                                    const sel = userSelections[pi] || ''
+                                                                                                    const ok = wordCorrectness[pi]
+                                                                                                    nodes.push(
+                                                                                                        <input
+                                                                                                            key={`input-${pi}`}
+                                                                                                            type="text"
+                                                                                                            value={sel}
+                                                                                                            style={{ width: `${calculateInputWidth(sel)}px` }}
+                                                                                                            onChange={(e) => {
+                                                                                                                const val = e.target.value
+                                                                                                                setSelectedWords(prev => {
+                                                                                                                    const next = prev.map(b => b.map(exArr => [...exArr]))
                                                                                                                     if (!next[originalIndex]) next[originalIndex] = []
-                                                                                                                    next[originalIndex][i] = false
+                                                                                                                    if (!next[originalIndex][i]) next[originalIndex][i] = []
+                                                                                                                    next[originalIndex][i][pi] = val
                                                                                                                     return next
                                                                                                                 })
-                                                                                                            }
-                                                                                                        }}
-                                                                                                        className={`fill-blank-input ${isSubmitted ? (ok ? 'correct' : 'incorrect') : ''}`}
-                                                                                                    />
-                                                                                                )
-                                                                                            }
-                                                                                        })
-                                                                                        return nodes
-                                                                                    })()}
+                                                                                                                if (isSubmitted) {
+                                                                                                                    setSubmittedLexical(prev => {
+                                                                                                                        const next = prev.map(arr => [...arr])
+                                                                                                                        if (!next[originalIndex]) next[originalIndex] = []
+                                                                                                                        next[originalIndex][i] = false
+                                                                                                                        return next
+                                                                                                                    })
+                                                                                                                }
+                                                                                                            }}
+                                                                                                            className={`fill-blank-input ${isSubmitted ? (ok ? 'correct' : 'incorrect') : ''}`}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }
+                                                                                            })
+                                                                                            return nodes
+                                                                                        })()}
                                                                                     </p>
                                                                                 </div>
                                                                             )}
@@ -625,44 +631,44 @@ const LessonPage: React.FC = () => {
                                                                         <div>
                                                                             <p className="grammar-sentence">
                                                                                 {i + 1}. {(() => {
-                                                                                const parts = ex.split('______')
-                                                                                const nodes: React.ReactNode[] = []
-                                                                                parts.forEach((part, pi) => {
-                                                                                    if (part.trim()) nodes.push(<span key={`text-${pi}`}>{part}</span>)
-                                                                                    if (pi < parts.length - 1) {
-                                                                                        const userAns = user[pi] || ''
-                                                                                        const ok = correctAnswers[pi] && userAns.toLowerCase().trim() === correctAnswers[pi]
-                                                                                        nodes.push(
-                                                                                            <input
-                                                                                                key={`input-${pi}`}
-                                                                                                type="text"
-                                                                                                value={userAns}
-                                                                                                style={{ width: `${calculateInputWidth(userAns)}px` }}
-                                                                                                onChange={(e) => {
-                                                                                                    const val = e.target.value
-                                                                                                    setGrammarAnswers(prev => {
-                                                                                                        const next = prev.map(b => b.map(exArr => [...exArr]))
-                                                                                                        if (!next[blockIndex]) next[blockIndex] = []
-                                                                                                        if (!next[blockIndex][i]) next[blockIndex][i] = []
-                                                                                                        next[blockIndex][i][pi] = val
-                                                                                                        return next
-                                                                                                    })
-                                                                                                    if (isSubmitted) {
-                                                                                                        setSubmittedGrammar(prev => {
-                                                                                                            const next = prev.map(arr => [...arr])
+                                                                                    const parts = ex.split('______')
+                                                                                    const nodes: React.ReactNode[] = []
+                                                                                    parts.forEach((part, pi) => {
+                                                                                        if (part.trim()) nodes.push(<span key={`text-${pi}`}>{part}</span>)
+                                                                                        if (pi < parts.length - 1) {
+                                                                                            const userAns = user[pi] || ''
+                                                                                            const ok = correctAnswers[pi] && userAns.toLowerCase().trim() === correctAnswers[pi]
+                                                                                            nodes.push(
+                                                                                                <input
+                                                                                                    key={`input-${pi}`}
+                                                                                                    type="text"
+                                                                                                    value={userAns}
+                                                                                                    style={{ width: `${calculateInputWidth(userAns)}px` }}
+                                                                                                    onChange={(e) => {
+                                                                                                        const val = e.target.value
+                                                                                                        setGrammarAnswers(prev => {
+                                                                                                            const next = prev.map(b => b.map(exArr => [...exArr]))
                                                                                                             if (!next[blockIndex]) next[blockIndex] = []
-                                                                                                            next[blockIndex][i] = false
+                                                                                                            if (!next[blockIndex][i]) next[blockIndex][i] = []
+                                                                                                            next[blockIndex][i][pi] = val
                                                                                                             return next
                                                                                                         })
-                                                                                                    }
-                                                                                                }}
-                                                                                                className={`grammar-input ${isSubmitted ? (ok ? 'correct' : 'incorrect') : ''}`}
-                                                                                            />
-                                                                                        )
-                                                                                    }
-                                                                                })
-                                                                                return nodes
-                                                                            })()}
+                                                                                                        if (isSubmitted) {
+                                                                                                            setSubmittedGrammar(prev => {
+                                                                                                                const next = prev.map(arr => [...arr])
+                                                                                                                if (!next[blockIndex]) next[blockIndex] = []
+                                                                                                                next[blockIndex][i] = false
+                                                                                                                return next
+                                                                                                            })
+                                                                                                        }
+                                                                                                    }}
+                                                                                                    className={`grammar-input ${isSubmitted ? (ok ? 'correct' : 'incorrect') : ''}`}
+                                                                                                />
+                                                                                            )
+                                                                                        }
+                                                                                    })
+                                                                                    return nodes
+                                                                                })()}
                                                                             </p>
                                                                         </div>
                                                                     ) : (
@@ -856,9 +862,9 @@ const LessonPage: React.FC = () => {
                                             <div className="vocab-sidebar-content">
                                                 <h3>{item.expression} — {item.translation}</h3>
                                                 <div className="time-code">
-                          <span className="time-link" onClick={() => scrollToPlayerAndSeek(item.time_code as number)}>
-                            {timeDisplay}
-                          </span>
+                                                    <span className="time-link" onClick={() => scrollToPlayerAndSeek(item.time_code as number)}>
+                                                        {timeDisplay}
+                                                    </span>
                                                 </div>
                                                 <p className="quote">«{item.quote}»</p>
                                                 <p className="explanation">{item.explanation}</p>

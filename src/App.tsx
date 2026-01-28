@@ -3,22 +3,23 @@ import { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { LessonBuilderProvider, useLessonBuilder } from './contexts/LessonBuilderContext';
-import LessonBuilderPopup from './components/LessonBuilderPopup';
+import LessonBuilderPopup from './components/main-page/lesson-builder/LessonBuilderPopup.tsx';
 import ProtectedRoute from './components/ProtectedRoute';
-import HomePage from './components/HomePage';
-import Login from './components/Login';
-import LoginSuccess from './components/LoginSuccess';
-import Profile from './components/Profile';
-import OpenLibrary from './components/OpenLibrary';
-import LessonPage from './components/LessonPage';
-import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
-import GlobalLessonMonitor from './components/GlobalLessonMonitor';
-import TermsOfService from './components/TermsOfService.tsx';
-import RefundPolicy from './components/RefundPolicy.tsx';
-import PrivacyPolicy from './components/PrivacyPolicy.tsx';
-import CookiePolicy from './components/CookiePolicy.tsx';
-import TermlyBanner from './components/TermlyBanner';
+import HomePage from './components/main-page/home/HomePage.tsx';
+import LandingPage from './components/lending/LandingPage.tsx';
+import Login from './components/auth/Login.tsx';
+import LoginSuccess from './components/auth/LoginSuccess.tsx';
+import Profile from './components/main-page/profile/Profile.tsx';
+import OpenLibrary from './components/main-page/open-library/OpenLibrary.tsx';
+import LessonPage from './components/main-page/lesson/LessonPage.tsx';
+import Sidebar from './components/main-page/sidebar/Sidebar.tsx';
+import Footer from './components/footer/Footer.tsx';
+import GlobalLessonMonitor from './components/main-page/lesson/GlobalLessonMonitor.tsx';
+import TermsOfService from './components/policy/TermsOfService.tsx';
+import RefundPolicy from './components/policy/RefundPolicy.tsx';
+import PrivacyPolicy from './components/policy/PrivacyPolicy.tsx';
+import CookiePolicy from './components/policy/CookiePolicy.tsx';
+import TermlyBanner from './components/policy/TermlyBanner.tsx';
 import './App.css';
 
 const LessonBuilderPopupWrapper = () => {
@@ -78,10 +79,10 @@ function App() {
             <div className={mainContentClasses.join(' ')}>
               <Routes>
                 {/* Public routes */}
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/home" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/login/success" element={<LoginSuccess />} />
-
                 <Route path="/open-library" element={<OpenLibrary />} />
                 <Route path="/lesson/:id" element={<LessonPage />} />
                 <Route path="/termsofservice" element={<TermsOfService />} />

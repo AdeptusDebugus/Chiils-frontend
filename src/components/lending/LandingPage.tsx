@@ -1,27 +1,27 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLessonBuilder } from '../contexts/LessonBuilderContext';
-import './HomePage.css';
-import Footer from './Footer';
-import ComparePlansPopup from './ComparePlansPopup';
+import { useLessonBuilder } from '../../contexts/LessonBuilderContext.tsx';
+import './LandingPage.css';
+import Footer from '../footer/Footer.tsx';
+import ComparePlansPopup from './ComparePlansPopup.tsx';
 
 //IMAGES
-const imgHeroImage = "/assets/home/about-hero-human.webp";
+const imgHeroImage = "/assets/lending/about-hero-human.webp";
 const imgChiilsLogo = "/assets/chiils-white-logo.svg";
-const imgFeatureCardSmall1 = "/assets/home/feature-card-small-1.svg";
-const imgFeatureCardSmall2 = "/assets/home/feature-card-small-2.svg";
-const imgPricingBackground = "/assets/home/pricing-background.webp";
-const imgAboutBackground = "/assets/home/about-background.webp";
-const imgLessonBuilderBackground = "/assets/home/home-lesson-builder-background.webp";
-const imgOpenLibBackground = "/assets/home/home-open-library-background.webp";
-const imgFAQProfile1 = "/assets/home/portrait-1.webp";
-const imgFAQProfile2 = "/assets/home/portrait-2.webp";
-const imgFAQProfile3 = "/assets/home/portrait-3.webp";
-const imgFAQProfile4 = "/assets/home/portrait-4.webp";
-const imgFAQProfile5 = "/assets/home/portrait-5.webp";
-const imgJoyfulWomanPortrait = "/assets/home/cta-background.webp";
+const imgFeatureCardSmall1 = "/assets/lending/feature-card-small-1.svg";
+const imgFeatureCardSmall2 = "/assets/lending/feature-card-small-2.svg";
+const imgPricingBackground = "/assets/lending/pricing-background.webp";
+const imgAboutBackground = "/assets/lending/about-background.webp";
+const imgLessonBuilderBackground = "/assets/lending/lending-lesson-builder-background.webp";
+const imgOpenLibBackground = "/assets/lending/lending-open-library-background.webp";
+const imgFAQProfile1 = "/assets/lending/portrait-1.webp";
+const imgFAQProfile2 = "/assets/lending/portrait-2.webp";
+const imgFAQProfile3 = "/assets/lending/portrait-3.webp";
+const imgFAQProfile4 = "/assets/lending/portrait-4.webp";
+const imgFAQProfile5 = "/assets/lending/portrait-5.webp";
+const imgJoyfulWomanPortrait = "/assets/lending/cta-background.webp";
 
-const HomePage: React.FC = () => {
+const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { openLessonBuilder } = useLessonBuilder();
   const [showComparePopup, setShowComparePopup] = React.useState(false);
@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
                 <button className="create-first-lesson-btn" onClick={handleLessonBuilder}>
                   Create your first lesson
                 </button>
-                <img src="/assets/home/feature-card-large.svg" alt="Feature icon" className="feature-icon-img-large" />
+                <img src="/assets/lending/feature-card-large.svg" alt="Feature icon" className="feature-icon-img-large" />
               </div>
             </div>
           </div>
@@ -408,4 +408,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default LandingPage;

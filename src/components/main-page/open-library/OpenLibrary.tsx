@@ -1,21 +1,23 @@
 // src/components/OpenLibrary.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLessonsLite, getUserLessonsLite, type LessonLite } from '../services/lessonService';
-import { useAuth } from '../contexts/AuthContext';
+import { getLessonsLite, type LessonLite } from '../../../services/lessonService.ts';
+import { useAuth } from '../../../contexts/AuthContext.tsx';
 import './OpenLibrary.css';
-import { extractYouTubeId, fetchYouTubeTitle } from '../utils/youtube';
-import { capitalizeFirstLetter } from '../utils/text';
+import { extractYouTubeId, fetchYouTubeTitle } from '../../../utils/youtube.ts';
+import { capitalizeFirstLetter } from '../../../utils/text.ts';
 import {
     LANGUAGES, CEFR_LEVELS, SCENARIOS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
     type CefrLevel, type Scenario as ScenarioType, type Topic, type GrammarTopic
-} from '../utils/filters';
+} from '../../../utils/filters.ts';
 
 // Helpers for Filters
-import { FilterDropdown, FilterPill } from './FilterComponents';
-import { useLessonBuilder } from '../contexts/LessonBuilderContext';
+import { FilterDropdown, FilterPill } from '../FilterComponents.tsx';
+import LessonBuilderButton from '../lesson-builder/LessonBuilderButton.tsx';
+import {useLessonBuilder} from "../../../contexts/LessonBuilderContext.tsx";
 
 const OpenLibrary: React.FC = () => {
+
     const navigate = useNavigate();
     const { user } = useAuth();
     const [lessons, setLessons] = useState<LessonLite[]>([]);
@@ -23,7 +25,6 @@ const OpenLibrary: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const titleCacheRef = useRef<Record<string, string>>({});
-    const [viewMode, setViewMode] = useState<'all' | 'my'>('all');
 
     // Helpers
     const getLanguageLevel = (l: LessonLite): string => l.tags?.language_level || 'B1';
@@ -216,12 +217,7 @@ const OpenLibrary: React.FC = () => {
         (async () => {
             try {
                 setLoading(true);
-                let data: LessonLite[];
-                if (viewMode === 'my' && user?.email) {
-                    data = await getUserLessonsLite({ page: 0, size: 24, sort: '-createdAt', email: user.email });
-                } else {
-                    data = await getLessonsLite({ page: 0, size: 24, sort: '-createdAt' });
-                }
+                const data = await getLessonsLite({ page: 0, size: 24, sort: '-createdAt' });
                 setLessons(data ?? []);
                 setError(null);
             } catch (e) {
@@ -231,7 +227,7 @@ const OpenLibrary: React.FC = () => {
                 setLoading(false);
             }
         })();
-    }, [viewMode, user?.email]);
+    }, []);
 
     useEffect(() => {
         const missing = lessons.filter(l => !l.you_tube_title && Boolean(l.youtube_url));
@@ -510,14 +506,6 @@ const OpenLibrary: React.FC = () => {
                                             ?
                                         </span>
                                     </div>
-                                    {user && (
-                                        <button
-                                            className={`my-lessons-button ${viewMode === 'my' ? 'active' : ''}`}
-                                            onClick={() => setViewMode(viewMode === 'all' ? 'my' : 'all')}
-                                        >
-                                            My Lessons
-                                        </button>
-                                    )}
                                 </div>
                                 {showSearchHelp && (
                                     <p className="search-description active">
@@ -576,7 +564,7 @@ const OpenLibrary: React.FC = () => {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

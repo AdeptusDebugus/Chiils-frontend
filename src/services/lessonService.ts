@@ -1,6 +1,23 @@
 // src/services/lessonService.ts
 import api from './api'
 
+// ===== History Types =====
+export interface HistoryItem {
+    lessonId: string
+    youtubeUrl: string
+    lessonTopic: string
+    tags: string[]
+    createdAt: string
+    lastOpenedAt: string | null
+    // Add compatible fields for LessonLite if needed for reuse, or map later
+}
+
+export interface HistoryResponse {
+    yesterday: HistoryItem[]
+    lastWeek: HistoryItem[]
+    thisMonth: HistoryItem[]
+}
+
 // ===== Типы карточки (списка) =====
 export interface Tags {
     lesson_theme: string
@@ -18,6 +35,8 @@ export interface LessonLite {
     created_at: string
     tags?: Tags
     you_tube_title?: string // будем кэшировать заголовок YouTube на фронте
+    duration?: string
+    status?: string
 }
 
 // ===== Сырые типы полного урока (как приходит с бэка) =====
@@ -263,4 +282,182 @@ export async function getUserLessonsLite(params: {
 export async function getLessonFull(id: string): Promise<LessonData> {
     const res = await api.get<RawLessonFull>(`/lessons/${id}`)
     return mapRawToLesson(res.data)
+}
+
+export async function openLesson(lessonId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    await api.post(`/history/lesson/${lessonId}/open`, {}, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+    })
+}
+
+export async function getHistory(params: {
+    statuses?: string[]
+    access?: string
+    page?: number
+    size?: number
+} = {}): Promise<HistoryResponse> {
+    const {
+        page = 0,
+        size = 20,
+    } = params
+
+    // Only add params if they exist/are needed. The contract mentions status/access defaults.
+    const token = localStorage.getItem('jwt_token')
+    const res = await api.get<HistoryResponse>('/history', {
+        params: { page, size },
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+    })
+    return res.data
+}
+
+// ===== Likes API =====
+
+export async function getLikedLessonIds(): Promise<string[]> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return []
+    try {
+        const res = await api.get<string[]>('/likes/ids', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return res.data
+    } catch (e) {
+        console.error('Failed to get liked ids', e)
+        return []
+    }
+}
+
+export interface LikedLessonLite {
+    lesson_id: string
+    youtube_url: string
+    lesson_topic: string | null
+    tags: Tags
+    created_at: string
+}
+
+export async function getLikedLessons(): Promise<LikedLessonLite[]> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return []
+    try {
+        const res = await api.get<LikedLessonLite[]>('/likes', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return res.data
+    } catch (e) {
+        console.error('Failed to get liked lessons', e)
+        return []
+    }
+}
+
+export async function likeLesson(lessonId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+    await api.post(`/likes/${lessonId}/like`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+}
+
+export async function unlikeLesson(lessonId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+    await api.delete(`/likes/${lessonId}/like`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+}
+
+export async function getTotalLikes(): Promise<number> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return 0
+    // Contract says: GET /api/v1/likes/total
+    // But backend response format isn't fully specified (number vs {total: number}).
+    // Often "count" endpoints return a direct number or an object.
+    // Let's assume it returns a number based on previous patterns or handle text.
+    // If it returns JSON { count: 10 } or just 10.
+    // Safest is to check response type.
+    try {
+        const res = await api.get<number | { total: number }>('/likes/total', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        if (typeof res.data === 'number') return res.data
+        if (typeof res.data === 'object' && res.data !== null && 'total' in res.data) return (res.data as any).total
+        return 0
+    } catch (e) {
+        console.error('Failed to get total likes', e)
+        return 0
+    }
+}
+
+export async function getTotalHistory(): Promise<number> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return 0
+    try {
+        const res = await api.get<number | { total: number }>('/history/total', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        if (typeof res.data === 'number') return res.data
+        if (typeof res.data === 'object' && res.data !== null && 'total' in res.data) return (res.data as any).total
+        return 0
+    } catch (e) {
+        console.error('Failed to get total history', e)
+        return 0
+    }
+}
+
+export async function addLessonWords(lessonId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+    try {
+        await api.post('/words/add', null, {
+            params: { lessonId },
+            headers: { Authorization: `Bearer ${token}` }
+        })
+    } catch (e) {
+        console.error('Failed to add lesson words to word bank', e)
+    }
+}
+
+// ===== Word Bank API =====
+
+export interface Word {
+    id: string
+    lesson_id: string
+    term: string
+    quote: string
+    translation: string
+    translated_explanation: string
+    another_example: string
+    time_code: number | null
+}
+
+export interface WordBankResponse {
+    content: Word[]
+    totalPages: number
+    totalElements: number
+    last: boolean
+    first: boolean
+    size: number
+    number: number
+    numberOfElements: number
+    empty: boolean
+}
+
+export async function getWordBank(params: {
+    page?: number
+    size?: number
+    sortBy?: string
+    sortDir?: 'asc' | 'desc'
+} = {}): Promise<WordBankResponse> {
+    const {
+        page = 0,
+        size = 50,
+        sortBy = 'createdAt',
+        sortDir = 'desc'
+    } = params
+
+    const token = localStorage.getItem('jwt_token')
+    const res = await api.get<WordBankResponse>('/words/bank', {
+        params: { page, size, sortBy, sortDir },
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+    })
+    return res.data
 }

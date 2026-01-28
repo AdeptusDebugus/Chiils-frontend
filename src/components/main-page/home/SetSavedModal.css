@@ -1,0 +1,88 @@
+.set-saved-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    border-radius: 22px;
+}
+
+.set-saved-modal {
+    background: #FFFFFF;
+    border-radius: 22.106px;
+    padding: 40px;
+    width: 90%;
+    max-width: 620px;
+    box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+.set-saved-modal h2 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: #222222;
+    margin: 0;
+}
+
+.set-saved-modal p {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 20px;
+    line-height: 1.25;
+    color: #2a2b2a;
+    margin: 0 0 24px 0;
+    max-width: 457px;
+}
+
+.set-saved-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+}
+
+.set-saved-actions button {
+    padding: 0 32px;
+    height: 30px;
+    border-radius: 14.211px;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.set-saved-actions .close-btn {
+    background: #FFFFFF;
+    border: 1px solid black;
+    color: #222222;
+}
+
+.set-saved-actions .close-btn:hover {
+    background: black;
+    color: white;
+}
+
+.set-saved-actions .view-btn {
+    background: black;
+    border: 1px solid white;
+    color: white;
+}
+
+.set-saved-actions .view-btn:hover {
+    background: white;
+    color: black;
+    border-color: black;
+}

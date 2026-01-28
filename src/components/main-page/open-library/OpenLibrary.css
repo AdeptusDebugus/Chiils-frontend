@@ -53,83 +53,9 @@
   gap: 20px;
 }
 
-.lesson-builder-button {
-  width: 63px;
-  height: 40px;
-  background-color: white;
-  border-radius: 22.106px;
-  border: 1px solid #000;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  /* Keep icon on the right */
-  padding-right: 14px;
-  /* Center icon visually (63-34)/2 ~= 14px */
-  padding-left: 14px;
-  transition: width 0.3s ease, gap 0.3s ease, background-color 0.2s ease, transform 0.2s ease;
-  overflow: hidden;
-  gap: 0;
-}
 
-.lesson-builder-button:hover {
-  width: 195px;
-  /* Expanded width */
-  background-color: #f9f9f9;
-  transform: translateY(-2px);
-  gap: 12px;
-}
+/* lesson-builder-button styles removed - now in LessonBuilderButton.css */
 
-.lesson-builder-button.expanded {
-  width: 195px;
-  /* Keep expanded when popup is open */
-  background-color: #f9f9f9;
-  gap: 12px;
-}
-
-.lesson-builder-button svg {
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  filter: grayscale(100%) brightness(0);
-  /* Force black color */
-  animation: rotate360 15s linear infinite;
-}
-
-@keyframes rotate360 {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  6.67% {
-    transform: rotate(360deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.button-text {
-  font-family: 'TeX Gyre Heros', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: #000;
-  opacity: 0;
-  max-width: 0;
-  white-space: nowrap;
-  transition: opacity 0.3s ease, max-width 0.3s ease;
-}
-
-.lesson-builder-button:hover .button-text {
-  opacity: 1;
-  max-width: 120px;
-}
-
-.lesson-builder-button.expanded .button-text {
-  opacity: 1;
-  max-width: 120px;
-}
 
 .open-library-header h1 {
   font-size: 48px;
@@ -358,11 +284,10 @@
   color: #F26430;
   /* Orange/Accent */
   font-size: 15.79px;
-  ;
   line-height: 1.2;
   white-space: nowrap;
   position: absolute;
-  top: -25px;
+  top: -30px;
   left: 170px;
   /* 150px Label + 12px Gap */
 }

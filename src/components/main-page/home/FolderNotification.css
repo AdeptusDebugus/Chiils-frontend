@@ -1,0 +1,73 @@
+.folder-notification-pill {
+    position: absolute;
+    bottom: 40px;
+    left: 200px;
+    background: #FFFFFF;
+    border: 1px solid #222222;
+    border-radius: 22.1px;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10001;
+    white-space: nowrap;
+    animation: slideUpFade 0.3s ease-out;
+}
+
+.notification-text {
+    font-size: 16px;
+    color: #000000;
+}
+
+.folder-name-link {
+    text-decoration: underline;
+    font-weight: 400;
+}
+
+.notification-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.undo-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000000;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+}
+
+.undo-btn:hover {
+    text-decoration: underline;
+}
+
+.close-notif-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.close-notif-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

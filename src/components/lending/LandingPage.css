@@ -357,7 +357,7 @@
   max-width: 100%;
   margin: 0;
   z-index: 3;
-  background-image: url('/assets/home/about-hero-background.png');
+  background-image: url('/assets/lending/about-hero-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -687,14 +687,14 @@
 
 /* Apply background to content area only */
 .tool-card-large:nth-child(1) .tool-card-content {
-  background-image: url('/assets/home/open-library-background.png');
+  background-image: url('/assets/lending/open-library-background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .tool-card-large:nth-child(2) .tool-card-content {
-  background-image: url('/assets/home/lesson-builder-background.png');
+  background-image: url('/assets/lending/lesson-builder-background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1027,8 +1027,8 @@
   width: 20px;
   height: 20px;
 
-  -webkit-mask: url("/assets/home/pop-up/check-mark.svg") no-repeat center;
-  mask: url("/assets/home/pop-up/check-mark.svg") no-repeat center;
+  -webkit-mask: url("/assets/lending/pop-up/check-mark.svg") no-repeat center;
+  mask: url("/assets/lending/pop-up/check-mark.svg") no-repeat center;
   mask-size: contain;
   background-color: white;
 }

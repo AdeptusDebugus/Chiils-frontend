@@ -16,7 +16,7 @@ const DESCRIPTIONS: Record<string, string> = {
     "Generation modes": "Choose your lesson scenario",
     "Student progress": "Lesson history, status, personal vocab banks per student"
 };
-const checkMark = "/assets/home/pop-up/check-mark.svg"
+const checkMark = "/assets/lending/pop-up/check-mark.svg"
 
 const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
     const [activeInfoRow, setActiveInfoRow] = React.useState<string | null>(null);

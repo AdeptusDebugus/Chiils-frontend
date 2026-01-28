@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './LessonBuilderPopup.css';
-import { FilterDropdown, FilterPill } from './FilterComponents';
-import { createLesson } from '../services/api';
-import { useAuth } from '../contexts/AuthContext';
+import { FilterDropdown, FilterPill } from '../FilterComponents.tsx';
+import { createLesson } from '../../../services/api.ts';
+import { useAuth } from '../../../contexts/AuthContext.tsx';
 import {
     LANGUAGES, CEFR_LEVELS, SCENARIOS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
     type CefrLevel
-} from '../utils/filters';
-import { extractYouTubeId } from '../utils/youtube';
+} from '../../../utils/filters.ts';
+import { extractYouTubeId } from '../../../utils/youtube.ts';
 
 interface LessonBuilderPopupProps {
     isOpen: boolean;

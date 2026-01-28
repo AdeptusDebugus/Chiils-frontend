@@ -1,5 +1,5 @@
 import { checkLessonReady, LessonReadyResponse } from './api';
-import { NotificationData } from '../components/Notification';
+import { NotificationData } from '../components/main-page/lesson/Notification.tsx';
 
 export interface LessonMonitorConfig {
   lessonId: string;

@@ -1,0 +1,154 @@
+.folder-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 180px;
+    /* Offset by sidebar width */
+    width: calc(100vw - 180px);
+    /* Fill remaining width */
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+@media (max-width: 768px) {
+    .folder-popup-overlay {
+        left: 0;
+        width: 100vw;
+    }
+}
+
+.folder-popup-content {
+    width: 90%;
+    max-width: 1200px;
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.folder-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.folder-popup-header h2 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #222222;
+    margin: 0;
+}
+
+.folder-popup-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.folder-popup-controls button {
+    width: 40px;
+    height: 32px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    border: 1px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.folder-popup-controls button:hover {
+    background: #F5F5F5;
+    border-color: #222222;
+}
+
+.folder-popup-body {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Container defining the viewport for scrolling */
+.folder-grid-container {
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.folder-grid-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari/Webkit */
+}
+
+/* The actual grid of items */
+.folder-scroll-content {
+    display: grid;
+    /* 2 rows, taking content height */
+    grid-template-rows: repeat(2, max-content);
+    /* Fill columns automatically */
+    grid-auto-flow: column;
+    gap: 24px;
+    padding: 0 4px;
+    width: max-content;
+}
+
+/* Adjust card sizing if needed within popup */
+.folder-scroll-content .home-lesson-card {
+    width: 233px;
+    height: max-content;
+}
+
+/* Empty state */
+.folder-empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #999999;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #666666;
+}
+
+.error-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #D32F2F;
+}

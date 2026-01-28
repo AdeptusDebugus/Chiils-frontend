@@ -1,0 +1,191 @@
+.add-to-folder-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.add-to-folder-modal {
+    background: #FFFFFF;
+    border-radius: 22.1px;
+    box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
+    padding: 32px;
+    width: 633px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    font-family: 'TeX Gyre Heros', sans-serif;
+}
+
+.add-to-folder-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.add-to-folder-header h2 {
+    font-size: 32px;
+    font-weight: 400;
+    color: #000000;
+    margin: 0;
+}
+
+.add-to-folder-header .close-btn {
+    position: absolute;
+    right: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.add-to-folder-header .close-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+.add-to-folder-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.folder-section {
+    border: 1px solid #222222;
+    border-radius: 24px;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-header h3 {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.section-nav {
+    display: flex;
+    gap: 12px;
+}
+
+.section-nav button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0.6;
+}
+
+.section-nav button:hover {
+    opacity: 1;
+}
+
+.folder-cards-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 4px 4px 8px 4px;
+    margin: 0 -4px;
+}
+
+.folder-cards-row::-webkit-scrollbar {
+    display: none;
+}
+
+.folder-card-item {
+    min-width: 178px;
+    height: 147px;
+    background: #F8F8F8;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.folder-card-item:hover {
+    background: #F0F0F0;
+}
+
+.folder-card-info h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.folder-card-info span {
+    font-size: 14px;
+    color: #999999;
+}
+
+.folder-card-icon {
+    align-self: flex-end;
+    width: 44px;
+    height: 44px;
+    background: #252524;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.folder-card-icon img {
+    width: 44px;
+    height: 44px;
+}
+
+.modal-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.create-folder-pill {
+    background: #222222;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.create-folder-pill:hover {
+    background: #333333;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}

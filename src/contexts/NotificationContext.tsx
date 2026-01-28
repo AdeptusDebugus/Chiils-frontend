@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import Notification, { NotificationData } from '../components/Notification';
+import Notification, { NotificationData } from '../components/main-page/lesson/Notification.tsx';
 
 interface NotificationContextType {
   showNotification: (notification: Omit<NotificationData, 'id'>) => void;

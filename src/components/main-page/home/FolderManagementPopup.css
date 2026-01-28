@@ -1,0 +1,388 @@
+.folder-management-overlay {
+    position: fixed;
+    top: 0;
+    left: 180px;
+    width: calc(100vw - 180px);
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+@media (max-width: 768px) {
+    .folder-management-overlay {
+        left: 0;
+        width: 100vw;
+    }
+}
+
+.folder-management-content {
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.folder-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.folder-management-header h2 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #222222;
+    margin: 0;
+}
+
+.folder-management-header .close-btn {
+    width: 40px;
+    height: 32px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    border: 1px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.folder-management-header .close-btn:hover {
+    background: #F5F5F5;
+    border-color: #222222;
+}
+
+.folder-management-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.folders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.folder-card {
+    background: #F9F9F9;
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.folder-card:hover {
+    border-color: #E0E0E0;
+    transform: translateY(-2px);
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.folder-card-main {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.folder-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFFFFF;
+    border-radius: 8px;
+}
+
+.folder-icon img {
+    width: 28px;
+    height: 28px;
+}
+
+.folder-info h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #222222;
+    margin: 0;
+    word-break: break-word;
+}
+
+.folder-info p {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #666666;
+    margin: 4px 0 0 0;
+}
+
+.folder-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #E0E0E0;
+}
+
+.folder-actions button {
+    flex: 1;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #FFFFFF;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.folder-actions button:hover {
+    background: #F0F0F0;
+}
+
+.folder-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.folder-edit-form input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #DDDDDD;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+}
+
+.folder-edit-form input:focus {
+    border-color: #222222;
+}
+
+.folder-edit-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.folder-edit-actions button {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.folder-edit-actions button:first-child {
+    background: #F5F5F5;
+    color: #666666;
+}
+
+.folder-edit-actions button:first-child:hover {
+    background: #E0E0E0;
+}
+
+.folder-edit-actions button:last-child {
+    background: #222222;
+    color: white;
+}
+
+.folder-edit-actions button:last-child:hover {
+    background: #333333;
+}
+
+.create-folder-section {
+    padding: 20px;
+    background: #F9F9F9;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.create-folder-section input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #DDDDDD;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+}
+
+.create-folder-section input:focus {
+    border-color: #222222;
+}
+
+.create-folder-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.create-folder-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create-folder-actions button:first-child {
+    background: #F5F5F5;
+    color: #666666;
+}
+
+.create-folder-actions button:first-child:hover {
+    background: #E0E0E0;
+}
+
+.create-folder-actions button:last-child {
+    background: #222222;
+    color: white;
+}
+
+.create-folder-actions button:last-child:hover {
+    background: #333333;
+}
+
+.create-folder-btn {
+    width: 100%;
+    padding: 14px;
+    background: #222222;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create-folder-btn:hover {
+    background: #333333;
+    transform: translateY(-1px);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px 16px;
+    color: #999999;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 48px 16px;
+    color: #666666;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+}
+
+.error-message {
+    padding: 12px 16px;
+    background: #FFEBEE;
+    color: #D32F2F;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+/* Delete Confirmation Modal */
+.delete-confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.delete-confirmation-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.delete-confirmation-modal h3 {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #222222;
+    margin: 0 0 12px 0;
+}
+
+.delete-confirmation-modal p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #666666;
+    margin: 0 0 20px 0;
+}
+
+.delete-confirmation-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.delete-confirmation-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-confirmation-actions button:first-child {
+    background: #F5F5F5;
+    color: #666666;
+}
+
+.delete-confirmation-actions button:first-child:hover {
+    background: #E0E0E0;
+}
+
+.delete-confirmation-actions .confirm-delete {
+    background: #D32F2F;
+    color: white;
+}
+
+.delete-confirmation-actions .confirm-delete:hover {
+    background: #B71C1C;
+}
