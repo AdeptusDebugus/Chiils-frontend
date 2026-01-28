@@ -522,18 +522,21 @@ const HomePage: React.FC = () => {
         )}
 
         {isFavoritesOpen && (
-          <FavoritesPopup onClose={() => {
-            setIsFavoritesOpen(false);
-            // Refresh likes on close in case user removed some inside popup
-            // Or we can rely on state if we lift more, but simple re-fetch is safter
-            async function refreshLikes() {
-              const ids = await getLikedLessonIds();
-              setLikedLessonIds(new Set(ids));
-              const total = await getTotalLikes();
-              setFavoritesCount(total);
-            }
-            refreshLikes();
-          }} />
+          <FavoritesPopup
+            onClose={() => {
+              setIsFavoritesOpen(false);
+              // Refresh likes on close in case user removed some inside popup
+              // Or we can rely on state if we lift more, but simple re-fetch is safter
+              async function refreshLikes() {
+                const ids = await getLikedLessonIds();
+                setLikedLessonIds(new Set(ids));
+                const total = await getTotalLikes();
+                setFavoritesCount(total);
+              }
+              refreshLikes();
+            }}
+            onAddToFolder={(lessonId) => setAddToFolderModal({ lessonId })}
+          />
         )}
 
         {isFolderManagementOpen && (

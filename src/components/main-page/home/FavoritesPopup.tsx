@@ -9,9 +9,10 @@ const iconClose = "/assets/home/close.svg";
 
 interface FavoritesPopupProps {
     onClose: () => void;
+    onAddToFolder: (lessonId: string) => void;
 }
 
-const FavoritesPopup: React.FC<FavoritesPopupProps> = ({ onClose }) => {
+const FavoritesPopup: React.FC<FavoritesPopupProps> = ({ onClose, onAddToFolder }) => {
     const navigate = useNavigate();
     const [lessons, setLessons] = useState<LikedLessonLite[]>([]);
     const [loading, setLoading] = useState(true);
@@ -125,7 +126,7 @@ const FavoritesPopup: React.FC<FavoritesPopupProps> = ({ onClose }) => {
                                         key={lesson.lesson_id}
                                         lesson={mapToLessonLite(lesson)}
                                         onClick={() => navigate(`/lesson/${lesson.lesson_id}`)}
-                                        onAddToFolder={() => console.log('Add to folder', lesson.lesson_id)}
+                                        onAddToFolder={() => onAddToFolder(lesson.lesson_id)}
                                         onAddToFavorite={() => handleUnlike(lesson.lesson_id)} // Clicking filled heart unlikes it
                                         isLiked={true}
                                     />

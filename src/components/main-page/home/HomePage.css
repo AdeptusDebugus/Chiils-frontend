@@ -225,6 +225,8 @@
   grid-template-rows: repeat(2, auto);
   grid-auto-flow: column;
   gap: 16px;
+  justify-content: flex-start;
+  grid-auto-columns: max-content;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
