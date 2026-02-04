@@ -4,6 +4,7 @@ import './CreateFolderModal.css';
 interface CreateFolderModalProps {
     onClose: () => void;
     onSave: (name: string) => Promise<void> | void;
+    existingNames?: string[];
     title?: string;
     initialValue?: string;
     placeholder?: string;
@@ -12,6 +13,7 @@ interface CreateFolderModalProps {
 const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
     onClose,
     onSave,
+    existingNames = [],
     title = "Please name your folder",
     initialValue = "",
     placeholder
@@ -23,6 +25,12 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
     const handleSave = async () => {
         if (!folderName.trim()) {
             setError('Name cannot be empty');
+            return;
+        }
+
+        const trimmedName = folderName.trim();
+        if (existingNames.some(name => name.toLowerCase() === trimmedName.toLowerCase() && name.toLowerCase() !== initialValue.trim().toLowerCase())) {
+            setError('This name already exists');
             return;
         }
 

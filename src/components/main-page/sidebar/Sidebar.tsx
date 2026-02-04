@@ -2,11 +2,29 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthContext.tsx'
 import { useLessonBuilder } from '../../../contexts/LessonBuilderContext.tsx'
+import { useAuthPrompt } from '../../../contexts/AuthPromptContext.tsx'
+import { useUpgradePrompt } from '../../../contexts/UpgradePromptContext.tsx'
 import './Sidebar.css'
 
 const Sidebar: React.FC = () => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
+  const { openAuthPrompt } = useAuthPrompt()
+  const { openUpgradePrompt } = useUpgradePrompt()
   const { openLessonBuilder, isOpen } = useLessonBuilder()
+
+  const handleLessonBuilderClick = () => {
+    if (!isAuthenticated) {
+      openAuthPrompt()
+      return
+    }
+
+    if (user?.permissions && !user.permissions.can_use_builder) {
+      openUpgradePrompt()
+      return
+    }
+
+    openLessonBuilder()
+  }
 
   return (
     <div className="figma-sidebar">
@@ -29,7 +47,7 @@ const Sidebar: React.FC = () => {
 
         <div
           className={`nav-item ${isOpen ? 'active' : ''}`}
-          onClick={openLessonBuilder}
+          onClick={handleLessonBuilderClick}
           style={{ cursor: 'pointer' }}
         >
           Lesson builder

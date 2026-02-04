@@ -10,11 +10,19 @@ interface SelectWordsPopupProps {
     setName: string;
     onClose: () => void;
     onSave: (wordIds: string[]) => void;
+    initialWordIds?: string[];
+    title?: string;
 }
 
-const SelectWordsPopup: React.FC<SelectWordsPopupProps> = ({ setName, onClose, onSave }) => {
+const SelectWordsPopup: React.FC<SelectWordsPopupProps> = ({
+    setName,
+    onClose,
+    onSave,
+    initialWordIds = [],
+    title = "Create custom set"
+}) => {
     const [allWords, setAllWords] = useState<Word[]>([]);
-    const [selectedWordIds, setSelectedWordIds] = useState<Set<string>>(new Set());
+    const [selectedWordIds, setSelectedWordIds] = useState<Set<string>>(new Set(initialWordIds));
     const [loading, setLoading] = useState(true);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -51,7 +59,10 @@ const SelectWordsPopup: React.FC<SelectWordsPopupProps> = ({ setName, onClose, o
     };
 
     const handleCloseAttempt = () => {
-        if (selectedWordIds.size > 0) {
+        const hasChanges = selectedWordIds.size !== initialWordIds.length ||
+            !initialWordIds.every(id => selectedWordIds.has(id));
+
+        if (hasChanges) {
             setShowConfirmModal(true);
         } else {
             onClose();
@@ -69,7 +80,7 @@ const SelectWordsPopup: React.FC<SelectWordsPopupProps> = ({ setName, onClose, o
         <div className="select-words-overlay">
             <div className="select-words-content">
                 <header className="select-words-header">
-                    <h2>Create custom set</h2>
+                    <h2>{title}</h2>
                     <div className="header-actions">
                         <button onClick={handleSave} title="Save">
                             <img src={iconCheckMark} alt="Save" />

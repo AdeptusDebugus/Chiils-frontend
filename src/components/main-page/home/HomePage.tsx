@@ -18,6 +18,8 @@ import {
 import { getFolders, type Folder } from '../../../services/folderService.ts';
 import { getWordSetsCount } from '../../../services/wordSetService.ts';
 import { useAuth } from '../../../contexts/AuthContext.tsx';
+import { useUpgradePrompt } from '../../../contexts/UpgradePromptContext.tsx';
+import { useOnboarding } from '../../../contexts/OnboardingContext.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 import { lessonMonitoringService } from '../../../services/lessonMonitoringService.ts';
 import { extractYouTubeId } from '../../../utils/youtube.ts';
@@ -56,11 +58,23 @@ const formatTime = (seconds: number | null): string => {
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const { openUpgradePrompt } = useUpgradePrompt();
+  const { openOnboarding } = useOnboarding();
   // Get first name from user name (e.g. "Alexander Smith" -> "Alexander"), fallback to "dear"
   const firstName = user?.name ? user.name.split(' ')[0] : 'dear';
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const formatPlanName = (plan?: string) => {
+    if (!plan) return 'No plan';
+    return plan.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
   const [activeCollection, setActiveCollection] = useState('history');
-  const [minutesLeft] = useState(300);
+  const minutesLeft = user?.lesson_builder_minutes ?? 0;
   const [isProfileCollapsed, setIsProfileCollapsed] = useState(false);
 
   const [userLessons, setUserLessons] = useState<LessonLite[]>([]);
@@ -102,117 +116,95 @@ const HomePage: React.FC = () => {
   const scrollObserverRef = useRef<HTMLDivElement>(null);
 
   const lessonsGridRef = useRef<HTMLDivElement>(null);
+  const lessonsScrollObserverRef = useRef<HTMLDivElement>(null);
+
+  const fetchLessons = async () => {
+    if (!user?.email) return;
+    try {
+      setLoading(true);
+      // Reset pagination state when user changes or first load
+      setPage(0);
+      setHasMore(true);
+      const data = await getUserLessonsLite({ page: 0, size: PAGE_SIZE, sort: '-createdAt', email: user.email });
+      setUserLessons(data);
+
+      // Start monitoring for processing lessons
+      data.forEach(lesson => {
+        if ((lesson.status === 'PROCESSING' || lesson.status === 'PENDING') && !lessonMonitoringService.isMonitoring(lesson.id)) {
+          globalLessonMonitoring.startMonitoring(lesson.id, lesson.lesson_topic || 'Untitled');
+        }
+      });
+
+      if (data.length < PAGE_SIZE) {
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Failed to load lessons');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchLessons() {
-      if (!user?.email) return;
-      try {
-        setLoading(true);
-        // Reset pagination state when user changes or first load
-        setPage(0);
-        setHasMore(true);
-        const data = await getUserLessonsLite({ page: 0, size: PAGE_SIZE, sort: '-createdAt', email: user.email });
-        setUserLessons(data);
-
-        // Start monitoring for processing lessons
-        data.forEach(lesson => {
-          if ((lesson.status === 'PROCESSING' || lesson.status === 'PENDING') && !lessonMonitoringService.isMonitoring(lesson.id)) {
-            globalLessonMonitoring.startMonitoring(lesson.id, lesson.lesson_topic || 'Untitled');
-          }
-        });
-
-        if (data.length < PAGE_SIZE) {
-          setHasMore(false);
-        }
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load lessons');
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchLessons();
 
-    // Fetch History Count
-    async function fetchHistory() {
-      if (!user?.email) return;
+    const handleLessonCreated = () => {
+      console.log('HomePage: Lesson created, refreshing lessons grid...');
+      fetchLessons();
+    };
+
+    window.addEventListener('lessonCreated', handleLessonCreated);
+    return () => window.removeEventListener('lessonCreated', handleLessonCreated);
+  }, [user?.email]);
+
+  // Fetch History, Likes, Folders, and Word Sets count
+  useEffect(() => {
+    if (!user?.email) return;
+
+    const fetchData = async () => {
       try {
-        const total = await getTotalHistory();
-        setHistoryCount(total);
+        const historyTotal = await getTotalHistory();
+        setHistoryCount(historyTotal);
+
+        const likedIds = await getLikedLessonIds();
+        setLikedLessonIds(new Set(likedIds));
+
+        const likesTotal = await getTotalLikes();
+        setFavoritesCount(likesTotal);
+
+        const folderData = await getFolders();
+        setFolders(folderData);
+
+        const setsCount = await getWordSetsCount();
+        setWordSetsCount(setsCount);
       } catch (e) {
-        console.error('Failed to fetch history count', e);
+        console.error('Failed to fetch summary data', e);
       }
-    }
+    };
 
-    fetchHistory();
+    fetchData();
+  }, [user?.email]);
 
-    // Fetch Likes Data
-    async function fetchLikes() {
-      if (!user?.email) return;
+  // Fetch Word Bank separately
+  useEffect(() => {
+    if (!user?.email) return;
+
+    const fetchInitialWordBank = async () => {
       try {
-        const ids = await getLikedLessonIds();
-        setLikedLessonIds(new Set(ids));
-
-        const total = await getTotalLikes();
-        setFavoritesCount(total);
-      } catch (e) {
-        console.error('Failed to fetch likes', e);
-      }
-    }
-    fetchLikes();
-
-    // Fetch Folders
-    async function fetchFolders() {
-      if (!user?.email) return;
-      try {
-        const data = await getFolders();
-        setFolders(data);
-      } catch (e) {
-        console.error('Failed to fetch folders', e);
-      }
-    }
-
-    async function fetchWordSetsCount() {
-      if (!user?.email) return;
-      try {
-        const count = await getWordSetsCount();
-        setWordSetsCount(count);
-      } catch (e) {
-        console.error('Failed to fetch word sets count', e);
-      }
-    }
-
-    fetchFolders();
-    fetchWordSetsCount();
-
-    async function fetchWordBank(page: number, append: boolean = false) {
-      if (!user?.email) return;
-      try {
-        if (append) setIsFetchingMoreWords(true);
-        else setIsWordBankLoading(true);
-
-        const data = await getWordBank({ page, size: 20 });
-        if (append) {
-          setWordBankWords(prev => [...prev, ...data.content]);
-        } else {
-          setWordBankWords(data.content);
-        }
+        setIsWordBankLoading(true);
+        const data = await getWordBank({ page: 0, size: 20 });
+        setWordBankWords(data.content);
         setHasMoreWords(!data.last);
+        setWordBankPage(0);
       } catch (e) {
         console.error('Failed to fetch word bank', e);
       } finally {
         setIsWordBankLoading(false);
-        setIsFetchingMoreWords(false);
       }
-    }
-    setWordBankPage(0);
-    setWordBankWords([]);
-    setHasMoreWords(true);
-    fetchWordBank(0);
+    };
 
-    // Update the local fetchWordBank so it can be used in other effects if needed
-    // But since it's inside useEffect, we should probably pull it out or use a ref.
-    // For now, I'll keep the initial fetch here and use another effect for pagination.
+    fetchInitialWordBank();
   }, [user?.email]);
 
   // Handle infinite scroll loading
@@ -361,6 +353,8 @@ const HomePage: React.FC = () => {
     }
   };
 
+
+
   const handleLessonScroll = (direction: 'left' | 'right') => {
     if (lessonsGridRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = lessonsGridRef.current;
@@ -394,6 +388,7 @@ const HomePage: React.FC = () => {
         setActiveFolderPopup({ id: folderId, name: folder.name });
       }
     } else if (id === 'wordsets') {
+      setWordSetsInitialCreate(false);
       setIsWordSetsOpen(true);
     } else {
       setActiveCollection(id);
@@ -512,92 +507,107 @@ const HomePage: React.FC = () => {
           />
         )}
 
-        {isHistoryOpen && (
-          <HistoryPopup
-            onClose={() => setIsHistoryOpen(false)}
-            likedLessonIds={likedLessonIds}
-            onToggleLike={(e, id) => handleToggleLike(id)}
-            onAddToFolder={(lessonId) => setAddToFolderModal({ lessonId })}
-          />
-        )}
+        {
+          isHistoryOpen && (
+            <HistoryPopup
+              onClose={() => setIsHistoryOpen(false)}
+              likedLessonIds={likedLessonIds}
+              onToggleLike={(e, id) => handleToggleLike(id)}
+              onAddToFolder={(lessonId) => setAddToFolderModal({ lessonId })}
+            />
+          )
+        }
 
-        {isFavoritesOpen && (
-          <FavoritesPopup
-            onClose={() => {
-              setIsFavoritesOpen(false);
-              // Refresh likes on close in case user removed some inside popup
-              // Or we can rely on state if we lift more, but simple re-fetch is safter
-              async function refreshLikes() {
-                const ids = await getLikedLessonIds();
-                setLikedLessonIds(new Set(ids));
-                const total = await getTotalLikes();
-                setFavoritesCount(total);
-              }
-              refreshLikes();
-            }}
-            onAddToFolder={(lessonId) => setAddToFolderModal({ lessonId })}
-          />
-        )}
-
-        {isFolderManagementOpen && (
-          <CollectionsPopup
-            onClose={() => setIsFolderManagementOpen(false)}
-            onOpenCollection={(id: string, folderId?: number) => {
-              setIsFolderManagementOpen(false);
-              if (id === 'history') {
-                setIsHistoryOpen(true);
-              } else if (id === 'favourites') {
-                setIsFavoritesOpen(true);
-              } else if (id.startsWith('folder-') && folderId) {
-                const folder = folders.find(f => f.id === folderId);
-                if (folder) {
-                  setActiveFolderPopup({ id: folderId, name: folder.name });
+        {
+          isFavoritesOpen && (
+            <FavoritesPopup
+              onClose={() => {
+                setIsFavoritesOpen(false);
+                // Refresh likes on close in case user removed some inside popup
+                // Or we can rely on state if we lift more, but simple re-fetch is safter
+                async function refreshLikes() {
+                  const ids = await getLikedLessonIds();
+                  setLikedLessonIds(new Set(ids));
+                  const total = await getTotalLikes();
+                  setFavoritesCount(total);
                 }
-              } else if (id === 'wordsets') {
-                setWordSetsInitialCreate(false);
-                setIsWordSetsOpen(true);
-              }
-            }}
-            historyCount={historyCount}
-            favoritesCount={favoritesCount}
-            wordSetsCount={wordSetsCount}
-            onFoldersUpdated={refreshFolders}
-          />
-        )}
+                refreshLikes();
+              }}
+              onAddToFolder={(lessonId) => setAddToFolderModal({ lessonId })}
+            />
+          )
+        }
+
+        {
+          isFolderManagementOpen && (
+            <CollectionsPopup
+              onClose={() => setIsFolderManagementOpen(false)}
+              onOpenCollection={(id: string, folderId?: number) => {
+                setIsFolderManagementOpen(false);
+                if (id === 'history') {
+                  setIsHistoryOpen(true);
+                } else if (id === 'favourites') {
+                  setIsFavoritesOpen(true);
+                } else if (id.startsWith('folder-') && folderId) {
+                  const folder = folders.find(f => f.id === folderId);
+                  if (folder) {
+                    setActiveFolderPopup({ id: folderId, name: folder.name });
+                  }
+                } else if (id === 'wordsets') {
+                  setIsFolderManagementOpen(false);
+                  setWordSetsInitialCreate(false);
+                  setIsWordSetsOpen(true);
+                }
+              }}
+              historyCount={historyCount}
+              favoritesCount={favoritesCount}
+              wordSetsCount={wordSetsCount}
+              onFoldersUpdated={refreshFolders}
+            />
+          )
+        }
 
 
-        {isWordSetsOpen && (
-          <WordSetsPopup
-            onClose={() => setIsWordSetsOpen(false)}
-            initialCreateMode={wordSetsInitialCreate}
-          />
-        )}
+        {/* WordSetsPopup restored for create flow from sidebar */}
+        {
+          isWordSetsOpen && (
+            <WordSetsPopup
+              onClose={() => setIsWordSetsOpen(false)}
+              onSetsUpdated={refreshFolders}
+              initialCreateMode={wordSetsInitialCreate}
+            />
+          )
+        }
 
 
-        {activeFolderPopup && (
-          <FolderPopup
-            folderId={activeFolderPopup.id}
-            folderName={activeFolderPopup.name}
-            onClose={() => setActiveFolderPopup(null)}
-            likedLessonIds={likedLessonIds}
-            onToggleLike={(e, id) => handleToggleLike(id)}
-            onAddToFolder={(lessonId) => setAddToFolderModal({ lessonId })}
-            onFolderUpdated={refreshFolders}
-          />
-        )}
+        {
+          activeFolderPopup && (
+            <FolderPopup
+              folderId={activeFolderPopup.id}
+              folderName={activeFolderPopup.name}
+              onClose={() => setActiveFolderPopup(null)}
+              likedLessonIds={likedLessonIds}
+              onToggleLike={(e, id) => handleToggleLike(id)}
+              onAddToFolder={(lessonId) => setAddToFolderModal({ lessonId })}
+              onFolderUpdated={refreshFolders}
+            />
+          )
+        }
 
-        {addToFolderModal && (
-          <AddToFolderModal
-            lessonId={addToFolderModal.lessonId}
-            onClose={() => setAddToFolderModal(null)}
-            onFoldersUpdated={refreshFolders}
-          />
-        )}
+        {
+          addToFolderModal && (
+            <AddToFolderModal
+              lessonId={addToFolderModal.lessonId}
+              onClose={() => setAddToFolderModal(null)}
+              onFoldersUpdated={refreshFolders}
+            />
+          )
+        }
 
 
         {/* Collections Section */}
         <section className="collections-section">
-          <div className="collections-container">
+          <div className={`collections-container ${user?.permissions && !user.permissions.can_use_collections ? 'locked' : ''}`}>
             <div className="section-header">
               <h2>Collections</h2>
               <div className="section-controls">
@@ -607,7 +617,11 @@ const HomePage: React.FC = () => {
                 <button className="nav-arrow" onClick={() => handleCollectionScroll('right')}>
                   <img src={iconNavRight} alt="Next" />
                 </button>
-                <button className="expand-btn" onClick={() => setIsFolderManagementOpen(true)}>
+                <button className="expand-btn" onClick={() => {
+                  if (user?.permissions?.can_use_collections !== false) {
+                    setIsFolderManagementOpen(true);
+                  }
+                }}>
                   <img src={iconExpand} alt="Expand" />
                 </button>
               </div>
@@ -617,7 +631,11 @@ const HomePage: React.FC = () => {
                 <div
                   key={collection.id}
                   className={`collection-item ${activeCollection === collection.id ? 'active' : ''}`}
-                  onClick={() => handleCollectionClick(collection.id, (collection as any).folderId)}
+                  onClick={() => {
+                    if (user?.permissions?.can_use_collections !== false) {
+                      handleCollectionClick(collection.id, (collection as any).folderId);
+                    }
+                  }}
                 >
                   <div className="collection-icon">
                     <img src={collection.icon} alt={collection.name} />
@@ -662,7 +680,7 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </section>
-      </main>
+      </main >
 
       {/* Right Sidebar - Word Bank */}
       {/* Right Sidebar - Word Bank */}
@@ -673,7 +691,7 @@ const HomePage: React.FC = () => {
               <span className="minutes-number">{minutesLeft}</span>
               <span className="minutes-label">Minutes left</span>
             </div>
-            <button className="start-plan-btn">Start plan</button>
+            <span className="user-plan-label">{formatPlanName(user?.plan)}</span>
             <button className="expand-profile-btn" onClick={() => setIsProfileCollapsed(false)}>
               <img src={iconExpand} alt="Expand" />
             </button>
@@ -686,7 +704,7 @@ const HomePage: React.FC = () => {
                   <span className="minutes-number">{minutesLeft}</span>
                   <span className="minutes-label">Minutes left</span>
                 </div>
-                <button className="start-plan-btn">Start plan</button>
+                <span className="user-plan-label">{formatPlanName(user?.plan)}</span>
               </div>
               <div className="profile-widget">
                 <button className="profile-icon-btn">
@@ -702,7 +720,8 @@ const HomePage: React.FC = () => {
             </div>
             <div className="user-profile-actions">
               <button className="add-minutes-btn">Add minutes</button>
-              <button className="upgrade-btn">Upgrade</button>
+              <button className="upgrade-btn" onClick={() => openOnboarding(true)}>Upgrade</button>
+              <button className="logout-btn" onClick={handleLogout}>Log out</button>
             </div>
           </div>
         )}
@@ -751,7 +770,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </aside>
-    </div>
+    </div >
   );
 };
 

@@ -113,16 +113,19 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+    font-family: "TeX Gyre Heros", sans-serif;
 }
 
 .plan-name {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 20px;
+    color: #222;
 }
 
 .plan-price {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 20px;
+    color: #222;
 }
 
 .info-icon {
@@ -157,11 +160,10 @@
     top: -25px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #000;
-    color: #fff;
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 12px;
+    background-color: transparent;
+    color: #222;
+    font-size: 14px;
+    font-weight: 400;
     white-space: nowrap;
 }
 
@@ -177,17 +179,22 @@
     color: #fff;
     border: none;
     border-radius: 18px;
-    padding: 8px 32px;
-    font-size: 16px;
+    padding: 10px 40px;
+    font-family: "TeX Gyre Heros", sans-serif;
+    font-size: 20px;
     font-weight: 400;
+    line-height: 25px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    height: 37px;
+    transition: all 0.3s ease;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 325px;
 }
 
 .got-it-btn:hover {
-    background-color: #444;
+    background-color: transparent;
+    color: #2a2b2a;
+    border: 1px solid #2a2b2a;
 }

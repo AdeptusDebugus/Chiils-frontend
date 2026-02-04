@@ -1,12 +1,33 @@
 import React from 'react';
 import { useLessonBuilder } from '../../../contexts/LessonBuilderContext.tsx';
+import { useAuth } from '../../../contexts/AuthContext.tsx';
+import { useAuthPrompt } from '../../../contexts/AuthPromptContext.tsx';
+import { useUpgradePrompt } from '../../../contexts/UpgradePromptContext.tsx';
 import './LessonBuilderButton.css';
 
 const LessonBuilderButton: React.FC = () => {
     const { openLessonBuilder, isOpen } = useLessonBuilder();
+    const { isAuthenticated, user } = useAuth();
+    const { openAuthPrompt } = useAuthPrompt();
+    const { openUpgradePrompt } = useUpgradePrompt();
+
+    const handleClick = () => {
+        if (!isAuthenticated) {
+            openAuthPrompt();
+            return;
+        }
+
+        // If authenticated but doesn't have builder permission
+        if (user?.permissions && !user.permissions.can_use_builder) {
+            openUpgradePrompt();
+            return;
+        }
+
+        openLessonBuilder();
+    };
 
     return (
-        <button className={`lesson-builder-button ${isOpen ? 'expanded' : ''}`} onClick={openLessonBuilder}>
+        <button className={`lesson-builder-button ${isOpen ? 'expanded' : ''}`} onClick={handleClick}>
             <span className="button-text">Lesson Builder</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="106" height="104" viewBox="0 0 106 104" fill="none">
                 <g opacity="1">

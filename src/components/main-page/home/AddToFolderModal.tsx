@@ -81,6 +81,11 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
                 setNotification({ folderId, folderName: folder.name });
             }
             onFoldersUpdated?.();
+
+            // Auto-close if this is the only folder
+            if (folders.length === 1) {
+                setTimeout(onClose, 500); // Small delay to show state change
+            }
         } catch (e: any) {
             console.error('Failed to add to folder', e);
             setError('Failed to add to folder');
@@ -122,6 +127,11 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
             ));
             setNotification({ folderId: newFolder.id, folderName: newFolder.name });
             onFoldersUpdated?.();
+
+            // Auto-close if this was the first folder created
+            if (folders.length === 0) {
+                setTimeout(onClose, 500);
+            }
         } catch (e) {
             console.error('Failed to create folder', e);
             setError('Failed to create folder');
@@ -219,6 +229,7 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
                     <CreateFolderModal
                         onClose={() => setIsCreatingFolder(false)}
                         onSave={handleCreateFolder}
+                        existingNames={folders.map(f => f.name)}
                         title="Create folder"
                     />
                 )}

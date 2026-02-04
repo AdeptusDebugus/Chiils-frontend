@@ -46,27 +46,27 @@ export async function renameWordSet(id: string, name: string): Promise<WordSet> 
  * Adds words from Word Bank to a Word Set
  */
 export async function addWordsToWordSet(id: string, wordIds: string[]): Promise<void> {
-    await api.post(`/words/${id}/words`, wordIds);
+    await api.post(`/words/set/${id}`, wordIds);
 }
 
 /**
  * Returns all words in a Word Set
  */
 export async function getWordSetWords(id: string): Promise<Word[]> {
-    const res = await api.get<Word[]>(`/words/${id}/words`);
+    const res = await api.get<Word[]>(`/words/set/${id}`);
     return res.data || [];
 }
 
 /**
- * Removes a single word from a Word Set
+ * Removes words from a Word Set
  */
-export async function removeWordFromWordSet(id: string, wordId: string): Promise<void> {
-    await api.delete(`/words/${id}/words/${wordId}`);
+export async function removeWordFromWordSet(id: string, wordIds: string[]): Promise<void> {
+    await api.delete(`/words/set/${id}`, { data: wordIds });
 }
 /**
  * Returns the total number of Word Sets created by the authenticated user
  */
 export async function getWordSetsCount(): Promise<number> {
-    const res = await api.get<number>('/words/total');
+    const res = await api.get<number>('/words/set/total');
     return res.data;
 }

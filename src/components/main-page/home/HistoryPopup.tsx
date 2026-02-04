@@ -166,7 +166,7 @@ const HistoryPopup: React.FC<HistoryPopupProps> = ({ onClose, likedLessonIds, on
                             <div className="empty-state">No history found.</div>
                         ) : (
                             <div className="popup-lessons-grid history-grid">
-                                {renderGroup('Yesterday', data?.yesterday, yesterdayRef)}
+                                {renderGroup('Recent', data?.yesterday, yesterdayRef)}
                                 {renderGroup('Last Week', data?.lastWeek, lastWeekRef)}
                                 {renderGroup('This Month', data?.thisMonth, thisMonthRef)}
                             </div>

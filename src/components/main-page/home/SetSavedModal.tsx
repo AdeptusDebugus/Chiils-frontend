@@ -17,7 +17,7 @@ const SetSavedModal: React.FC<SetSavedModalProps> = ({ onClose, onViewInCollecti
                         Close
                     </button>
                     <button className="view-btn" onClick={onViewInCollection}>
-                        View in collection
+                        View in collections
                     </button>
                 </div>
             </div>

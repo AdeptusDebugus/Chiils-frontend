@@ -77,8 +77,9 @@
 }
 
 .confirm-modal-primary-btn.danger {
-    color: #D32F2F;
-    border-color: #D32F2F;
+    background: black;
+    border: 1px solid black;
+    color: white;
 }
 
 .confirm-modal-primary-btn.danger:hover {

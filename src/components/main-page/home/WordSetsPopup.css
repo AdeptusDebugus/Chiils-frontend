@@ -8,7 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
 }
 
 @media (max-width: 768px) {
@@ -96,8 +96,12 @@
 }
 
 .word-sets-row-content {
-    display: flex;
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
     gap: 16px;
+    justify-content: flex-start;
+    grid-auto-columns: max-content;
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -122,6 +126,8 @@
     cursor: pointer;
     transition: all 0.3s ease;
     display: block;
+    grid-row: 1;
+    /* Match WordSetsPage: items stay on top row */
     flex-shrink: 0;
 }
 
@@ -391,6 +397,10 @@
 .add-set-item {
     border: 1px #BBBBBB;
     background: #F9F9F9;
+    grid-row: 2;
+    /* Match WordSetsPage: add button on bottom row */
+    grid-column: 1;
+    /* Aligned to the start */
 }
 
 .add-set-item:hover {

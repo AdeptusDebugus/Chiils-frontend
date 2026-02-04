@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './WordSetsPopup.css';
 import {
     getWordSets,
@@ -24,10 +25,12 @@ const iconDelete = "/assets/home/remove-from-folder.svg"; // Reusing icon for de
 
 interface WordSetsPopupProps {
     onClose: () => void;
+    onSetsUpdated?: () => void;
     initialCreateMode?: boolean;
 }
 
-const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, initialCreateMode = false }) => {
+const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, onSetsUpdated, initialCreateMode = false }) => {
+    const navigate = useNavigate();
     const setsRowRef = useRef<HTMLDivElement>(null);
     const isTransitioningRef = useRef(false);
     const [wordSets, setWordSets] = useState<WordSet[]>([]);
@@ -132,6 +135,7 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, initialCreateMod
             setIsSuccessModalOpen(true);
             setTempSetName('');
             setLocalIsInitialCreate(false);
+            if (onSetsUpdated) onSetsUpdated();
         } catch (e) {
             console.error('Failed to create set with words', e);
             setError('Failed to create word set');
@@ -143,6 +147,7 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, initialCreateMod
         const updated = await renameWordSet(selectedSet.id, name);
         setWordSets(prev => prev.map(s => s.id === updated.id ? updated : s));
         if (activeSet?.id === updated.id) setActiveSet(updated);
+        if (onSetsUpdated) onSetsUpdated();
     };
 
     const handleDeleteClick = (e: React.MouseEvent, id: string) => {
@@ -156,6 +161,7 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, initialCreateMod
             await deleteWordSet(id);
             setWordSets(prev => prev.filter(s => s.id !== id));
             if (activeSet?.id === id) setActiveSet(null);
+            if (onSetsUpdated) onSetsUpdated();
         } catch (e) {
             console.error('Failed to delete set', e);
         } finally {
@@ -246,7 +252,14 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, initialCreateMod
                                         ) : (
                                             <>
                                                 {wordSets.map(set => (
-                                                    <div key={set.id} className="collection-item" onClick={() => setActiveSet(set)}>
+                                                    <div
+                                                        key={set.id}
+                                                        className="collection-item"
+                                                        onClick={() => {
+                                                            navigate('/word-sets', { state: { selectedSetId: set.id } });
+                                                            onClose();
+                                                        }}
+                                                    >
                                                         <div className="collection-info">
                                                             <h3>{set.name}</h3>
                                                             <p>{set.word_count} words</p>
@@ -312,6 +325,7 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, initialCreateMod
                         isTransitioningRef.current = false;
                     }}
                     onSave={modalMode === 'create' ? handleCreateNameSubmit : handleRenameSet}
+                    existingNames={wordSets.map(s => s.name)}
                     title={modalMode === 'create' ? "Name your word set" : "Rename word set"}
                     initialValue={selectedSet?.name || ""}
                     placeholder="My custom set 1"

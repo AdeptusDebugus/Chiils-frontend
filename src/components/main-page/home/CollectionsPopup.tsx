@@ -264,6 +264,7 @@ const CollectionsPopup: React.FC<CollectionsPopupProps> = ({
                     <CreateFolderModal
                         onClose={() => setIsCreatingFolder(false)}
                         onSave={handleCreateFolder}
+                        existingNames={folders.map(f => f.name)}
                     />
                 )}
 
@@ -275,6 +276,7 @@ const CollectionsPopup: React.FC<CollectionsPopupProps> = ({
                             setEditingName('');
                         }}
                         onSave={(name) => handleRename(editingFolderId, name)}
+                        existingNames={folders.map(f => f.name)}
                         title="Rename your folder"
                         initialValue={editingName}
                     />

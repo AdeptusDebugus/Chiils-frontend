@@ -141,6 +141,9 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
 
             await createLesson(requestData);
 
+            // Signal refresh for HomePage
+            window.dispatchEvent(new CustomEvent('lessonCreated'));
+
             onClose();
             // detailed reset is not needed because the component unmounts on close
         } catch (e: any) {
@@ -160,7 +163,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
 
                 <div className="lesson-builder-content">
                     <div className="popup-header">
-                        <h2 className="popup-title">Lesson Builder</h2>
+                        <h1 className="popup-title">Lesson Builder</h1>
 
                     </div>
 

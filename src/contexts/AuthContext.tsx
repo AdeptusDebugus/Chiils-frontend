@@ -1,10 +1,19 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-interface User {
+export interface User {
   id: string;
   email: string;
   name: string;
   picture?: string;
+  role?: string;
+  plan?: string;
+  lesson_builder_minutes?: number;
+  permissions?: {
+    can_access_library: boolean;
+    can_use_builder: boolean;
+    can_use_collections: boolean;
+    can_use_scenarios: boolean;
+  };
 }
 
 interface AuthContextType {
@@ -12,6 +21,7 @@ interface AuthContextType {
   token: string | null;
   login: (token: string, userData: User) => void;
   logout: () => void;
+  refreshProfile: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -35,25 +45,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchUserProfile = async (jwt: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/me`, {
+        headers: {
+          'Authorization': `Bearer ${jwt}`
+        }
+      });
+      if (response.ok) {
+        const fullProfile = await response.json();
+        console.log("Fetched full profile:", fullProfile);
+        setUser(prev => ({ ...prev, ...fullProfile }));
+        localStorage.setItem('user_data', JSON.stringify(fullProfile));
+      } else {
+        console.warn("Failed to fetch user profile:", response.status);
+        // If 401/403, might consider logging out, but be careful of loops
+      }
+    } catch (err) {
+      console.error("Error fetching user profile", err);
+    }
+  };
+
   useEffect(() => {
     // Check for existing token on app load
     const storedToken = localStorage.getItem('jwt_token');
     const storedUser = localStorage.getItem('user_data');
-    
-    if (storedToken && storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        console.log('Retrieved user data from localStorage:', userData); // Debug log
-        setToken(storedToken);
-        setUser(userData);
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        // Clear invalid data
-        localStorage.removeItem('jwt_token');
-        localStorage.removeItem('user_data');
+
+    if (storedToken) {
+      setToken(storedToken);
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) { /* ignore */ }
       }
+      // Always refresh from API to get latest permissions
+      fetchUserProfile(storedToken).finally(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
   const login = (newToken: string, userData: User) => {
@@ -62,6 +91,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(userData);
     localStorage.setItem('jwt_token', newToken);
     localStorage.setItem('user_data', JSON.stringify(userData));
+    // Immediately fetch full profile
+    fetchUserProfile(newToken);
   };
 
   const logout = () => {
@@ -79,6 +110,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       token,
       login,
       logout,
+      refreshProfile: () => token ? fetchUserProfile(token) : Promise.resolve(),
       isAuthenticated,
       isLoading
     }}>
