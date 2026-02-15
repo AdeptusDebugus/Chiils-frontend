@@ -12,6 +12,7 @@ import {
     type WordSet
 } from '../../../services/wordSetService';
 import { type Word } from '../../../services/lessonService';
+import { useAuth } from '../../../contexts/AuthContext';
 import CreateFolderModal from './CreateFolderModal';
 import SelectWordsPopup from './SelectWordsPopup';
 import ConfirmModal from './ConfirmModal';
@@ -45,6 +46,7 @@ const formatTime = (seconds: number | null): string => {
 
 const WordSetsPage: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const location = useLocation();
     const setsRowRef = useRef<HTMLDivElement>(null);
     const isTransitioningRef = useRef(false);
@@ -108,8 +110,16 @@ const WordSetsPage: React.FC = () => {
     const fetchSets = async () => {
         try {
             setLoading(true);
-            const data = await getWordSets();
-            setWordSets(data);
+            const createdSets = await getWordSets();
+            const sharedSets = await import('../../../services/wordSetService').then(m => m.getSharedWordSets());
+
+            // Map shared sets to ensure they have unique IDs or flags if needed
+            // For now assuming IDs are unique across all sets
+            // We might want to distinguish them visually or by actions (e.g. can't delete shared set)
+            // But for now, just merge.
+
+            // Note: If user is STUDENT, createdSets might be empty, which is fine.
+            setWordSets([...createdSets, ...sharedSets]);
             setError(null);
         } catch (e) {
             console.error('Failed to fetch word sets', e);
@@ -418,13 +428,15 @@ const WordSetsPage: React.FC = () => {
                                                 <div className="collection-icon">
                                                     <img src={iconWordSets} alt={set.name} />
                                                 </div>
-                                                <button
-                                                    className="folder-menu-btn"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setActiveMenu(activeMenu === set.id ? null : set.id);
-                                                    }}
-                                                >⋯</button>
+                                                {user?.role !== 'STUDENT' && (
+                                                    <button
+                                                        className="folder-menu-btn"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setActiveMenu(activeMenu === set.id ? null : set.id);
+                                                        }}
+                                                    >⋯</button>
+                                                )}
                                             </div>
                                             {activeMenu === set.id && (
                                                 <div className="folder-menu">
@@ -434,14 +446,16 @@ const WordSetsPage: React.FC = () => {
                                             )}
                                         </div>
                                     ))}
-                                    <div className="collection-item add-set-item" onClick={openCreateModal}>
-                                        <div className="collection-info">
-                                            <h3>Add word set</h3>
+                                    {user?.role !== 'STUDENT' && (
+                                        <div className="collection-item add-set-item" onClick={openCreateModal}>
+                                            <div className="collection-info">
+                                                <h3>Add word set</h3>
+                                            </div>
+                                            <div className="collection-icon add-icon">
+                                                <img src={iconPlus} alt="Add" />
+                                            </div>
                                         </div>
-                                        <div className="collection-icon add-icon">
-                                            <img src={iconPlus} alt="Add" />
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -452,16 +466,18 @@ const WordSetsPage: React.FC = () => {
                 <aside className="terms-sidebar">
                     <div className="sidebar-header">
                         <h3>Terms in this set ({activeSetWords.length})</h3>
-                        <div className="sidebar-actions">
-                            <button onClick={openEditWordsModal}><img src={iconEdit} alt="Edit" /></button>
-                            <button onClick={openAddStudentModal}><img src={iconExternal} alt="Open" /></button>
-                            <button
-                                onClick={() => setIsManageStudentsModalOpen(!isManageStudentsModalOpen)}
-                                className={isManageStudentsModalOpen ? 'active' : ''}
-                            >
-                                <img src={iconShared} alt="Manage Students" />
-                            </button>
-                        </div>
+                        {user?.role !== 'STUDENT' && (
+                            <div className="sidebar-actions">
+                                <button onClick={openEditWordsModal}><img src={iconEdit} alt="Edit" /></button>
+                                <button onClick={openAddStudentModal}><img src={iconExternal} alt="Open" /></button>
+                                <button
+                                    onClick={() => setIsManageStudentsModalOpen(!isManageStudentsModalOpen)}
+                                    className={isManageStudentsModalOpen ? 'active' : ''}
+                                >
+                                    <img src={iconShared} alt="Manage Students" />
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="terms-list">
@@ -485,7 +501,8 @@ const WordSetsPage: React.FC = () => {
                                             }}
                                             title="Open lesson"
                                         >
-                                            {formatTime(word.time_code)}
+                                            {/* {formatTime(word.time_code)} */}
+                                            View lesson
                                         </span>
                                     </div>
                                     <p className="quote">«{word.quote}»</p>
@@ -557,6 +574,7 @@ const WordSetsPage: React.FC = () => {
                         setIsAddStudentModalOpen(false);
                         setStudentsRefreshKey(prev => prev + 1);
                     }}
+                    wordSetId={activeSet?.id}
                 />
             )}
         </div>

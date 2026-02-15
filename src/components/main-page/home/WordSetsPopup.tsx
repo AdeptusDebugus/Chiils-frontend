@@ -11,6 +11,7 @@ import {
     type WordSet
 } from '../../../services/wordSetService';
 import { type Word } from '../../../services/lessonService';
+import { useAuth } from '../../../contexts/AuthContext';
 import CreateFolderModal from './CreateFolderModal';
 import SelectWordsPopup from './SelectWordsPopup';
 import ConfirmModal from './ConfirmModal';
@@ -31,6 +32,7 @@ interface WordSetsPopupProps {
 
 const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, onSetsUpdated, initialCreateMode = false }) => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const setsRowRef = useRef<HTMLDivElement>(null);
     const isTransitioningRef = useRef(false);
     const [wordSets, setWordSets] = useState<WordSet[]>([]);
@@ -68,7 +70,13 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, onSetsUpdated, i
     const fetchSets = async () => {
         try {
             setLoading(true);
-            const data = await getWordSets();
+            let data: WordSet[] = [];
+            if (user?.role === 'STUDENT') {
+                const { getSharedWordSets } = await import('../../../services/wordSetService');
+                data = await getSharedWordSets();
+            } else {
+                data = await getWordSets();
+            }
             setWordSets(data);
             setError(null);
         } catch (e) {
@@ -268,15 +276,17 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, onSetsUpdated, i
                                                             <div className="collection-icon">
                                                                 <img src={iconWordSets} alt={set.name} />
                                                             </div>
-                                                            <button
-                                                                className="folder-menu-btn"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    setActiveMenu(activeMenu === set.id ? null : set.id);
-                                                                }}
-                                                            >
-                                                                ⋯
-                                                            </button>
+                                                            {user?.role !== 'STUDENT' && (
+                                                                <button
+                                                                    className="folder-menu-btn"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setActiveMenu(activeMenu === set.id ? null : set.id);
+                                                                    }}
+                                                                >
+                                                                    ⋯
+                                                                </button>
+                                                            )}
                                                             {activeMenu === set.id && (
                                                                 <div className="folder-menu">
                                                                     <button onClick={(e) => openRenameModal(e, set)}>Rename</button>
@@ -288,14 +298,17 @@ const WordSetsPopup: React.FC<WordSetsPopupProps> = ({ onClose, onSetsUpdated, i
                                                 ))}
 
                                                 {/* Add Set Item */}
-                                                <div className="collection-item add-set-item" onClick={openCreateModal}>
-                                                    <div className="collection-info">
-                                                        <h3>Add set</h3>
+                                                {/* Add Set Item */}
+                                                {user?.role !== 'STUDENT' && (
+                                                    <div className="collection-item add-set-item" onClick={openCreateModal}>
+                                                        <div className="collection-info">
+                                                            <h3>Add set</h3>
+                                                        </div>
+                                                        <div className="collection-icon add-icon">
+                                                            <img src={iconPlus} alt="Add" />
+                                                        </div>
                                                     </div>
-                                                    <div className="collection-icon add-icon">
-                                                        <img src={iconPlus} alt="Add" />
-                                                    </div>
-                                                </div>
+                                                )}
                                             </>
                                         )}
                                     </div>

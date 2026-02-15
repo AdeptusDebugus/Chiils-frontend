@@ -7,8 +7,9 @@ export interface Student {
     joinedAt: string;
 }
 
-export const addStudent = async (email: string, name?: string): Promise<void> => {
-    await api.post('/students', { email, name });
+export const addStudent = async (email: string, name?: string): Promise<Student> => {
+    const response = await api.post<Student>('/students', { email, name });
+    return response.data;
 };
 
 export const getMyStudents = async (): Promise<Student[]> => {
@@ -18,4 +19,13 @@ export const getMyStudents = async (): Promise<Student[]> => {
 
 export const removeStudent = async (studentId: string): Promise<void> => {
     await api.delete(`/students/${studentId}`);
+};
+
+export const getMyTeacher = async (): Promise<Student | null> => {
+    try {
+        const response = await api.get<Student>('/students/teacher');
+        return response.data;
+    } catch (e) {
+        return null;
+    }
 };

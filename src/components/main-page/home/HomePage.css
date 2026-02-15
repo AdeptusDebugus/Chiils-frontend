@@ -765,10 +765,11 @@
 .user-profile-actions {
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
-.logout-btn {
+.home-logout-btn {
   padding: 8px 24px;
   background: #2a2b2a;
   border: 1px solid #222222;
@@ -779,9 +780,10 @@
   color: #FFFFFF;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-.logout-btn:hover {
+.home-logout-btn:hover {
   background: white;
   color: black;
 }
@@ -797,6 +799,7 @@
   color: #222222;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .upgrade-btn {
@@ -810,6 +813,7 @@
   color: black;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .add-minutes-btn:hover {
@@ -818,6 +822,104 @@
 
 .upgrade-btn:hover {
   background: #F5F5F5;
+}
+
+/* Open Library Profile Styles */
+.user-profile.open-library {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+.user-profile.collapsed.open-library {
+  width: 180px;
+  background: #f5f5f5;
+  border: 1px solid #2a2b2a;
+  padding: 12px 16px;
+}
+
+.open-library-container {
+  display: flex;
+  gap: 16px;
+  background: #FFFFFF;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 24px 20px 20px 20px;
+  position: relative;
+  height: 175px;
+  box-sizing: border-box;
+}
+
+.plan-box {
+  flex: 1;
+  background: #F5F5F5;
+  border-radius: 17.37px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #2a2b2a;
+}
+
+.plan-title {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #222222;
+  line-height: 1.2;
+}
+
+.upgrade-link-btn {
+  background: transparent;
+  border: none;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #222222;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.upgrade-link-btn:hover {
+  text-decoration: underline;
+}
+
+.profile-actions-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 4px 0;
+}
+
+.profile-info-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.open-library-container .profile-icon-btn {
+  width: 40px;
+  height: 40px;
+}
+
+.open-library-container .profile-label {
+  font-size: 18px;
+  font-weight: 400;
+  color: #222222;
+}
+
+/* Standardize logout button styles */
+
+
+.collapse-btn.absolute {
+  position: absolute;
+  top: 16px;
+  right: 16px;
 }
 
 .word-bank-section {

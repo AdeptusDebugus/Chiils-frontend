@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLessonBuilder } from '../../contexts/LessonBuilderContext.tsx';
+import { useAuth } from '../../contexts/AuthContext';
+import { useAuthPrompt } from '../../contexts/AuthPromptContext.tsx';
 import './LandingPage.css';
 import Footer from '../footer/Footer.tsx';
 import ComparePlansPopup from './ComparePlansPopup.tsx';
@@ -24,6 +26,8 @@ const imgJoyfulWomanPortrait = "/assets/lending/cta-background.webp";
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { openLessonBuilder } = useLessonBuilder();
+  const { isAuthenticated, logout } = useAuth();
+  const { openAuthPrompt } = useAuthPrompt();
   const [showComparePopup, setShowComparePopup] = React.useState(false);
 
   const handleSignUp = () => {
@@ -31,7 +35,7 @@ const LandingPage: React.FC = () => {
   };
 
   const handleSignIn = () => {
-    navigate('/login');
+    navigate('/login', { state: { hideSignInLink: true } });
   };
 
   const handleOpenLib = () => {
@@ -39,8 +43,12 @@ const LandingPage: React.FC = () => {
   };
 
   const handleLessonBuilder = () => {
-    navigate('/open-library');
-    openLessonBuilder();
+    if (isAuthenticated) {
+      navigate('/open-library');
+      openLessonBuilder();
+    } else {
+      openAuthPrompt();
+    }
   };
 
   return (
@@ -70,8 +78,21 @@ const LandingPage: React.FC = () => {
               </div>
 
               <div className="header-buttons">
-                <button className="sign-up-btn" onClick={handleSignUp}>Sign up</button>
-                <button className="sign-in-btn" onClick={handleSignIn}>Sign in</button>
+                {isAuthenticated ? (
+                  <>
+                    <button className="logout-btn" onClick={logout}>Log out</button>
+                    <Link to="/home" className="user-btn-link">
+                      <div className="user-btn">
+                        <img src="/assets/user.svg" alt="User Profile" />
+                      </div>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <button className="login-btn" onClick={handleSignIn}>Log in</button>
+                    <button className="sign-up-btn" onClick={handleSignUp}>Sign up</button>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -84,13 +105,21 @@ const LandingPage: React.FC = () => {
                 Teach real language.<br />No busywork.
               </h1>
               <div className="hero-subtitle-lines">
-                <p className="hero-subtitle-line">Turn any video into a ready-to-teach lesson</p>
+                <p className="hero-subtitle-line">Turn videos into a ready-to-teach lessons</p>
                 <p className="hero-subtitle-line">in a couple of clicks.</p>
               </div>
             </div>
+
+            <Link to="/login" className="student-link">
+              <span className="student-text">I’m a student</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
+                <path d="M13.9036 11.3237C15.3158 11.0018 17.0469 10.5645 18.459 10.1985C19.1803 10.0117 19.1803 8.98827 18.459 8.8015C17.0469 8.43554 15.3158 7.99822 13.9036 7.6763C14.675 6.44937 15.5891 4.9157 16.3286 3.65992C16.7067 3.0176 15.9824 2.29329 15.3401 2.67139C14.0828 3.41089 12.5491 4.32653 11.3237 5.0964C11.0018 3.68422 10.5645 1.95315 10.1985 0.540959C10.0117 -0.18032 8.98828 -0.18032 8.8015 0.540959C8.43555 1.95315 7.99822 3.68422 7.6763 5.0964C6.44937 4.32502 4.91571 3.41089 3.65993 2.67139C3.01761 2.29329 2.29329 3.0176 2.67139 3.65992C3.41089 4.91722 4.32653 6.45089 5.0964 7.6763C3.68422 7.99822 1.95315 8.43554 0.540959 8.8015C-0.18032 8.98827 -0.18032 10.0117 0.540959 10.1985C1.95315 10.5645 3.68422 11.0018 5.0964 11.3237C4.32502 12.5506 3.41089 14.0843 2.67139 15.3401C2.29329 15.9824 3.01761 16.7067 3.65993 16.3286C4.91723 15.5891 6.45089 14.6735 7.6763 13.9036C7.99822 15.3158 8.43555 17.0469 8.8015 18.459C8.98828 19.1803 10.0117 19.1803 10.1985 18.459C10.5645 17.0469 11.0018 15.3158 11.3237 13.9036C12.5506 14.675 14.0843 15.5891 15.3401 16.3286C15.9824 16.7067 16.7067 15.9824 16.3286 15.3401C15.5891 14.0828 14.6735 12.5491 13.9036 11.3237Z" fill="white" />
+              </svg>
+            </Link>
+
             <div className="hero-buttons">
-              <button className="first-lesson-btn" onClick={handleLessonBuilder}>Create your first lesson free</button>
-              <button className="community-lessons-btn" onClick={handleOpenLib}>See 500+ community lessons</button>
+              <button className="community-lessons-btn" onClick={handleOpenLib}>Explore the library</button>
+              <button className="first-lesson-btn" onClick={handleLessonBuilder}>Create a lesson →</button>
             </div>
           </div>
         </div>

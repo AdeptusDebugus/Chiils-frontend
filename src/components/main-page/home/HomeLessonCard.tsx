@@ -10,6 +10,7 @@ interface HomeLessonCardProps {
     onAddToFavorite?: (e: React.MouseEvent) => void;
     isLiked?: boolean;
     showRemoveIcon?: boolean;
+    showActions?: boolean;
 }
 
 const imgLessonThumbnail = "/assets/dashboard/lesson-thumbnail.jpg";
@@ -30,7 +31,8 @@ const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
     onAddToFolder,
     onAddToFavorite,
     isLiked = false,
-    showRemoveIcon = false
+    showRemoveIcon = false,
+    showActions = true
 }) => {
     const isProcessing = lesson.status === 'PROCESSING' || lesson.status === 'PENDING';
 
@@ -89,33 +91,36 @@ const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
                             || 'Untitled Lesson')
                     )}
                 </h3>
-                <div className="home-lesson-actions">
-                    <button
-                        className="action-btn add-to-folder"
-                        aria-label={showRemoveIcon ? "Remove from Folder" : "Add to Folder"}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onAddToFolder?.(e);
-                        }}
-                    >
-                        <img src={showRemoveIcon ? iconRemove : iconFolder} alt={showRemoveIcon ? "Remove" : "Folder"} />
-                    </button>
-                    <button
-                        className={`action-btn add-to-favorite ${isLiked ? 'liked' : ''}`}
-                        aria-label={isLiked ? "Remove from Favorite" : "Add to Favorite"}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onAddToFavorite?.(e);
-                        }}
-                        style={isLiked ? { backgroundColor: 'black' } : {}}
-                    >
-                        <img
-                            src={iconFavorites}
-                            alt="Favorite"
-                            style={isLiked ? { filter: 'brightness(0) invert(1)' } : {}}
-                        />
-                    </button>
-                </div>
+
+                {showActions && (
+                    <div className="home-lesson-actions">
+                        <button
+                            className="action-btn add-to-folder"
+                            aria-label={showRemoveIcon ? "Remove from Folder" : "Add to Folder"}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAddToFolder?.(e);
+                            }}
+                        >
+                            <img src={showRemoveIcon ? iconRemove : iconFolder} alt={showRemoveIcon ? "Remove" : "Folder"} />
+                        </button>
+                        <button
+                            className={`action-btn add-to-favorite ${isLiked ? 'liked' : ''}`}
+                            aria-label={isLiked ? "Remove from Favorite" : "Add to Favorite"}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAddToFavorite?.(e);
+                            }}
+                            style={isLiked ? { backgroundColor: 'black' } : {}}
+                        >
+                            <img
+                                src={iconFavorites}
+                                alt="Favorite"
+                                style={isLiked ? { filter: 'brightness(0) invert(1)' } : {}}
+                            />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

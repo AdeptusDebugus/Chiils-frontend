@@ -79,6 +79,10 @@
   font-weight: 600;
 }
 
+.support-link {
+  margin-top: 42px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .figma-sidebar {
@@ -88,7 +92,7 @@
     padding: 16px 0;
     display: block;
   }
-  
+
   .sidebar-logo {
     position: relative;
     left: auto;
@@ -103,7 +107,7 @@
     box-sizing: content-box;
     display: block;
   }
-  
+
   .logo-container {
     position: relative;
     width: 100%;
@@ -111,7 +115,7 @@
     overflow: hidden;
     display: block;
   }
-  
+
   .logo-img {
     position: relative;
     left: auto;
@@ -121,7 +125,7 @@
     display: block;
     margin: 0 auto;
   }
-  
+
   .sidebar-nav {
     position: relative;
     left: auto;
@@ -132,7 +136,7 @@
     overflow-x: auto;
     justify-content: center;
   }
-  
+
   .nav-item {
     font-size: 16px;
     min-width: 80px;
@@ -145,17 +149,17 @@
     gap: 16px;
     padding: 0 8px;
   }
-  
+
   .nav-item {
     font-size: 14px;
     min-width: 60px;
   }
-  
+
   .sidebar-logo {
     padding-top: 12px;
     margin: 0 auto 12px auto;
   }
-  
+
   .logo-img {
     width: 100px;
     height: 31px;
@@ -168,19 +172,19 @@
   .figma-sidebar {
     background: #2a2a2a;
   }
-  
+
   .logo-text {
     color: #ffffff;
   }
-  
+
   .nav-item {
     color: #ffffff;
   }
-  
+
   .nav-item:hover {
     color: #f0f0f0;
   }
-  
+
   .nav-item.active {
     color: #f0f0f0;
   }

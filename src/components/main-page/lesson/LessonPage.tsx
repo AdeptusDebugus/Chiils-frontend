@@ -5,6 +5,10 @@ import { useParams } from 'react-router-dom';
 import './LessonPage.css';
 import { extractYouTubeId, fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import { capitalizeFirstLetter } from '../../../utils/text.ts';
+import { useAuth } from '../../../contexts/AuthContext';
+
+import SharedToSidebar from '../home/SharedToSidebar';
+import AddStudentModal from '../home/AddStudentModal';
 
 const calculateInputWidth = (text: string): number => {
     const canvas = document.createElement('canvas')
@@ -25,6 +29,14 @@ const LessonPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const playerRef = useRef<any>(null)
+
+    const { user } = useAuth();
+    const [isManageStudentsModalOpen, setIsManageStudentsModalOpen] = useState(false);
+    const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
+    const [studentsRefreshKey, setStudentsRefreshKey] = useState(0);
+
+    const iconShared = "/assets/home/shared.svg";
+    const iconExternal = "/assets/home/external.svg";
 
     const [grammarAnswers, setGrammarAnswers] = useState<string[][][]>([])
     const [lexicalChecks, setLexicalChecks] = useState<boolean[][]>([])
@@ -168,6 +180,8 @@ const LessonPage: React.FC = () => {
 
         const selectedWordsInit = lesson.lexical_exercises.map(block => block.examples.map(() => [] as string[]))
         setSelectedWords(selectedWordsInit)
+
+
     }, [lesson])
 
     // подтягиваем заголовок YouTube при необходимости
@@ -845,10 +859,30 @@ const LessonPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Vocabulary sidebar */}
-                <div className="vocabulary-column">
+                {/* Sidebar */}
+                <aside className="lesson-sidebar">
                     <div className="vocabulary-sidebar">
-                        <h2>Dictionary</h2>
+                        <div className="vocabulary-header">
+                            <h2>Dictionary</h2>
+                            <div className="sidebar-actions">
+                                {user?.role !== 'STUDENT' && (
+                                    <>
+                                        <button onClick={() => setIsAddStudentModalOpen(true)} title="Add Student">
+                                            <img src={iconExternal} alt="Open" />
+                                        </button>
+                                        <button
+                                            onClick={() => setIsManageStudentsModalOpen(!isManageStudentsModalOpen)}
+                                            className={isManageStudentsModalOpen ? 'active' : ''}
+                                            title="Manage Students"
+                                        >
+                                            <img src={iconShared} alt="Manage Students" />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {isManageStudentsModalOpen && <SharedToSidebar lessonId={id} key={studentsRefreshKey} />}
                         <div className="vocabulary-list">
                             {lesson.glossary
                                 .filter(item => item.time_code !== null && item.time_code !== undefined)
@@ -875,8 +909,19 @@ const LessonPage: React.FC = () => {
                                 })}
                         </div>
                     </div>
-                </div>
+                </aside>
             </div>
+
+            {isAddStudentModalOpen && (
+                <AddStudentModal
+                    lessonId={id}
+                    onClose={() => setIsAddStudentModalOpen(false)}
+                    onSuccess={() => {
+                        setStudentsRefreshKey(prev => prev + 1);
+                        setIsManageStudentsModalOpen(true);
+                    }}
+                />
+            )}
         </div>
     );
 };

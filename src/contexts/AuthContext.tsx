@@ -14,6 +14,7 @@ export interface User {
     can_use_collections: boolean;
     can_use_scenarios: boolean;
   };
+  paddle_customer_id?: string;
 }
 
 interface AuthContextType {
@@ -46,6 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserProfile = async (jwt: string) => {
+    setIsLoading(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/me`, {
         headers: {
@@ -59,10 +61,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.setItem('user_data', JSON.stringify(fullProfile));
       } else {
         console.warn("Failed to fetch user profile:", response.status);
-        // If 401/403, might consider logging out, but be careful of loops
       }
     } catch (err) {
       console.error("Error fetching user profile", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,7 +94,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(userData);
     localStorage.setItem('jwt_token', newToken);
     localStorage.setItem('user_data', JSON.stringify(userData));
-    // Immediately fetch full profile
+    // Immediately fetch full profile and it will handle setting isLoading to false
     fetchUserProfile(newToken);
   };
 

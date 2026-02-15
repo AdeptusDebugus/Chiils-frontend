@@ -1,0 +1,65 @@
+/* StudentHomePage.css */
+
+/* Reusing styles from HomePage.css via import or global styles. */
+
+/* Unlike the previous version, we now use the .dashboard-page grid from HomePage.css
+   so we don't need to manually constrain the content width here. 
+   The .dashboard-main-content class handles standard padding.
+*/
+
+/* Ensure grid for lessons behaves well if fewer items */
+.home-lessons-grid {
+    justify-content: flex-start;
+}
+
+/* Any specific overrides for student view can go here */
+
+.student-sidebar-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-bottom: 24px;
+    justify-content: flex-end;
+}
+
+/* Consistent with HomePage.css buttons (e.g., .home-logout-btn, .add-minutes-btn) */
+.student-action-btn {
+    padding: 8px 0;
+    /* Removing side padding to rely on width */
+    border-radius: 20px;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Teacher Login - Secondary Style (White with Border) */
+.student-action-btn.teacher-login {
+    width: 164px;
+    background: #FFFFFF;
+    border: 1px solid #222222;
+    color: #222222;
+}
+
+.student-action-btn.teacher-login:hover {
+    background: #F5F5F5;
+}
+
+/* Logout - Primary Style (Black) - Matches HomePage Profile Logout */
+.student-action-btn.logout {
+    width: 120px;
+    background: #2a2b2a;
+    border: 1px solid #222222;
+    color: #FFFFFF;
+}
+
+.student-action-btn.logout:hover {
+    background: #FFFFFF;
+    color: #222222;
+}

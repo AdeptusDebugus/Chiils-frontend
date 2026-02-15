@@ -13,7 +13,7 @@ export interface HistoryItem {
 }
 
 export interface HistoryResponse {
-    yesterday: HistoryItem[]
+    recent: HistoryItem[]
     lastWeek: HistoryItem[]
     thisMonth: HistoryItem[]
 }
@@ -460,4 +460,50 @@ export async function getWordBank(params: {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
     })
     return res.data
+}
+
+export async function shareLesson(lessonId: string, studentId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+    await api.post(`/lessons/${lessonId}/share`, null, {
+        params: { studentId },
+        headers: { Authorization: `Bearer ${token}` }
+    })
+}
+
+export async function unshareLesson(lessonId: string, studentId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+    await api.delete(`/lessons/${lessonId}/unshare`, {
+        params: { studentId },
+        headers: { Authorization: `Bearer ${token}` }
+    })
+}
+
+export async function getSharedUsers(lessonId: string): Promise<any[]> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return []
+    try {
+        const res = await api.get<any[]>(`/lessons/${lessonId}/shared-users`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return res.data
+    } catch (e) {
+        console.error('Failed to get shared users', e)
+        return []
+    }
+}
+
+export async function getSharedLessons(): Promise<LessonLite[]> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return []
+    try {
+        const res = await api.get<LessonLite[]>('/lessons/shared', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return res.data
+    } catch (e) {
+        console.error('Failed to get shared lessons', e)
+        return []
+    }
 }

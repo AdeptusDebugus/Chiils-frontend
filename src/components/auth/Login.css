@@ -205,3 +205,54 @@
 .secondary-btn:hover {
     background: #F5F5F5;
 }
+
+/* Login Notification */
+.login-notification {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border: 1px solid #FFFFFF;
+    border-radius: 22px;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    max-width: 501px;
+    height: 44px;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease;
+}
+
+.notification-text {
+    font-size: 16px;
+    color: #FFFFFF;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.notification-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.notification-close-btn:hover {
+    opacity: 1;
+}
+
+.notification-close-btn img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+    /* Make sure icon is white if it's black */
+}

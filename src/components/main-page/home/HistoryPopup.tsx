@@ -136,7 +136,7 @@ const HistoryPopup: React.FC<HistoryPopupProps> = ({ onClose, likedLessonIds, on
         );
     };
 
-    const hasData = data && (data.yesterday?.length > 0 || data.lastWeek?.length > 0 || data.thisMonth?.length > 0);
+    const hasData = data && (data.recent?.length > 0 || data.lastWeek?.length > 0 || data.thisMonth?.length > 0);
 
     return (
         <div className="history-popup-overlay">
@@ -166,7 +166,7 @@ const HistoryPopup: React.FC<HistoryPopupProps> = ({ onClose, likedLessonIds, on
                             <div className="empty-state">No history found.</div>
                         ) : (
                             <div className="popup-lessons-grid history-grid">
-                                {renderGroup('Recent', data?.yesterday, yesterdayRef)}
+                                {renderGroup('Recent', data?.recent, yesterdayRef)}
                                 {renderGroup('Last Week', data?.lastWeek, lastWeekRef)}
                                 {renderGroup('This Month', data?.thisMonth, thisMonthRef)}
                             </div>

@@ -1,21 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { getMyStudents, removeStudent, type Student } from '../../../services/studentService';
+import { getSharedUsers, unshareLesson } from '../../../services/lessonService';
 
 const iconClose = "/assets/home/close-circle.svg";
 
-const SharedToSidebar: React.FC = () => {
+interface SharedToSidebarProps {
+    lessonId?: string;
+    wordSetId?: string;
+}
+
+const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId }) => {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchStudents();
-    }, []);
+    }, [lessonId, wordSetId]);
 
     const fetchStudents = async () => {
         try {
             setLoading(true);
-            const data = await getMyStudents();
+            let data: Student[] = [];
+            if (lessonId) {
+                data = await getSharedUsers(lessonId);
+            } else {
+                data = await getMyStudents();
+            }
             setStudents(data);
         } catch (err) {
             console.error('Failed to fetch students', err);
@@ -27,10 +38,14 @@ const SharedToSidebar: React.FC = () => {
 
     const handleDelete = async (studentId: string) => {
         try {
-            await removeStudent(studentId);
+            if (lessonId) {
+                await unshareLesson(lessonId, studentId);
+            } else {
+                await removeStudent(studentId);
+            }
             setStudents(prev => prev.filter(s => s.id !== studentId));
         } catch (err) {
-            console.error('Failed to delete student', err);
+            console.error('Failed to delete/unshare student', err);
             setError('Failed to remove student');
         }
     };
@@ -64,13 +79,13 @@ const SharedToSidebar: React.FC = () => {
                 .shared-to-container {
                     background: #FFFFFF;
                     border: 1px solid #2a2b2a;
-                    border-radius: 13px; /* Slightly adjusted to match sidebar cards better */
+                    border-radius: 13px;
                     padding: 16px 20px;
                     display: flex;
                     flex-direction: column;
                     gap: 12px;
                     width: 100%;
-                    margin-bottom: 12px; /* Gap between this and the next card */
+                    margin-bottom: 12px;
                 }
                 .shared-to-title {
                     font-family: 'TeX Gyre Heros', sans-serif;

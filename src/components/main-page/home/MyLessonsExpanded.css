@@ -280,6 +280,7 @@
     padding-bottom: 24px;
     overflow-x: auto;
     width: 100%;
+    justify-content: start;
     scrollbar-width: none;
 }
 

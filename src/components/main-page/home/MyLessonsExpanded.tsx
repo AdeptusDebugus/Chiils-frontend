@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type LessonLite, getUserLessonsLite } from '../../../services/lessonService.ts';
+import { type LessonLite, getUserLessonsLite, getSharedLessons } from '../../../services/lessonService.ts';
 import { useAuth } from '../../../contexts/AuthContext.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 import { lessonMonitoringService } from '../../../services/lessonMonitoringService.ts';
@@ -19,16 +19,22 @@ const iconClose = "/assets/home/close.svg";
 
 interface MyLessonsExpandedProps {
     onClose: () => void;
-    likedLessonIds: Set<string>;
-    onToggleLike: (lessonId: string) => void;
-    onAddToFolder: (lessonId: string) => void;
+
+    // Teacher/Default items (optional for Student view)
+    likedLessonIds?: Set<string>;
+    onToggleLike?: (lessonId: string) => void;
+    onAddToFolder?: (lessonId: string) => void;
+
+    // Mode
+    variant?: 'default' | 'student';
 }
 
 const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
     onClose,
-    likedLessonIds,
+    likedLessonIds = new Set(),
     onToggleLike,
-    onAddToFolder
+    onAddToFolder,
+    variant = 'default'
 }) => {
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -55,7 +61,14 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
             try {
                 setLoading(true);
                 // Fetch all/more lessons for the expanded view
-                const data = await getUserLessonsLite({ page: 0, size: 50, sort: '-createdAt', email: user.email });
+                let data: LessonLite[] = [];
+
+                if (variant === 'student') {
+                    data = await getSharedLessons();
+                } else {
+                    data = await getUserLessonsLite({ page: 0, size: 50, sort: '-createdAt', email: user.email });
+                }
+
                 setLessons(data ?? []);
 
                 // Start monitoring for processing lessons
@@ -83,7 +96,12 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
             (async () => {
                 if (!user?.email) return;
                 try {
-                    const data = await getUserLessonsLite({ page: 0, size: 50, sort: '-createdAt', email: user.email });
+                    let data: LessonLite[] = [];
+                    if (variant === 'student') {
+                        data = await getSharedLessons();
+                    } else {
+                        data = await getUserLessonsLite({ page: 0, size: 50, sort: '-createdAt', email: user.email });
+                    }
                     setLessons(data ?? []);
                 } catch (e) {
                     console.error('Failed to refresh expanded lessons', e);
@@ -201,7 +219,7 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
         <div className="my-lessons-popup-overlay">
             <div className="my-lessons-popup-content">
                 <div className="popup-header">
-                    <h2>My Lessons</h2>
+                    <h2>{variant === 'student' ? 'Shared Lessons' : 'My Lessons'}</h2>
                     <div className="popup-controls">
                         <button className="nav-arrow" onClick={() => handleScroll('left')}>
                             <img src={iconNavLeft} alt="Previous" />
@@ -354,9 +372,10 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
                                         key={lesson.id}
                                         lesson={lesson}
                                         onClick={() => navigate(`/lesson/${lesson.id}`)}
-                                        onAddToFolder={() => onAddToFolder(lesson.id)}
-                                        onAddToFavorite={() => onToggleLike(lesson.id)}
+                                        onAddToFolder={() => onAddToFolder?.(lesson.id)}
+                                        onAddToFavorite={() => onToggleLike?.(lesson.id)}
                                         isLiked={likedLessonIds.has(lesson.id)}
+                                        showActions={variant === 'default'}
                                     />
                                 ))}
                             </div>

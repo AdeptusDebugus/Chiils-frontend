@@ -70,3 +70,20 @@ export async function getWordSetsCount(): Promise<number> {
     const res = await api.get<number>('/words/set/total');
     return res.data;
 }
+
+/**
+ * Shares a Word Set with a student
+ */
+export async function shareWordSet(id: string, studentId: string): Promise<void> {
+    await api.post(`/words/${id}/share`, null, {
+        params: { studentId }
+    });
+}
+
+/**
+ * Returns all Word Sets shared with the authenticated user
+ */
+export async function getSharedWordSets(): Promise<WordSet[]> {
+    const res = await api.get<WordSet[]>('/words/shared');
+    return res.data || [];
+}

@@ -22,6 +22,7 @@ import { useUpgradePrompt } from '../../../contexts/UpgradePromptContext.tsx';
 import { useOnboarding } from '../../../contexts/OnboardingContext.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 import { lessonMonitoringService } from '../../../services/lessonMonitoringService.ts';
+import { paddleService } from '../../../services/paddleService.ts';
 import { extractYouTubeId } from '../../../utils/youtube.ts';
 import { capitalizeFirstLetter } from '../../../utils/text.ts';
 import LessonBuilderButton from '../lesson-builder/LessonBuilderButton.tsx';
@@ -33,32 +34,36 @@ import CollectionsPopup from './CollectionsPopup.tsx';
 import AddToFolderModal from './AddToFolderModal.tsx';
 import HomeLessonCard from './HomeLessonCard.tsx';
 import WordSetsPopup from './WordSetsPopup.tsx';
+import ShareLessonModal from './ShareLessonModal.tsx';
 
 // Assets
-const imgLessonThumbnail = "/assets/dashboard/lesson-thumbnail.jpg";
 const iconHistory = "/assets/home/book.svg";
-const iconFavorites = "/assets/home/favorite.svg";
 const iconFavoritesCollection = "/assets/home/favorite-collection.svg";
 const iconWordSets = "/assets/home/star.svg";
-const iconCustomFolder = "/assets/home/custom-folder.svg"; // or folder.svg depending on which one user prefers, user said custom-folder -> custom-folder
 const iconNavLeft = "/assets/home/expand-left.svg";
 const iconNavRight = "/assets/home/expand-right.svg";
 const iconExpand = "/assets/home/fullscreen.svg";
 const iconFlag = "/assets/home/flag.svg";
-const iconFolder = "/assets/home/folder.svg";
-const iconUser = "/assets/home/user.svg";
+const iconUser = "/assets/user.svg";
 const iconReduce = "/assets/home/reduce.svg";
 
-const formatTime = (seconds: number | null): string => {
-  if (seconds === null) return '00:00';
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-};
+
+
+import StudentHomePage from './StudentHomePage.tsx'; // Import the new component
 
 const HomePage: React.FC = () => {
-  const navigate = useNavigate();
   const { user, logout } = useAuth();
+
+  // Condition to checking if user is student
+  // Assuming role is stored in user object as 'role' or similar, 
+  // key might be 'role' or 'user_role'. AuthContext says 'role?: string'.
+  // Backend Enum is 'STUDENT', 'TEACHER', 'USER'.
+  if (user?.role === 'STUDENT') {
+    return <StudentHomePage />;
+  }
+
+  const navigate = useNavigate();
+  // ... rest of the component
   const { openUpgradePrompt } = useUpgradePrompt();
   const { openOnboarding } = useOnboarding();
   // Get first name from user name (e.g. "Alexander Smith" -> "Alexander"), fallback to "dear"
@@ -73,7 +78,7 @@ const HomePage: React.FC = () => {
     return plan.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   };
 
-  const [activeCollection, setActiveCollection] = useState('history');
+  const [activeCollection, setActiveCollection] = useState<string | null>(null);
   const minutesLeft = user?.lesson_builder_minutes ?? 0;
   const [isProfileCollapsed, setIsProfileCollapsed] = useState(false);
 
@@ -106,6 +111,7 @@ const HomePage: React.FC = () => {
   const [isFolderManagementOpen, setIsFolderManagementOpen] = useState(false);
   const [activeFolderPopup, setActiveFolderPopup] = useState<{ id: number, name: string } | null>(null);
   const [addToFolderModal, setAddToFolderModal] = useState<{ lessonId: string } | null>(null);
+  const [shareLessonModal, setShareLessonModal] = useState<{ lessonId: string } | null>(null);
 
   // Word Bank State
   const [wordBankWords, setWordBankWords] = useState<Word[]>([]);
@@ -377,7 +383,30 @@ const HomePage: React.FC = () => {
     navigate(`/lesson/${lessonId}`);
   };
 
+  const handleAddMinutes = () => {
+    if (!user) return;
+
+    const plan = (user.plan || '').toUpperCase();
+    let priceId = '';
+
+    // If user is on SMART (Start) plan, use the Start price, 
+    // otherwise (PLUS, PRO, etc.) use the Plus/Pro price.
+    if (plan === 'SMART') {
+      priceId = import.meta.env.VITE_PADDLE_PRICE_100_MINS_START;
+    } else {
+      priceId = import.meta.env.VITE_PADDLE_PRICE_100_MINS_PLUS;
+    }
+
+    if (priceId) {
+      paddleService.openCheckout(priceId, user.id, user.email);
+    } else {
+      console.error('Add Minutes: Price ID not configured for plan', plan);
+      alert('This option is temporarily unavailable. Please try again later.');
+    }
+  };
+
   const handleCollectionClick = (id: string, folderId?: number) => {
+    setActiveCollection(id);
     if (id === 'history') {
       setIsHistoryOpen(true);
     } else if (id === 'favourites') {
@@ -390,8 +419,6 @@ const HomePage: React.FC = () => {
     } else if (id === 'wordsets') {
       setWordSetsInitialCreate(false);
       setIsWordSetsOpen(true);
-    } else {
-      setActiveCollection(id);
     }
   };
 
@@ -605,6 +632,8 @@ const HomePage: React.FC = () => {
         }
 
 
+
+
         {/* Collections Section */}
         <section className="collections-section">
           <div className={`collections-container ${user?.permissions && !user.permissions.can_use_collections ? 'locked' : ''}`}>
@@ -686,43 +715,76 @@ const HomePage: React.FC = () => {
       {/* Right Sidebar - Word Bank */}
       <aside className="sidebar-right">
         {isProfileCollapsed ? (
-          <div className="user-profile collapsed">
-            <div className="collapsed-info">
-              <span className="minutes-number">{minutesLeft}</span>
-              <span className="minutes-label">Minutes left</span>
-            </div>
+          <div className={`user-profile collapsed ${user?.plan?.toUpperCase() === 'OPEN_LIBRARY' ? 'open-library' : ''}`}>
+            {user?.plan?.toUpperCase() !== 'OPEN_LIBRARY' && (
+              <div className="collapsed-info">
+                <span className="minutes-number">{minutesLeft}</span>
+                <span className="minutes-label">Minutes left</span>
+              </div>
+            )}
             <span className="user-plan-label">{formatPlanName(user?.plan)}</span>
             <button className="expand-profile-btn" onClick={() => setIsProfileCollapsed(false)}>
               <img src={iconExpand} alt="Expand" />
             </button>
           </div>
         ) : (
-          <div className="user-profile">
-            <div className="user-profile-top">
-              <div className="minutes-widget">
-                <div className="minutes-info">
-                  <span className="minutes-number">{minutesLeft}</span>
-                  <span className="minutes-label">Minutes left</span>
-                </div>
-                <span className="user-plan-label">{formatPlanName(user?.plan)}</span>
-              </div>
-              <div className="profile-widget">
-                <button className="profile-icon-btn">
-                  <img src={iconUser} alt="Profile" />
-                </button>
-                <span className="profile-label">Profile</span>
-                <div className="window-controls">
-                  <button className="collapse-btn" onClick={() => setIsProfileCollapsed(true)}>
+          <div className={`user-profile ${user?.plan?.toUpperCase() === 'OPEN_LIBRARY' ? 'open-library' : ''}`}>
+            {user?.plan?.toUpperCase() === 'OPEN_LIBRARY' ? (
+              <>
+                <div className="open-library-container">
+                  <div className="plan-box">
+                    <span className="plan-title">Open Library</span>
+                    <button className="upgrade-link-btn" onClick={() => openOnboarding(true)}>Upgrade</button>
+                  </div>
+                  <div className="profile-actions-box">
+                    <div className="profile-info-group">
+                      <button
+                        className="profile-icon-btn"
+                        onClick={() => paddleService.openCustomerPortal(user?.paddle_customer_id)}
+                      >
+                        <img src={iconUser} alt="Profile" />
+                      </button>
+                      <span className="profile-label">Profile</span>
+                    </div>
+                    <button className="home-logout-btn" onClick={handleLogout}>Log out</button>
+                  </div>
+                  <button className="collapse-btn absolute" onClick={() => setIsProfileCollapsed(true)}>
                     <img src={iconReduce} alt="Collapse" />
                   </button>
                 </div>
-              </div>
-            </div>
-            <div className="user-profile-actions">
-              <button className="add-minutes-btn">Add minutes</button>
-              <button className="upgrade-btn" onClick={() => openOnboarding(true)}>Upgrade</button>
-              <button className="logout-btn" onClick={handleLogout}>Log out</button>
-            </div>
+              </>
+            ) : (
+              <>
+                <div className="user-profile-top">
+                  <div className="minutes-widget">
+                    <div className="minutes-info">
+                      <span className="minutes-number">{minutesLeft}</span>
+                      <span className="minutes-label">Minutes left</span>
+                    </div>
+                    <span className="user-plan-label">{formatPlanName(user?.plan)}</span>
+                  </div>
+                  <div className="profile-widget">
+                    <button
+                      className="profile-icon-btn"
+                      onClick={() => paddleService.openCustomerPortal(user?.paddle_customer_id)}
+                    >
+                      <img src={iconUser} alt="Profile" />
+                    </button>
+                    <span className="profile-label">Profile</span>
+                    <div className="window-controls">
+                      <button className="collapse-btn" onClick={() => setIsProfileCollapsed(true)}>
+                        <img src={iconReduce} alt="Collapse" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="user-profile-actions">
+                  <button className="add-minutes-btn" onClick={handleAddMinutes}>Add minutes</button>
+                  <button className="upgrade-btn" onClick={() => openOnboarding(true)}>Upgrade</button>
+                  <button className="home-logout-btn" onClick={handleLogout}>Log out</button>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -751,7 +813,7 @@ const HomePage: React.FC = () => {
                           onClick={() => navigate(`/lesson/${word.lesson_id}`)}
                           title="Open lesson"
                         >
-                          {formatTime(word.time_code)}
+                          View lesson
                         </span>
                       </div>
                       <p className="quote">«{word.quote}»</p>

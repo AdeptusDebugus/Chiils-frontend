@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthContext.tsx'
 import { useLessonBuilder } from '../../../contexts/LessonBuilderContext.tsx'
 import { useAuthPrompt } from '../../../contexts/AuthPromptContext.tsx'
@@ -30,9 +30,9 @@ const Sidebar: React.FC = () => {
     <div className="figma-sidebar">
       {/* Chiils Logo */}
       <div className="sidebar-logo">
-        <div className="logo-container">
+        <Link to="/" className="logo-container">
           <img alt="Chiils" className="logo-img" src="/assets/chiils-black-logo.svg" />
-        </div>
+        </Link>
       </div>
 
       {/* Navigation Items - Text Only */}
@@ -55,11 +55,14 @@ const Sidebar: React.FC = () => {
 
 
 
-        {isAuthenticated && (
-          <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-            Profile
-          </NavLink>
-        )}
+        <a
+          href="https://tally.so/r/KYlp6V"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="nav-item support-link"
+        >
+          Support
+        </a>
       </div>
     </div>
   )

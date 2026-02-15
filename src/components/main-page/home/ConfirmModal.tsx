@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './ConfirmModal.css';
 
 interface ConfirmModalProps {
@@ -18,6 +18,13 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     primaryText,
     variant = 'primary'
 }) => {
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, []);
+
     const handleOverlayClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             onSecondary();

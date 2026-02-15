@@ -9,7 +9,7 @@ import HomePage from './components/main-page/home/HomePage.tsx';
 import LandingPage from './components/lending/LandingPage.tsx';
 import Login from './components/auth/Login.tsx';
 import LoginSuccess from './components/auth/LoginSuccess.tsx';
-import Profile from './components/main-page/profile/Profile.tsx';
+
 import OpenLibrary from './components/main-page/open-library/OpenLibrary.tsx';
 import LessonPage from './components/main-page/lesson/LessonPage.tsx';
 import WordSetsPage from './components/main-page/home/WordSetsPage.tsx';
@@ -21,11 +21,9 @@ import RefundPolicy from './components/policy/RefundPolicy.tsx';
 import PrivacyPolicy from './components/policy/PrivacyPolicy.tsx';
 import CookiePolicy from './components/policy/CookiePolicy.tsx';
 import TermlyBanner from './components/policy/TermlyBanner.tsx';
-import PricingPage from './pages/PricingPage.tsx';
 import './App.css';
 
 import { useAuth } from './contexts/AuthContext';
-import { useState } from 'react';
 import OnboardingPlanPopup from './components/subscription/OnboardingPlanPopup.tsx';
 import { AuthPromptProvider, useAuthPrompt } from './contexts/AuthPromptContext.tsx';
 import AuthPromptPopup from './components/auth/AuthPromptPopup.tsx';
@@ -101,17 +99,8 @@ const AppContent = () => {
           <Route path="/refundpolicy" element={<RefundPolicy />} />
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
           <Route path="/cookies" element={<CookiePolicy />} />
-          <Route path="/pricing" element={<PricingPage />} />
-
           {/* Protected routes */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+
 
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/" replace />} />

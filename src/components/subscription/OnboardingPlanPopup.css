@@ -14,8 +14,10 @@
 
 .onboarding-container {
     background: white;
-    width: 1156px;
-    height: 527px;
+    width: 95%;
+    max-width: 1156px;
+    height: auto;
+    min-height: 527px;
     border-radius: 24px;
     position: relative;
     overflow: hidden;
@@ -222,6 +224,8 @@
     transition: opacity 0.2s;
 }
 
+
+
 .onboarding-subscribe-btn:hover:not(.disabled) {
     transform: translateY(-2px);
 }
@@ -231,15 +235,41 @@
     cursor: not-allowed;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1366px) {
     .onboarding-container {
         width: 95%;
         height: auto;
+        /* max-height: 90vh; */
+        /* Let children define height, OR keep it constrained */
+        max-height: 90vh;
+        /* Constrain vertical height */
+        /* flex-direction: column; */
+        /* This affects close button mostly */
         flex-direction: column;
+        overflow: hidden;
+        /* Ensure content is contained */
+    }
+
+    .onboarding-layout {
+        flex-direction: column;
+        /* CRITICAL FIX: Make inner layout column */
+        height: 100%;
+        /* Fill container */
     }
 
     .onboarding-visual {
         width: 100%;
-        height: 150px;
+        height: 120px;
+        /* Reduced specific height */
+        flex-shrink: 0;
+    }
+
+    .onboarding-content {
+        overflow-y: auto;
+        /* Allow scrolling inside the card */
+        min-height: 0;
+        /* Important for flex child scrolling */
+        padding: 16px;
+        /* Slightly reduced padding */
     }
 }

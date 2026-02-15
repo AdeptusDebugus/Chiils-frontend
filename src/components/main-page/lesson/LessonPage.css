@@ -233,23 +233,67 @@
   align-self: start;
 }
 
-.vocabulary-sidebar {
+/* Vocabulary/Lesson Sidebar */
+.lesson-sidebar {
   background: var(--color-white);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-card);
   padding: 24px;
   height: fit-content;
-  /* Scrollable content inside sticky column */
-  position: relative;
+  position: sticky;
+  top: 16px;
   max-height: calc(100vh - 32px);
   overflow: auto;
-  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
+
+.vocabulary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.sidebar-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.sidebar-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.sidebar-actions button img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: brightness(0);
+  transition: transform 0.2s ease;
+}
+
+.sidebar-actions button:hover img {
+  transform: scale(1.25);
+}
+
+.sidebar-actions button.active img {
+  filter: invert(50%) sepia(85%) saturate(1600%) hue-rotate(345deg) brightness(98%) contrast(92%);
+}
+
 
 .vocabulary-sidebar h2 {
   font-size: 22px;
   font-weight: 400;
-  margin-bottom: 16px;
+  margin: 0;
   color: var(--color-text);
   line-height: 1;
 }
@@ -394,7 +438,7 @@
   border: none;
 }
 
-.quizlet-questions .question + .question {
+.quizlet-questions .question+.question {
   border-top: 1px solid #e0e0de;
   padding-top: 12px;
 }
@@ -531,12 +575,15 @@
   height: 20px;
   margin: 0;
   padding: 0;
-  opacity: 0; /* hide native, keep accessible */
+  opacity: 0;
+  /* hide native, keep accessible */
   position: static;
   flex: 0 0 20px;
 }
 
-.question .checkbox-list .checkbox-label .checkbox-text { min-width: 0; }
+.question .checkbox-list .checkbox-label .checkbox-text {
+  min-width: 0;
+}
 
 .question .checkbox-list .checkbox-label .checkbox-box {
   width: 20px !important;
@@ -552,12 +599,12 @@
   flex: 0 0 20px;
 }
 
-.question .checkbox-list .checkbox-label input[type="checkbox"]:checked + .checkbox-box {
+.question .checkbox-list .checkbox-label input[type="checkbox"]:checked+.checkbox-box {
   background-color: var(--color-orange);
   border-color: var(--color-orange);
 }
 
-.question .checkbox-list .checkbox-label input[type="checkbox"]:focus-visible + .checkbox-box {
+.question .checkbox-list .checkbox-label input[type="checkbox"]:focus-visible+.checkbox-box {
   outline: none;
   box-shadow: 0 0 0 3px rgba(242, 100, 48, 0.35);
 }
@@ -1010,8 +1057,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-container p,
@@ -1032,36 +1084,45 @@
     gap: 24px;
     padding: 24px 16px;
   }
-  
+
   .main-content {
     margin-left: 0;
   }
-  
+
   .page-title {
     margin-left: 0;
     padding-left: 16px;
     /* On mobile/tablet, let title span full content width */
     max-width: calc(100% - 16px - 16px);
   }
-  
-  .vocabulary-column { order: -1; top: 8px; }
-  .vocabulary-sidebar { position: relative; max-height: calc(100vh - 16px); overflow: auto; margin-top: 0; }
+
+  .vocabulary-column {
+    order: -1;
+    top: 8px;
+  }
+
+  .vocabulary-sidebar {
+    position: relative;
+    max-height: calc(100vh - 16px);
+    overflow: auto;
+    margin-top: 0;
+  }
 }
 
 @media (max-width: 768px) {
   .lesson-layout {
     padding: 16px;
   }
-  
+
   .page-title {
     padding: 16px 16px 6px 16px;
   }
-  
+
   .page-title-text {
     font-size: 48px;
     line-height: 1.25;
   }
-  
+
   .lesson-title {
     font-size: 28px;
     font-weight: 600;
@@ -1069,39 +1130,39 @@
     padding: 4px 0;
     margin: 0 0 12px 0;
   }
-  
+
   .video-embed iframe {
     min-height: 288px;
     max-height: 432px;
   }
-  
+
   .all-exercises-container {
     padding: 20px;
   }
-  
+
   .exercises-section {
     padding: 16px;
   }
-  
+
   .vocabulary-sidebar {
     padding: 16px;
     margin-top: 0;
   }
-  
+
   .question {
     padding: 12px;
   }
-  
+
   .answers-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .answers-toggle-btn {
     align-self: flex-end;
   }
-  
+
 }
 
 @media (max-width: 480px) {
@@ -1112,16 +1173,16 @@
     padding: 4px 0;
     margin: 0 0 12px 0;
   }
-  
+
   .page-title-text {
     font-size: 40px;
   }
-  
+
   .exercises-section h2,
   .vocabulary-sidebar h2 {
     font-size: 20px;
   }
-  
+
   .exercise-description,
   .question p,
   .vocab-content h3,
@@ -1145,14 +1206,14 @@
     grid-template-columns: minmax(0, 1fr) 380px;
     gap: 50px;
   }
-  
+
   /* Align page title left edge with main-content (50px) */
   .page-title {
     margin-left: 50px;
     margin-right: auto;
     padding-left: 0;
   }
-  
+
   /* Align page title right edge to sidebar right edge, left aligned to 50px */
   .page-title {
     margin-left: 50px;
@@ -1162,16 +1223,16 @@
   }
 
   /* Position main content 50px from the left edge of lesson-layout */
-  .lesson-layout > .main-content,
+  .lesson-layout>.main-content,
   .main-content {
     margin-left: 50px;
     width: auto;
   }
-  
+
   .vocabulary-sidebar {
     max-width: 420px;
   }
-  
+
   /* Minimize outer padding for primary content so it can stretch fully */
   .all-exercises-container {
     padding-left: 0;
@@ -1192,14 +1253,14 @@
     grid-template-columns: minmax(0, 1fr) 380px;
     gap: 50px;
   }
-  
+
   /* Position main content 50px from the left edge of lesson-layout */
-  .lesson-layout > .main-content,
+  .lesson-layout>.main-content,
   .main-content {
     margin-left: 50px;
     width: auto;
   }
-  
+
   /* Align page title right edge to sidebar right edge, left aligned to 50px */
   .page-title {
     margin-left: 50px;
@@ -1207,7 +1268,7 @@
     padding-left: 0;
     max-width: calc(100% - 24px - 50px);
   }
-  
+
   /* Align page title left edge with main-content (50px) */
   .page-title {
     margin-left: 50px;

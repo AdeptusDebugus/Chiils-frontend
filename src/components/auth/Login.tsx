@@ -1,11 +1,14 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext.tsx';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import LoginNotification from './LoginNotification';
 import './Login.css';
 
 const Login: React.FC = () => {
   const { login, user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const hideSignInLink = location.state?.hideSignInLink;
 
   const handleGoogleLogin = () => {
     const rawBackendUrl = import.meta.env.VITE_API_URL;
@@ -77,6 +80,7 @@ const Login: React.FC = () => {
   // Show login form for unauthenticated users
   return (
     <div className="login-container">
+      <LoginNotification />
       <img src="/assets/subscription/chiils-log.svg" alt="Chiils" className="login-logo" />
 
       <div className="login-card">
@@ -89,9 +93,11 @@ const Login: React.FC = () => {
             <img src="/assets/autorization/google-logo.svg" alt="Google" className="google-icon" />
           </button>
 
-          <p className="signin-link-text">
-            Already have an account? <span onClick={handleGoogleLogin} className="signin-link" style={{ cursor: 'pointer' }}>Sign in.</span>
-          </p>
+          {!hideSignInLink && (
+            <p className="signin-link-text">
+              Already have an account? <span onClick={handleGoogleLogin} className="signin-link" style={{ cursor: 'pointer' }}>Sign in.</span>
+            </p>
+          )}
         </div>
 
         <p className="login-footer-text">

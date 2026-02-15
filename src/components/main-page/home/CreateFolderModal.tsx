@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CreateFolderModal.css';
 
 interface CreateFolderModalProps {
@@ -21,6 +21,13 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
     const [folderName, setFolderName] = useState(initialValue);
     const [error, setError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, []);
 
     const handleSave = async () => {
         if (!folderName.trim()) {

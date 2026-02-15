@@ -23,19 +23,31 @@ interface OnboardingProviderProps {
 }
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => {
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated, isLoading } = useAuth();
     const location = useLocation();
     const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
-    const [sessionClosed, setSessionClosed] = useState(false);
+    const [isManualOpen, setIsManualOpen] = useState(false);
 
-    const hasActivePlan = user?.plan || ['SMART', 'PLUS', 'PRO', 'OPEN_LIBRARY', 'ADMIN'].includes(user?.role || '');
+    // Use sessionStorage to persist closed state for current tab/window session
+    const [sessionClosed, setSessionClosed] = useState(() => {
+        return sessionStorage.getItem('sessionOnboardingClosed') === 'true';
+    });
+
+    const hasActivePlan = !!(user?.plan || user?.permissions?.can_access_library || ['SMART', 'PLUS', 'PRO', 'ADMIN'].includes(user?.role || ''));
 
     // Automatic onboarding logic
     useEffect(() => {
+        // If user already has a plan and popup is open (AND it wasn't opened manually), close it
+        if (!isManualOpen && hasActivePlan && isOnboardingOpen) {
+            setIsOnboardingOpen(false);
+            return;
+        }
+
         const isAuthRoute = ['/login', '/login/success'].includes(location.pathname);
         const isLandingPage = location.pathname === '/';
 
         if (
+            !isLoading &&
             isAuthenticated &&
             user &&
             !hasActivePlan &&
@@ -44,19 +56,20 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
             !isLandingPage
         ) {
             setIsOnboardingOpen(true);
+            setIsManualOpen(false);
         }
-    }, [isAuthenticated, user, hasActivePlan, sessionClosed, location.pathname]);
+    }, [isAuthenticated, user, hasActivePlan, sessionClosed, location.pathname, isLoading, isOnboardingOpen, isManualOpen]);
 
     const openOnboarding = (isManual = false) => {
+        setIsManualOpen(isManual);
         setIsOnboardingOpen(true);
-        if (isManual) {
-            // If manual, we don't care about sessionClosed
-        }
     };
 
     const closeOnboarding = () => {
         setIsOnboardingOpen(false);
+        setIsManualOpen(false);
         setSessionClosed(true);
+        sessionStorage.setItem('sessionOnboardingClosed', 'true');
     };
 
     return (

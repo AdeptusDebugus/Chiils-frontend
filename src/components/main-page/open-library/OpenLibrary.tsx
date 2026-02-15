@@ -7,8 +7,8 @@ import './OpenLibrary.css';
 import { extractYouTubeId, fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import { capitalizeFirstLetter } from '../../../utils/text.ts';
 import {
-    LANGUAGES, CEFR_LEVELS, SCENARIOS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
-    type CefrLevel, type Scenario as ScenarioType, type Topic, type GrammarTopic
+    LANGUAGES, CEFR_LEVELS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
+    type CefrLevel, type Topic, type GrammarTopic
 } from '../../../utils/filters.ts';
 
 // Helpers for Filters
@@ -40,7 +40,6 @@ const OpenLibrary: React.FC = () => {
     // фильтры
     const [selectedLanguage, setSelectedLanguage] = useState<string>('English');
     const [selectedCefrLevels, setSelectedCefrLevels] = useState<string[]>([]);
-    const [selectedScenarios, setSelectedScenarios] = useState<string[]>([]);
     const [selectedGrammar, setSelectedGrammar] = useState<string[]>([]);
     const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -98,11 +97,6 @@ const OpenLibrary: React.FC = () => {
                             score += 10;
                         }
 
-                        // Check lesson theme (Scenario)
-                        const lessonTheme = (lesson.tags?.lesson_theme || '').toLowerCase();
-                        if (lessonTheme.includes(searchWord)) {
-                            score += 8;
-                        }
 
                         // Check grammar topics
                         const grammarMatches = (lesson.tags?.grammar_topics || []).filter(
@@ -165,13 +159,6 @@ const OpenLibrary: React.FC = () => {
                 if (!selectedCefrLevels.includes(lvl)) return false;
             }
 
-            // Scenario (lesson_theme)
-            if (selectedScenarios.length > 0) {
-                // assume lesson_theme holds the scenario
-                const theme = (filteredLesson.tags?.lesson_theme || '');
-                // It might need precise matching or normalization
-                if (!selectedScenarios.some(s => theme.toLowerCase() === s.toLowerCase())) return false;
-            }
 
             // Grammar
             if (selectedGrammar.length > 0) {
@@ -198,9 +185,6 @@ const OpenLibrary: React.FC = () => {
     const handleCefrToggle = (level: string) => {
         // Single select: If already selected, deselect it. If new, replace selection.
         setSelectedCefrLevels(prev => prev.includes(level) ? [] : [level]);
-    };
-    const handleScenarioToggle = (scenario: string) => {
-        setSelectedScenarios(prev => prev.includes(scenario) ? prev.filter(s => s !== scenario) : [...prev, scenario]);
     };
     const handleGrammarToggle = (topic: string) => {
         setSelectedGrammar(prev => prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]);
@@ -372,29 +356,6 @@ const OpenLibrary: React.FC = () => {
                             </FilterDropdown>
                         </div>
 
-                        {/* Scenario */}
-                        <div className="filter-group">
-                            <span className="filter-group-label">Scenario</span>
-                            <FilterDropdown
-                                label={selectedScenarios.length > 0 ? selectedScenarios.join(', ') : "Select lesson scenario"}
-                                isOpen={openDropdown === 'scenario'}
-                                onToggle={() => toggleDropdown('scenario')}
-                                activeCount={selectedScenarios.length}
-                                isDefault={selectedScenarios.length === 0}
-                                onClear={() => setSelectedScenarios([])}
-                            >
-                                <div className="filters-row">
-                                    {SCENARIOS.map(scenario => (
-                                        <FilterPill
-                                            key={scenario}
-                                            label={scenario}
-                                            isActive={selectedScenarios.includes(scenario)}
-                                            onClick={() => handleScenarioToggle(scenario)}
-                                        />
-                                    ))}
-                                </div>
-                            </FilterDropdown>
-                        </div>
                     </div>
 
                     {/* RIGHT GROUP: Grammar, Topic */}
