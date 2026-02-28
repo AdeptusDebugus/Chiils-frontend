@@ -45,13 +45,15 @@ const Sidebar: React.FC = () => {
           Open library
         </NavLink>
 
-        <div
-          className={`nav-item ${isOpen ? 'active' : ''}`}
-          onClick={handleLessonBuilderClick}
-          style={{ cursor: 'pointer' }}
-        >
-          Lesson builder
-        </div>
+        {user?.role !== 'STUDENT' && (
+          <div
+            className={`nav-item ${isOpen ? 'active' : ''}`}
+            onClick={handleLessonBuilderClick}
+            style={{ cursor: 'pointer' }}
+          >
+            Lesson builder
+          </div>
+        )}
 
 
 

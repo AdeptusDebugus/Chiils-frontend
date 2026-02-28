@@ -99,7 +99,7 @@
 
 /* Main Content */
 .dashboard-main-content {
-  padding: 32px 40px;
+  padding: 32px 42px;
   overflow-y: auto;
   max-height: 100vh;
 }
@@ -198,7 +198,7 @@
 
 /* My Lessons Section */
 .my-lessons-section {
-  margin-bottom: 48px;
+  margin-bottom: 35px;
 }
 
 .my-lessons-container {
@@ -640,6 +640,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  padding-left: 48px;
   overflow: hidden;
 }
 
@@ -764,7 +765,7 @@
 
 .user-profile-actions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: flex-start;
   flex-wrap: wrap;
 }

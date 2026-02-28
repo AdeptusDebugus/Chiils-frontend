@@ -88,6 +88,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const handlePaddleCheckoutCompleted = () => {
+      console.log('Paddle checkout completed. Waiting 4 seconds to refresh profile...');
+      setTimeout(() => {
+        if (token) {
+          fetchUserProfile(token);
+        }
+      }, 4000);
+    };
+
+    window.addEventListener('paddle-checkout-completed', handlePaddleCheckoutCompleted as EventListener);
+
+    return () => {
+      window.removeEventListener('paddle-checkout-completed', handlePaddleCheckoutCompleted as EventListener);
+    };
+  }, [token]);
+
   const login = (newToken: string, userData: User) => {
     console.log('Storing user data:', userData); // Debug log
     setToken(newToken);

@@ -20,6 +20,9 @@ class PaddleService {
                 token: this.clientToken,
                 eventCallback: (data: any) => {
                     console.log('Paddle Event:', data);
+                    if (data.name === 'checkout.completed') {
+                        window.dispatchEvent(new CustomEvent('paddle-checkout-completed'));
+                    }
                 }
             };
 

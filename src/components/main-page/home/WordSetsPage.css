@@ -283,11 +283,6 @@
     transform: translateY(-2px);
 }
 
-.collection-item.active {
-    border-color: #222222;
-    border-width: 2px;
-}
-
 .collection-info {
     position: absolute;
     top: 24px;

@@ -14,6 +14,25 @@
 
 /* Any specific overrides for student view can go here */
 
+.dashboard-page.student-homepage-layout {
+    grid-template-rows: auto 1fr auto;
+}
+
+.student-homepage-layout .dashboard-header {
+    grid-column: 1 / -1;
+    padding: 32px 40px 0 40px;
+    margin-bottom: 28px;
+}
+
+.student-homepage-layout .dashboard-main-content {
+    padding-top: 12px;
+}
+
+.student-homepage-layout .sidebar-right {
+    padding-top: 12px;
+    padding-bottom: 32px;
+}
+
 .student-sidebar-actions {
     display: flex;
     flex-direction: row;
@@ -37,18 +56,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/* Teacher Login - Secondary Style (White with Border) */
-.student-action-btn.teacher-login {
-    width: 164px;
-    background: #FFFFFF;
-    border: 1px solid #222222;
-    color: #222222;
-}
-
-.student-action-btn.teacher-login:hover {
-    background: #F5F5F5;
 }
 
 /* Logout - Primary Style (Black) - Matches HomePage Profile Logout */

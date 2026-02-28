@@ -132,13 +132,14 @@ const StudentHomePage: React.FC = () => {
     };
 
     return (
-        <div className="dashboard-page">
+        <div className="dashboard-page student-homepage-layout">
+            <header className="dashboard-header">
+                <h1>Hello, {firstName}</h1>
+                <div className="header-controls">
+                    <button className="student-action-btn logout" onClick={handleLogout}>Log out</button>
+                </div>
+            </header>
             <main className="dashboard-main-content">
-                <header className="dashboard-header">
-                    <h1>Hello, {firstName}</h1>
-
-                </header>
-
                 {/* 1st Block: Shared Lessons */}
                 <section className="my-lessons-section">
                     <div className="my-lessons-container">
@@ -238,16 +239,8 @@ const StudentHomePage: React.FC = () => {
                 />
             )}
 
-            {/* Right Sidebar - Word Bank & Actions */}
+            {/* Right Sidebar - Word Bank */}
             <aside className="sidebar-right">
-                <div className="student-sidebar-actions">
-                    <button className="student-action-btn teacher-login" onClick={() => {
-                        logout();
-                        navigate('/login');
-                    }}>Teacher sign in</button>
-                    <button className="student-action-btn logout" onClick={handleLogout}>Log out</button>
-                </div>
-
                 <div className="word-bank-section">
                     <div className="word-bank-title">
                         <h2>Word Bank</h2>

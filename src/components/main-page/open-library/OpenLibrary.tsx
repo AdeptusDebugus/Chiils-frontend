@@ -301,7 +301,7 @@ const OpenLibrary: React.FC = () => {
                         All community-created lessons in one place — use tags to find what you need just in a few clicks.
                     </p>
                 </div>
-                <LessonBuilderButton />
+                {user?.role !== 'STUDENT' && <LessonBuilderButton />}
             </div>
 
             <div className="filters-section">

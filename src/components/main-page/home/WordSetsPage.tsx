@@ -335,7 +335,7 @@ const WordSetsPage: React.FC = () => {
             <header className="word-sets-header">
                 <h1>{activeSet ? activeSet.name : 'Word sets'}</h1>
                 <div className="header-controls">
-                    <LessonBuilderButton />
+                    {user?.role !== 'STUDENT' && <LessonBuilderButton />}
                 </div>
             </header>
 
