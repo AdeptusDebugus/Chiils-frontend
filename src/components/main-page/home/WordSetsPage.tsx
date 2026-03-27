@@ -368,7 +368,7 @@ const WordSetsPage: React.FC = () => {
                                     </div>
                                     <div className="flashcard-back">
                                         <div className="flashcard-content">
-                                            <h2 className="term">{activeSetWords[currentCardIndex].translation}</h2>
+                                            <h2 className="term">{activeSetWords[currentCardIndex].translated_explanation}</h2>
                                         </div>
                                     </div>
                                 </div>

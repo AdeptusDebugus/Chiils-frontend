@@ -81,24 +81,15 @@ const FolderPopup: React.FC<FolderPopupProps> = ({
     };
 
     // Convert FolderLesson to LessonLite for the card
-    const mapToLessonLite = (folderLesson: FolderLesson): LessonLite => {
-        const topic = folderLesson.tags.lesson_theme || 'Untitled Lesson';
+    const mapToLessonLite = (liked: FolderLesson): LessonLite => {
         return {
-            id: folderLesson.lesson_id,
-            youtube_url: folderLesson.youtube_url,
-            // fallback if null
-            lesson_topic: topic,
-            created_at: folderLesson.created_at,
-            tags: typeof folderLesson.tags === 'object' ? {
-                ...folderLesson.tags,
-                lesson_theme: folderLesson.tags?.lesson_theme || topic,
-            } : {
-                lesson_theme: topic,
-                language: '',
-                language_level: '',
-                lexical_fields: [],
-                style: '',
-                grammar_topics: []
+            id: liked.lesson_id,
+            youtube_url: liked.youtube_url,
+            lesson_topic: liked.lesson_topic,
+            created_at: liked.created_at,
+            tags: {
+                ...liked.tags,
+                lesson_theme: liked.tags?.lesson_theme || liked.lesson_topic,
             },
             duration: '10:00',
             status: 'ACTIVE'

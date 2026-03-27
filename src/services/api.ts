@@ -49,11 +49,14 @@ api.interceptors.response.use(
 
 export interface CreateLessonRequest {
   name: string
-  youtube_link: string
   email: string
-  language_level: string
-  grammar_topics: string[]
+  youtubeLink: string
   language: string
+  languageLevel: string
+  grammarTopics: string[]
+  preset: string
+  segmentStartMin: number
+  segmentEndMin: number
 }
 
 export interface CreateLessonResponse {

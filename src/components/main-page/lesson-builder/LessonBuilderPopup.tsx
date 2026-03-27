@@ -4,7 +4,7 @@ import { FilterDropdown, FilterPill } from '../FilterComponents.tsx';
 import { createLesson } from '../../../services/api.ts';
 import { useAuth } from '../../../contexts/AuthContext.tsx';
 import {
-    LANGUAGES, CEFR_LEVELS, SCENARIOS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
+    LANGUAGES, CEFR_LEVELS, PRESETS, GRAMMAR_TOPICS_BY_LEVEL,
     type CefrLevel
 } from '../../../utils/filters.ts';
 import { extractYouTubeId } from '../../../utils/youtube.ts';
@@ -25,9 +25,9 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
     // Filter States
     const [selectedLanguage, setSelectedLanguage] = useState<string>();
     const [selectedCefrLevels, setSelectedCefrLevels] = useState<string[]>([]);
-    const [selectedScenarios, setSelectedScenarios] = useState<string[]>([]);
+    const [selectedPreset, setSelectedPreset] = useState<string>();
     const [selectedGrammar, setSelectedGrammar] = useState<string[]>([]);
-    const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+    const [selectedSegmentIndex, setSelectedSegmentIndex] = useState<number | undefined>(undefined);
 
     // UI State
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -60,38 +60,36 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
         setSelectedGrammar([]);
     };
 
-    const handleScenarioToggle = (scenario: string) => {
-        setSelectedScenarios([scenario]);
+    const handlePresetToggle = (preset: string) => {
+        setSelectedPreset(preset);
     };
 
     const handleGrammarToggle = (topic: string) => {
-        setSelectedGrammar(prev => {
-            if (errors['grammar']) setErrors(prevErrors => ({ ...prevErrors, grammar: false }));
-            if (prev.includes(topic)) {
-                return prev.filter(t => t !== topic);
-            }
-            if (prev.length >= 3) {
-                return prev;
-            }
-            return [...prev, topic];
-        });
+        if (errors['grammar']) setErrors(prevErrors => ({ ...prevErrors, grammar: false }));
+        setSelectedGrammar([topic]);
+        setOpenDropdown(null);
     };
 
-    const handleTopicToggle = (topic: string) => {
-        setSelectedTopics(prev => prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]);
-    };
+    const segments = [
+        { label: '0:00 – 0:15', start: 0, end: 15 },
+        { label: '0:15 – 0:30', start: 15, end: 30 },
+        { label: '0:30 – 0:45', start: 30, end: 45 },
+        { label: '0:45 – 1:00', start: 45, end: 60 }
+    ];
 
     // Available Grammar
     const availableGrammarTopics = useMemo(() => {
         if (selectedCefrLevels.length === 0) return [];
         const level = selectedCefrLevels[0] as CefrLevel;
         return GRAMMAR_TOPICS_BY_LEVEL[level] || [];
-    }, [selectedCefrLevels]);
+    }, [selectedCefrLevels, selectedLanguage]);
 
     const handleSubmit = async () => {
         const newErrors: { [key: string]: boolean } = {};
         if (!selectedLanguage) newErrors.language = true;
         if (selectedCefrLevels.length === 0) newErrors.level = true;
+        if (!selectedPreset) newErrors.preset = true;
+        // Segment is now optional
         if (!youtubeLink) {
             newErrors.link = true;
         } else if (!extractYouTubeId(youtubeLink)) {
@@ -120,26 +118,22 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
         setStatus({ type: 'idle', message: '' });
 
         try {
-            // Mapping to API request
-            // Note: API definition currently supports: name, youtube_link, email, language_level, grammar_topics, language.
-            // We are adding 'lesson_theme' (Scenario) and 'lesson_topic' (Topic) implicitly or combining them?
-            // Since we can't change backend easily, we might send them if backend supports dynamic fields, 
-            // OR we append them to grammar_topics if we have to hack it, OR we just trust the plan that we send them.
-            // I will extend the type locally or just cast.
+            const selectedSegment = selectedSegmentIndex !== undefined ? segments[selectedSegmentIndex] : null;
+            // Removed segment throw
 
-            const requestData: any = {
+            const requestData = {
                 name,
                 email,
-                youtube_link: youtubeLink,
+                youtubeLink,
                 language: selectedLanguage,
-                language_level: selectedCefrLevels[0],
-                grammar_topics: selectedGrammar,
-                // Passing extra fields
-                lesson_theme: selectedScenarios.join(', '), // Send as string or array? Usually string for single theme.
-                lesson_topic: selectedTopics.join(', ')
+                languageLevel: selectedCefrLevels[0],
+                grammarTopics: selectedGrammar,
+                preset: selectedPreset === 'Claudia (classic, guided, balanced)' ? 'claudia' : (selectedPreset || ''),
+                segmentStartMin: selectedSegment ? selectedSegment.start : null,
+                segmentEndMin: selectedSegment ? selectedSegment.end : null
             };
 
-            await createLesson(requestData);
+            await createLesson(requestData as any);
 
             // Signal refresh for HomePage
             window.dispatchEvent(new CustomEvent('lessonCreated'));
@@ -178,7 +172,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                         {/* Left Column */}
                         <div className="lb-column">
                             {/* Language */}
-                            <div className="lb-input-row">
+                            <div className="lb-input-row" style={{ zIndex: 30 }}>
                                 <label className="lb-label">Language</label>
                                 <div className="lb-field-container">
                                     <FilterDropdown
@@ -194,24 +188,22 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                         }}
                                     >
                                         <div className="filters-row">
-                                            {LANGUAGES.map(lang => (
-                                                <FilterPill
-                                                    key={lang}
-                                                    label={lang}
-                                                    isActive={selectedLanguage === lang}
-                                                    onClick={() => {
-                                                        setSelectedLanguage(lang);
-                                                        setErrors(prev => ({ ...prev, language: false }));
-                                                    }}
-                                                />
-                                            ))}
+                                            <FilterPill
+                                                label="English"
+                                                isActive={selectedLanguage === 'English'}
+                                                onClick={() => {
+                                                    setSelectedLanguage('English');
+                                                    setOpenDropdown(null);
+                                                    setErrors(prev => ({ ...prev, language: false }));
+                                                }}
+                                            />
                                         </div>
                                     </FilterDropdown>
                                 </div>
                             </div>
 
                             {/* CEFR Level */}
-                            <div className="lb-input-row">
+                            <div className="lb-input-row" style={{ zIndex: 20 }}>
                                 <label className="lb-label">CEFR Level</label>
                                 <div className="lb-field-container">
                                     <FilterDropdown
@@ -240,25 +232,26 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                 </div>
                             </div>
 
-                            {/* Scenario */}
-                            <div className="lb-input-row">
-                                <label className="lb-label">Scenario</label>
+                            {/* Preset */}
+                            <div className="lb-input-row" style={{ zIndex: 10 }}>
+                                <label className="lb-label">Preset</label>
                                 <div className="lb-field-container">
                                     <FilterDropdown
-                                        label={selectedScenarios.length > 0 ? selectedScenarios.join(', ') : "Select lesson scenario"}
-                                        isOpen={openDropdown === 'scenario'}
-                                        onToggle={() => toggleDropdown('scenario')}
-                                        activeCount={selectedScenarios.length}
-                                        isDefault={selectedScenarios.length === 0}
-                                        onClear={() => setSelectedScenarios([])}
+                                        label={selectedPreset || "Select a lesson type"}
+                                        isOpen={openDropdown === 'preset'}
+                                        onToggle={() => toggleDropdown('preset')}
+                                        activeCount={selectedPreset ? 1 : 0}
+                                        isDefault={!selectedPreset}
+                                        error={errors.preset}
+                                        onClear={() => setSelectedPreset(undefined)}
                                     >
                                         <div className="filters-row">
-                                            {SCENARIOS.map(s => (
+                                            {PRESETS.map(p => (
                                                 <FilterPill
-                                                    key={s}
-                                                    label={s}
-                                                    isActive={selectedScenarios.includes(s)}
-                                                    onClick={() => handleScenarioToggle(s)}
+                                                    key={p}
+                                                    label={p}
+                                                    isActive={selectedPreset === p}
+                                                    onClick={() => handlePresetToggle(p)}
                                                 />
                                             ))}
                                         </div>
@@ -269,41 +262,15 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
 
                         {/* Right Column */}
                         <div className="lb-column">
-                            {/* YouTube Link */}
-                            <div className="lb-input-row">
-                                <label className="lb-label">Link</label>
-                                <div className="lb-field-container">
-                                    <p className="lb-helper-text">Your video must be under 120 minutes</p>
-                                    <input
-                                        className="lb-input"
-                                        value={errors.link ? "Please enter a valid YouTube link" : youtubeLink}
-                                        onChange={e => {
-                                            setYoutubeLink(e.target.value);
-                                            if (errors.link) {
-                                                setErrors(prev => ({ ...prev, link: false }));
-                                            }
-                                        }}
-                                        onFocus={e => {
-                                            if (errors.link) {
-                                                setYoutubeLink('');
-                                                setErrors(prev => ({ ...prev, link: false }));
-                                            }
-                                        }}
-                                        placeholder="Paste Youtube link"
-                                        style={errors.link ? { color: '#f44336' } : {}}
-                                    />
-                                </div>
-                            </div>
-
                             {/* Grammar */}
-                            <div className="lb-input-row">
+                            <div className="lb-input-row" style={{ zIndex: 30 }}>
                                 <label className="lb-label">Grammar</label>
                                 <div className="lb-field-container">
                                     {(!selectedLanguage || selectedCefrLevels.length === 0) && (
                                         <p className="lb-helper-text">Select a language and a CEFR level first</p>
                                     )}
                                     <FilterDropdown
-                                        label={selectedGrammar.length > 0 ? selectedGrammar.join(', ') : "Select up to 3 grammar points"}
+                                        label={selectedGrammar.length > 0 ? selectedGrammar.join(', ') : "Select grammar topic"}
                                         isOpen={openDropdown === 'grammar'}
                                         onToggle={() => toggleDropdown('grammar')}
                                         activeCount={selectedGrammar.length}
@@ -329,17 +296,76 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                 </div>
                             </div>
 
-                            {/* Create Button */}
-                            <div className="popup-footer">
-                                <button
-                                    className="create-btn"
-                                    onClick={handleSubmit}
-                                    disabled={isSubmitting}
-                                >
-                                    {isSubmitting ? 'Creating...' : 'Create your lesson'}
-                                </button>
+                            {/* YouTube Link */}
+                            <div className="lb-input-row" style={{ zIndex: 20 }}>
+                                <label className="lb-label">Link</label>
+                                <div className="lb-field-container">
+                                    <p className="lb-helper-text">Max length: 60 minutes</p>
+                                    <input
+                                        className={`lb-input ${errors.link ? 'has-error' : ''}`}
+                                        value={errors.link ? "Please enter a valid YouTube link" : youtubeLink}
+                                        onChange={e => {
+                                            setYoutubeLink(e.target.value);
+                                            if (errors.link) {
+                                                setErrors(prev => ({ ...prev, link: false }));
+                                            }
+                                        }}
+                                        onFocus={e => {
+                                            if (errors.link) {
+                                                setYoutubeLink('');
+                                                setErrors(prev => ({ ...prev, link: false }));
+                                            }
+                                        }}
+                                        placeholder="Paste Youtube link"
+                                        style={errors.link ? { color: '#f44336' } : {}}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Segment */}
+                            <div className="lb-input-row" style={{ zIndex: 10 }}>
+                                <label className="lb-label">Segment</label>
+                                <div className="lb-field-container">
+                                    <FilterDropdown
+                                        label={selectedSegmentIndex !== undefined ? segments[selectedSegmentIndex].label : "Select a segment"}
+                                        isOpen={openDropdown === 'segment'}
+                                        onToggle={() => toggleDropdown('segment')}
+                                        activeCount={selectedSegmentIndex !== undefined ? 1 : 0}
+                                        isDefault={selectedSegmentIndex === undefined}
+                                        error={errors.segment}
+                                        onClear={() => {
+                                            setSelectedSegmentIndex(undefined);
+                                            setErrors(prev => ({ ...prev, segment: false }));
+                                        }}
+                                    >
+                                        <div className="filters-row">
+                                            {segments.map((seg, idx) => (
+                                                <FilterPill
+                                                    key={idx}
+                                                    label={seg.label}
+                                                    isActive={selectedSegmentIndex === idx}
+                                                    onClick={() => {
+                                                        setSelectedSegmentIndex(idx);
+                                                        setOpenDropdown(null);
+                                                        setErrors(prev => ({ ...prev, segment: false }));
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </FilterDropdown>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="popup-footer">
+                        <button
+                            className="create-btn"
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Creating...' : 'Hit it!'}
+                        </button>
                     </div>
 
 

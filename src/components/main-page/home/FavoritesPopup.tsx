@@ -65,18 +65,17 @@ const FavoritesPopup: React.FC<FavoritesPopupProps> = ({ onClose, onAddToFolder 
 
     // Convert LikedLessonLite to LessonLite for the card
     const mapToLessonLite = (liked: LikedLessonLite): LessonLite => {
-        const topic = liked.lesson_topic || liked.tags?.lesson_theme || 'Untitled Lesson';
         return {
             id: liked.lesson_id,
             youtube_url: liked.youtube_url,
-            // fallback if null
-            lesson_topic: topic,
+            you_tube_title: liked.you_tube_title,
+            lesson_topic: liked.lesson_topic,
             created_at: liked.created_at,
             tags: {
                 ...liked.tags,
-                lesson_theme: liked.tags?.lesson_theme || topic,
+                lesson_theme: liked.tags?.lesson_theme || liked.lesson_topic || '',
             },
-            duration: '10:00', // Default or fetch if available
+            duration: '10:00',
             status: 'ACTIVE'
         };
     };

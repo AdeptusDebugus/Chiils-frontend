@@ -20,7 +20,7 @@
     width: 1511px;
     max-width: 1074px;
     /* From Figma context: w-[1074px] */
-    height: 374px;
+    height: 451px;
     /* Fixed height requested */
     position: relative;
     box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
@@ -62,16 +62,17 @@
     grid-template-columns: 1fr 1fr;
     gap: 15px 40px;
     /* Compact gaps */
-    height: 100%;
+    flex: 1;
     min-width: 0;
     /* Prevent grid blowout */
+    margin-bottom: 45px;
 }
 
 .lb-column {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 15px;
+    gap: 40px;
     /* Compact gap */
     min-width: 0;
     /* Prevent flex blowout */
@@ -192,7 +193,6 @@
     /* Reduced slightly */
     font-weight: 400;
     line-height: 1.2;
-    color: #999999;
     margin: 0;
     position: absolute;
     top: -25px;
@@ -215,13 +215,11 @@
 /* Actions */
 .popup-footer {
     padding: 0;
-    /* margin-top: auto; Removed to align with Scenario level */
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
-    /* Center to ensure alignment if heights differ slightly */
     height: 40px;
-    /* Match input height */
+    margin-top: 5px;
 }
 
 .cancel-btn {
@@ -239,17 +237,15 @@
     background: black;
     color: #ffffff;
     border: none;
-    border-radius: 14.211px;
-    padding: 12px 24px;
+    border-radius: 18px;
+    padding: 6px 24px;
     font-family: 'TeX Gyre Heros', sans-serif;
     font-size: 15.79px;
     font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
-    max-width: 182px;
-    height: 30px;
-    ;
-    /* Match input height */
+    width: 144px;
+    height: 33px;
     display: flex;
     align-items: center;
     justify-content: center;

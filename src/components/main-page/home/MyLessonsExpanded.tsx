@@ -5,10 +5,11 @@ import { useAuth } from '../../../contexts/AuthContext.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 import { lessonMonitoringService } from '../../../services/lessonMonitoringService.ts';
 import {
-    LANGUAGES, CEFR_LEVELS, SCENARIOS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
+    LANGUAGES, CEFR_LEVELS, PRESETS, GRAMMAR_TOPICS_BY_LEVEL, TOPICS,
     type CefrLevel
 } from '../../../utils/filters.ts';
 import { FilterDropdown, FilterPill } from '../FilterComponents.tsx';
+import { fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import HomeLessonCard from './HomeLessonCard.tsx';
 import './MyLessonsExpanded.css';
 
@@ -49,7 +50,7 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
     // Filters
     const [selectedLanguage, setSelectedLanguage] = useState<string>('English');
     const [selectedCefrLevels, setSelectedCefrLevels] = useState<string[]>([]);
-    const [selectedScenarios, setSelectedScenarios] = useState<string[]>([]);
+    const [selectedPresets, setSelectedPresets] = useState<string[]>([]);
     const [selectedGrammar, setSelectedGrammar] = useState<string[]>([]);
     const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -114,6 +115,36 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
         };
     }, [user?.email]);
 
+    // Fetch YouTube titles for expanded lessons
+    useEffect(() => {
+        const lessonsToFetch = lessons.filter(l => !l.you_tube_title && l.youtube_url);
+        if (lessonsToFetch.length === 0) return;
+
+        const fetchTitles = async () => {
+            let updated = false;
+            const newLessons = await Promise.all(lessons.map(async (l) => {
+                if (!l.you_tube_title && l.youtube_url) {
+                    try {
+                        const title = await fetchYouTubeTitle(l.youtube_url);
+                        if (title) {
+                            updated = true;
+                            return { ...l, you_tube_title: title };
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+                return l;
+            }));
+
+            if (updated) {
+                setLessons(newLessons);
+            }
+        };
+
+        fetchTitles();
+    }, [lessons]);
+
     // Helpers
     const getLanguageLevel = (l: LessonLite): string => l.tags?.language_level || 'B1';
     const getGrammarTopics = (l: LessonLite): string[] => l.tags?.grammar_topics || [];
@@ -174,9 +205,9 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
                 if (!selectedCefrLevels.includes(getLanguageLevel(l))) return false;
             }
 
-            if (selectedScenarios.length > 0) {
+            if (selectedPresets.length > 0) {
                 const theme = (l.tags?.lesson_theme || '');
-                if (!selectedScenarios.some(s => theme.toLowerCase() === s.toLowerCase())) return false;
+                if (!selectedPresets.some(p => theme.toLowerCase() === p.toLowerCase())) return false;
             }
 
             if (selectedGrammar.length > 0) {
@@ -202,7 +233,7 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
 
     // Toggle Handlers
     const handleCefrToggle = (level: string) => setSelectedCefrLevels(prev => prev.includes(level) ? [] : [level]);
-    const handleScenarioToggle = (scenario: string) => setSelectedScenarios(prev => prev.includes(scenario) ? prev.filter(s => s !== scenario) : [...prev, scenario]);
+    const handlePresetToggle = (preset: string) => setSelectedPresets(prev => prev.includes(preset) ? prev.filter(p => p !== preset) : [...prev, preset]);
     const handleGrammarToggle = (topic: string) => setSelectedGrammar(prev => prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]);
     const handleTopicToggle = (topic: string) => setSelectedTopics(prev => prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]);
 
@@ -274,24 +305,24 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
                                 </FilterDropdown>
                             </div>
 
-                            {/* Scenario */}
+                            {/* Preset */}
                             <div className="popup-filter-group">
-                                <span className="popup-filter-group-label">Scenario</span>
+                                <span className="popup-filter-group-label">Preset</span>
                                 <FilterDropdown
-                                    label={selectedScenarios.length > 0 ? selectedScenarios.join(', ') : "Select lesson scenario"}
-                                    isOpen={activeDropdown === 'scenario'}
-                                    onToggle={() => toggleDropdown('scenario')}
-                                    activeCount={selectedScenarios.length}
-                                    isDefault={selectedScenarios.length === 0}
-                                    onClear={() => setSelectedScenarios([])}
+                                    label={selectedPresets.length > 0 ? selectedPresets.join(', ') : "Select preset"}
+                                    isOpen={activeDropdown === 'preset'}
+                                    onToggle={() => toggleDropdown('preset')}
+                                    activeCount={selectedPresets.length}
+                                    isDefault={selectedPresets.length === 0}
+                                    onClear={() => setSelectedPresets([])}
                                 >
                                     <div className="popup-filters-row">
-                                        {SCENARIOS.map(scenario => (
+                                        {PRESETS.map(preset => (
                                             <FilterPill
-                                                key={scenario}
-                                                label={scenario}
-                                                isActive={selectedScenarios.includes(scenario)}
-                                                onClick={() => handleScenarioToggle(scenario)}
+                                                key={preset}
+                                                label={preset}
+                                                isActive={selectedPresets.includes(preset)}
+                                                onClick={() => handlePresetToggle(preset)}
                                             />
                                         ))}
                                     </div>

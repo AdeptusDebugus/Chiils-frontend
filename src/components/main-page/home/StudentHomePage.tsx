@@ -7,8 +7,8 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { getSharedWordSets, getWordSetWords, type WordSet } from '../../../services/wordSetService';
 import { getMyTeacher, type Student } from '../../../services/studentService';
 import { getUserLessonsLite, getSharedLessons, type LessonLite, type Word } from '../../../services/lessonService';
-import { paddleService } from '../../../services/paddleService';
-import HomeLessonCard from './HomeLessonCard';
+import { fetchYouTubeTitle } from '../../../utils/youtube.ts';
+import HomeLessonCard from './HomeLessonCard.tsx';
 import WordSetsPopup from './WordSetsPopup';
 import MyLessonsExpanded from './MyLessonsExpanded';
 
@@ -86,6 +86,36 @@ const StudentHomePage: React.FC = () => {
 
         fetchData();
     }, []);
+
+    // Fetch YouTube titles for shared lessons
+    useEffect(() => {
+        const lessonsToFetch = sharedLessons.filter(l => !l.you_tube_title && l.youtube_url);
+        if (lessonsToFetch.length === 0) return;
+
+        const fetchTitles = async () => {
+            let updated = false;
+            const newLessons = await Promise.all(sharedLessons.map(async (l) => {
+                if (!l.you_tube_title && l.youtube_url) {
+                    try {
+                        const title = await fetchYouTubeTitle(l.youtube_url);
+                        if (title) {
+                            updated = true;
+                            return { ...l, you_tube_title: title };
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+                return l;
+            }));
+
+            if (updated) {
+                setSharedLessons(newLessons);
+            }
+        };
+
+        fetchTitles();
+    }, [sharedLessons]);
 
 
     const handleSetClick = (setId: string) => {

@@ -23,7 +23,7 @@ import { useOnboarding } from '../../../contexts/OnboardingContext.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 import { lessonMonitoringService } from '../../../services/lessonMonitoringService.ts';
 import { paddleService } from '../../../services/paddleService.ts';
-import { extractYouTubeId } from '../../../utils/youtube.ts';
+import { extractYouTubeId, fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import { capitalizeFirstLetter } from '../../../utils/text.ts';
 import LessonBuilderButton from '../lesson-builder/LessonBuilderButton.tsx';
 import MyLessonsExpanded from './MyLessonsExpanded.tsx';
@@ -191,6 +191,36 @@ const HomePage: React.FC = () => {
 
     fetchData();
   }, [user?.email]);
+
+  // Fetch YouTube titles for lessons that don't have them
+  useEffect(() => {
+    const lessonsToFetch = userLessons.filter(l => !l.you_tube_title && l.youtube_url);
+    if (lessonsToFetch.length === 0) return;
+
+    const fetchTitles = async () => {
+      let updated = false;
+      const newLessons = await Promise.all(userLessons.map(async (l) => {
+        if (!l.you_tube_title && l.youtube_url) {
+          try {
+            const title = await fetchYouTubeTitle(l.youtube_url);
+            if (title) {
+              updated = true;
+              return { ...l, you_tube_title: title };
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+        return l;
+      }));
+
+      if (updated) {
+        setUserLessons(newLessons);
+      }
+    };
+
+    fetchTitles();
+  }, [userLessons]);
 
   // Fetch Word Bank separately
   useEffect(() => {

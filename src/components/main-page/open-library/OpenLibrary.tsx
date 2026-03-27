@@ -71,7 +71,6 @@ const OpenLibrary: React.FC = () => {
                 if (searchWords.length > 0) {
                     matchesSearch = false;
                     let wordMatches = 0;
-
                     // For each search word, check all fields
                     searchWords.forEach(searchWord => {
                         const fieldMatches = {
@@ -490,10 +489,10 @@ const OpenLibrary: React.FC = () => {
                                             <div className="lesson-meta">
                                                 <span className="lesson-title">
                                                     {capitalizeFirstLetter(
-                                                        (lesson.lesson_topic
-                                                            || lesson.you_tube_title?.trim()
+                                                        (lesson.you_tube_title?.trim()
                                                             || lesson.tags?.lesson_theme
-                                                            || 'Untitled Lesson') as string
+                                                            || lesson.lesson_topic
+                                                            || 'Lesson') as string
                                                     )}
                                                 </span>
                                             </div>

@@ -4,8 +4,8 @@ export type Language = typeof LANGUAGES[number];
 export const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
 export type CefrLevel = typeof CEFR_LEVELS[number];
 
-export const SCENARIOS = ['Homework', 'In-class'] as const;
-export type Scenario = typeof SCENARIOS[number];
+export const PRESETS = ['Claudia (classic, guided, balanced)'] as const;
+export type Preset = typeof PRESETS[number];
 
 export const GRAMMAR_TOPICS_BY_LEVEL: Record<CefrLevel, readonly string[]> = {
     A1: [

@@ -39,62 +39,54 @@ export interface LessonLite {
     status?: string
 }
 
-// ===== Сырые типы полного урока (как приходит с бэка) =====
-interface RawLexicalTrueFalseItem { sentence: string; answer: string }
-interface RawLexicalListenItem { sentence: string; answer: string | null }
-interface RawLexicalFillItem { sentence: string; answer: string } // одиночный ответ
+// ===== Preset and Block Types =====
+export interface LessonBlock {
+    id: string;
+    type: string;
+    order: number;
+    is_static_block: boolean;
+    static: {
+        title: string;
+        instruction: string;
+        questions?: string[]; // for real_talk
+        [key: string]: any;
+    };
+    source_inputs: string[];
+    interaction_type: 'multiple_choice' | 'matching' | 'true_false' | 'explanation' | 'correction' | 'static';
+    dynamic?: {
+        items?: number;
+        options_per_item?: number;
+        fields?: string[];
+    };
+    output_schema?: any;
+    generation_rules?: string[];
+}
 
+export interface PresetData {
+    [blockId: string]: any;
+}
+
+// ===== Сырые типы полного урока (как приходит с бэка) =====
 interface RawLessonFull {
     id: string
     youtube_url: string | null
     lesson_topic: string | null
-    tags: Tags
+    tags: Tags & { preset?: string }
     grammar_topics?: string[] | null
     created_at: string
     data: {
-        language?: string
-        language_level?: string
-        transcript_text?: string
-        language_filter?: {
-            target_language: string
-            ignore_other_languages: boolean
-        }
-        tags?: Tags
-        grammar_topics?: string[] | null
-        glossary?: Array<{
-            term: string
-            quote: string
-            translation_ru: string
-            explanation_ru: string
-            another_example: string
-            time_code: number | null
-        }>
-        exercises?: {
-            lexical?: {
-                true_or_false?: {
-                    phrases_paragraph?: string | null
-                    note?: string | null
-                    items: RawLexicalTrueFalseItem[]
-                }
-                listen_and_mark?: {
-                    phrases_paragraph?: string | null
-                    note?: string | null
-                    items: RawLexicalListenItem[]
-                }
-                fill_in_the_blank?: {
-                    phrases_paragraph?: string | null
-                    note?: string | null
-                    items: RawLexicalFillItem[]
-                }
-            }
-            grammar?: Array<{
-                topic: string
-                instructions?: string
-                items: Array<{ sentence: string; answer: string }>
-            }>
-        }
-        quizlet?: string[]
-        you_tube_url?: string
+        tag?: string;
+        word_bank_response?: {
+            items: Array<{
+                expression: string;
+                meaning: string;
+                quote: string;
+                timestamp: number | string | null;
+            }>;
+            quizlet_export: string;
+        };
+        preset?: PresetData;
+        you_tube_url?: string;
     }
 }
 
@@ -104,141 +96,38 @@ export interface LessonData {
     you_tube_title?: string
     youtube_url: string | null
     lesson_topic: string | null
-    tags: Tags
+    tags: Tags & { preset?: string }
     created_at: string
 
-    // для совместимости со старым кодом
+    // для совместимости со старым кодом (хотя мы его убираем, оставим базовые поля)
     you_tube_url?: string | null
 
-    glossary: Array<{
-        expression: string
-        translation: string
-        quote: string
-        explanation: string
-        another_example: string
-        time_code: number | null
-    }>
+    word_bank?: {
+        items: Array<{
+            expression: string;
+            meaning: string;
+            quote: string;
+            timestamp: number | string | null;
+        }>;
+        quizlet_export: string;
+    };
 
-    lexical_exercises: Array<{
-        type: string
-        examples: string[]
-        input?: string | null
-    }>
-    lexical_answers?: Array<{
-        type: 'truOrFalseAnswers' | 'fillTheBlankAnswers'
-        answer: string[]
-    }>
-
-    grammar_exercises: Array<{
-        type: string // topic
-        input?: string
-        examples: string[]
-    }>
-    grammar_answers?: Array<{
-        type: string // grammar1Answers, grammar2Answers, ...
-        answer: string[]
-    }>
-
-    quizlet: string[]
+    preset_name?: string;
+    preset_data?: PresetData;
 }
 
 // ===== Маппер полного урока Raw -> LessonData =====
 function mapRawToLesson(raw: RawLessonFull): LessonData {
-    const ex = raw.data.exercises ?? {}
-    const lex = ex.lexical ?? {}
-
-    const lexical_exercises: LessonData['lexical_exercises'] = []
-    const lexical_answers: NonNullable<LessonData['lexical_answers']> = []
-
-    // True/False
-    if (lex.true_or_false?.items?.length) {
-        lexical_exercises.push({
-            type: 'True or False',
-            examples: lex.true_or_false.items.map(i => i.sentence),
-            input: lex.true_or_false.note ?? null,
-        })
-        lexical_answers.push({
-            type: 'truOrFalseAnswers',
-            answer: lex.true_or_false.items.map(i => i.answer.trim()),
-        })
-    }
-
-    // Listen and mark
-    if (lex.listen_and_mark?.items?.length) {
-        lexical_exercises.push({
-            type: 'Послушай и отметь слова из списка',
-            examples: lex.listen_and_mark.items.map(i => i.sentence),
-            input: lex.listen_and_mark.note ?? null,
-        })
-    }
-
-    // Fill-in-the-blank (одиночные ответы)
-    if (lex.fill_in_the_blank?.items?.length) {
-        lexical_exercises.push({
-            type: 'Вставь пропущенное (fill-in-the-blank)',
-            examples: lex.fill_in_the_blank.items.map(i =>
-                i.sentence.includes('___') || i.sentence.includes('______')
-                    ? i.sentence.replace(/___+/g, '______')
-                    : i.sentence.replace(/(___+)/g, '______')
-            ),
-            input: lex.fill_in_the_blank.note ?? null,
-        })
-        lexical_answers.push({
-            type: 'fillTheBlankAnswers',
-            answer: lex.fill_in_the_blank.items.map(i => i.answer.trim()),
-        })
-    }
-
-    // Грамматика
-    const grammar_exercises: LessonData['grammar_exercises'] = []
-    const grammar_answers: NonNullable<LessonData['grammar_answers']> = []
-
-    if (ex.grammar?.length) {
-        ex.grammar.forEach((g, idx) => {
-            grammar_exercises.push({
-                type: g.topic,
-                input: g.instructions,
-                examples: g.items.map(i =>
-                    i.sentence.includes('___') || i.sentence.includes('______')
-                        ? i.sentence.replace(/___+/g, '______')
-                        : i.sentence.replace(/\(___*\)|_+/g, '______')
-                ),
-            })
-            grammar_answers.push({
-                type: `grammar${idx + 1}Answers`,
-                answer: g.items.map(i => i.answer.trim()),
-            })
-        })
-    }
-
-    // Глоссарий
-    const glossary = (raw.data.glossary ?? []).map(item => ({
-        expression: item.term,
-        translation: item.translation_ru,
-        quote: item.quote,
-        explanation: item.explanation_ru,
-        another_example: item.another_example,
-        time_code: item.time_code ?? null,
-    }))
-
-    const quizlet = raw.data.quizlet ?? []
-
     return {
         id: raw.id,
         youtube_url: raw.youtube_url,
-        you_tube_url: raw.youtube_url, // fallback для старого кода
+        you_tube_url: raw.youtube_url, // fallback
         lesson_topic: raw.lesson_topic,
         tags: raw.tags,
         created_at: raw.created_at,
-
-        glossary,
-        lexical_exercises,
-        lexical_answers: lexical_answers.length ? lexical_answers : undefined,
-
-        grammar_exercises,
-        grammar_answers: grammar_answers.length ? grammar_answers : undefined,
-
-        quizlet,
+        word_bank: raw.data.word_bank_response,
+        preset_name: raw.tags.preset,
+        preset_data: raw.data.preset,
     }
 }
 
@@ -426,7 +315,7 @@ export interface Word {
     translation: string
     translated_explanation: string
     another_example: string
-    time_code: number | null
+    time_code: number | string | null
 }
 
 export interface WordBankResponse {

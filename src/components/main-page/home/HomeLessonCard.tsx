@@ -85,10 +85,10 @@ const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
             <div className="home-lesson-info">
                 <h3>
                     {capitalizeFirstLetter(
-                        (lesson.lesson_topic
-                            || lesson.you_tube_title?.trim()
+                        (lesson.you_tube_title?.trim()
                             || lesson.tags?.lesson_theme
-                            || 'Untitled Lesson')
+                            || lesson.lesson_topic
+                            || 'Lesson') as string
                     )}
                 </h3>
 

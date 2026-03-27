@@ -7,16 +7,17 @@ const iconClose = "/assets/home/close-circle.svg";
 interface SharedToSidebarProps {
     lessonId?: string;
     wordSetId?: string;
+    refreshKey?: number;
 }
 
-const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId }) => {
+const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId, refreshKey }) => {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchStudents();
-    }, [lessonId, wordSetId]);
+    }, [lessonId, wordSetId, refreshKey]);
 
     const fetchStudents = async () => {
         try {
