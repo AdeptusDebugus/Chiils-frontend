@@ -222,6 +222,7 @@ export interface LikedLessonLite {
     lesson_topic: string | null
     tags: Tags
     created_at: string
+    you_tube_title?: string
 }
 
 export async function getLikedLessons(): Promise<LikedLessonLite[]> {

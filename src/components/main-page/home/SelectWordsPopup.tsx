@@ -69,8 +69,20 @@ const SelectWordsPopup: React.FC<SelectWordsPopupProps> = ({
         }
     };
 
-    const formatTime = (seconds: number | null) => {
-        if (seconds === null) return '00:00';
+    const formatTime = (time: string | number | null) => {
+        if (time === null || time === undefined) return '00:00';
+        
+        let seconds: number;
+        if (typeof time === 'string') {
+            // Handle if it's already a formatted string like "MM:SS"
+            if (time.includes(':')) return time;
+            seconds = parseFloat(time);
+        } else {
+            seconds = time;
+        }
+
+        if (isNaN(seconds)) return '00:00';
+
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
