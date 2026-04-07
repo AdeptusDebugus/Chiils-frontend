@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
-import { NotificationProvider } from './contexts/NotificationContext';
 import { LessonBuilderProvider, useLessonBuilder } from './contexts/LessonBuilderContext';
 import LessonBuilderPopup from './components/main-page/lesson-builder/LessonBuilderPopup.tsx';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -131,17 +130,15 @@ const AppContent = () => {
 function App() {
   return (
     <AuthProvider>
-      <NotificationProvider>
-        <LessonBuilderProvider>
-          <AuthPromptProvider>
-            <UpgradePromptProvider>
-              <OnboardingProvider>
-                <AppContent />
-              </OnboardingProvider>
-            </UpgradePromptProvider>
-          </AuthPromptProvider>
-        </LessonBuilderProvider>
-      </NotificationProvider>
+      <LessonBuilderProvider>
+        <AuthPromptProvider>
+          <UpgradePromptProvider>
+            <OnboardingProvider>
+              <AppContent />
+            </OnboardingProvider>
+          </UpgradePromptProvider>
+        </AuthPromptProvider>
+      </LessonBuilderProvider>
     </AuthProvider>
   )
 }

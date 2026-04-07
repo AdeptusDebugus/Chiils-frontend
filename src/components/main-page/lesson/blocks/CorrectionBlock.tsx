@@ -5,9 +5,12 @@ interface CorrectionBlockProps {
   block: LessonBlock;
   data: any;
   index: number;
+  grammarTopics?: string[] | null;
 }
 
-const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index }) => {
+const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index, grammarTopics }) => {
+  const grammarBadge = grammarTopics && grammarTopics.length > 0 ? grammarTopics[0] : null;
+
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [showAnswers, setShowAnswers] = useState<Record<number, boolean>>({});
 
@@ -29,6 +32,7 @@ const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index })
         {block.type === 'big_picture' && <div className="exercise-badge">Listen once</div>}
         {block.type === 'vocabulary_unlock' && <div className="exercise-badge">Before watching</div>}
         {block.type === 'fact_check' && <div className="exercise-badge">Listen again</div>}
+        {block.type === 'fix_it' && grammarBadge && <div className="exercise-badge">{grammarBadge}</div>}
       </div>
       <p className="exercise-instruction">{block.static.instruction}</p>
 
@@ -67,8 +71,12 @@ const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index })
                 </button>
               </div>
               {isAnswerVisible && (
-                <div className="revealed-answer">
-                  <p className="revealed-answer-text">{item.correct}</p>
+                <div className="revealed-answer-row">
+                  <div className="revealed-answer">
+                    <span className="item-number">{i + 1}.</span>
+                    <p className="revealed-answer-text">{item.correct}</p>
+                  </div>
+                  <div className="toggle-answer-btn-placeholder" />
                 </div>
               )}
             </div>

@@ -5,12 +5,20 @@ interface ExplanationBlockProps {
   block: LessonBlock;
   data: any;
   index: number;
+  grammarTopics?: string[] | null;
 }
 
-const ExplanationBlock: React.FC<ExplanationBlockProps> = ({ block, data, index }) => {
+const ExplanationBlock: React.FC<ExplanationBlockProps> = ({ block, data, index, grammarTopics }) => {
+  const grammarBadge = grammarTopics && grammarTopics.length > 0 ? grammarTopics[0] : null;
+
   return (
     <div className="exercises-section">
-      <h2>{block.static.title}</h2>
+      <div className="exercise-header-row">
+        <h2>{block.static.title}</h2>
+        {block.type === 'grammar_note' && grammarBadge && (
+          <div className="exercise-badge">{grammarBadge}</div>
+        )}
+      </div>
       <p className="exercise-instruction">{block.static.instruction}</p>
 
       <div className="explanation-content">

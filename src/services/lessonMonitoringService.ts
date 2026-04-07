@@ -1,5 +1,4 @@
 import { checkLessonReady, LessonReadyResponse } from './api';
-import { NotificationData } from '../components/main-page/lesson/Notification.tsx';
 
 export interface LessonMonitorConfig {
   lessonId: string;
@@ -100,6 +99,10 @@ class LessonMonitoringService {
         console.log(`Lesson ${lessonId} is ready!`);
         this.stopMonitoring(lessonId);
         config.onReady(lessonId, config.lessonName);
+      } else if (response.status === 'ERROR') {
+        console.log(`Lesson ${lessonId} failed with ERROR status`);
+        this.stopMonitoring(lessonId);
+        config.onError(lessonId, response.message || 'Ошибка генерации урока');
       } else {
         // Увеличиваем счетчик попыток
         this.attemptCounts.set(lessonId, currentAttempts + 1);
@@ -147,23 +150,3 @@ class LessonMonitoringService {
 // Создаем единственный экземпляр сервиса
 export const lessonMonitoringService = new LessonMonitoringService();
 
-// Функция для создания уведомления о готовности урока точно по дизайну Figma
-export const createLessonReadyNotification = (lessonId: string, _lessonName: string): Omit<NotificationData, 'id'> => {
-  return {
-    title: 'Урок готов! Можно забрать в профиле или по ссылке.',
-    message: '',
-    type: 'success',
-    lessonId: lessonId,
-  };
-};
-
-// Функция для создания уведомления об ошибке
-export const createLessonErrorNotification = (lessonId: string, error: string): Omit<NotificationData, 'id'> => {
-  return {
-    title: 'Ошибка обработки урока',
-    message: `Не удалось обработать урок: ${error}`,
-    type: 'error',
-    duration: 10000, // 10 секунд
-    lessonId: lessonId,
-  };
-};

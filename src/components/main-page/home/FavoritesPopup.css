@@ -10,8 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2000;
-
+    z-index: 10000;
 }
 
 @media (max-width: 768px) {
@@ -94,7 +93,10 @@
 .favorites-grid-container {
     width: 100%;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: auto;
+    /* Allow vertical scroll for footer gap */
+    padding-bottom: 456px;
+    /* 356px footer + 100px gap */
     /* Hide scrollbar */
     scrollbar-width: none;
     /* Firefox */

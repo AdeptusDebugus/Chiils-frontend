@@ -1,27 +1,13 @@
 export const LANGUAGES = ['English'] as const;
 export type Language = typeof LANGUAGES[number];
 
-export const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
+export const CEFR_LEVELS = ['A2', 'B1', 'B2', 'C1'] as const;
 export type CefrLevel = typeof CEFR_LEVELS[number];
 
 export const PRESETS = ['Claudia (classic, guided, balanced)'] as const;
 export type Preset = typeof PRESETS[number];
 
 export const GRAMMAR_TOPICS_BY_LEVEL: Record<CefrLevel, readonly string[]> = {
-    A1: [
-        'Present Simple',
-        'To be',
-        'There is / There are',
-        'Future forms (will / going to)',
-        'Past Simple',
-        'Articles',
-        'Pronouns',
-        'Possessives',
-        'Can (ability)',
-        'Must (obligation)',
-        'Basic questions',
-        'Have got'
-    ],
     A2: [
         'Past Simple',
         'Present Continuous (future)',
@@ -91,24 +77,6 @@ export const GRAMMAR_TOPICS_BY_LEVEL: Record<CefrLevel, readonly string[]> = {
         'Wish / If only (nuanced)',
         'Idiomatic inversion',
         'Register & style'
-    ],
-    C2: [
-        'Advanced inversion patterns',
-        'Inversion in conditionals (C2)',
-        'Mixed conditionals (complex)',
-        'Narrative tenses (extended)',
-        'Complex passives (C2)',
-        'Cleft & pseudo-cleft structures',
-        'Emphatic & contrastive structures',
-        'Future Perfect Continuous (advanced use)',
-        'Modal perfect (complex forms)',
-        'Advanced linking & cohesion',
-        'Nominalisation (C2)',
-        'Participial reductions',
-        'Reduced relative clauses (advanced)',
-        'Wish / If only (C2 nuances)',
-        'Idiomatic inversion (C2)',
-        'Register, tone & stylistic control'
     ]
 } as const;
 

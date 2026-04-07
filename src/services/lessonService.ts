@@ -9,6 +9,7 @@ export interface HistoryItem {
     tags: string[]
     createdAt: string
     lastOpenedAt: string | null
+    you_tube_title?: string
     // Add compatible fields for LessonLite if needed for reuse, or map later
 }
 
@@ -114,6 +115,7 @@ export interface LessonData {
 
     preset_name?: string;
     preset_data?: PresetData;
+    grammar_topics?: string[] | null;
 }
 
 // ===== Маппер полного урока Raw -> LessonData =====
@@ -128,6 +130,7 @@ function mapRawToLesson(raw: RawLessonFull): LessonData {
         word_bank: raw.data.word_bank_response,
         preset_name: raw.tags.preset,
         preset_data: raw.data.preset,
+        grammar_topics: raw.grammar_topics,
     }
 }
 
@@ -395,5 +398,17 @@ export async function getSharedLessons(): Promise<LessonLite[]> {
     } catch (e) {
         console.error('Failed to get shared lessons', e)
         return []
+    }
+}
+export async function deleteLesson(lessonId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+    try {
+        await api.delete(`/lessons/${lessonId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+    } catch (e) {
+        console.error('Failed to delete pending lesson', e)
+        throw e
     }
 }

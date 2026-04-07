@@ -14,6 +14,7 @@ export interface FolderLesson {
     lesson_topic: string;
     tags: Tags;
     created_at: string;
+    you_tube_title?: string;
 }
 
 export interface CreateFolderRequest {

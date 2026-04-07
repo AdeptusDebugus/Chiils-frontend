@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LessonLite } from '../../../services/lessonService.ts';
 import { extractYouTubeId } from '../../../utils/youtube.ts';
 import { capitalizeFirstLetter } from '../../../utils/text.ts';
@@ -8,6 +8,7 @@ interface HomeLessonCardProps {
     onClick: () => void;
     onAddToFolder?: (e: React.MouseEvent) => void;
     onAddToFavorite?: (e: React.MouseEvent) => void;
+    onStop?: (e: React.MouseEvent) => void;
     isLiked?: boolean;
     showRemoveIcon?: boolean;
     showActions?: boolean;
@@ -17,34 +18,67 @@ const imgLessonThumbnail = "/assets/dashboard/lesson-thumbnail.jpg";
 const iconFolder = "/assets/home/folder.svg";
 const iconRemove = "/assets/home/remove-from-folder.svg";
 const iconFavorites = "/assets/home/favorite.svg";
-
-// Simple inline SVG for filled heart if asset not available, or use CSS filter
-// The user said: "fill this button with black when user press liked button"
-// Probably best to use a filled SVG or toggle class.
-// Let's assume we can simply style it or swap the icon.
-// The user request: "fill this button with black" -> "fill: black" or "filter: brightness(0)"
-// I will apply a style or class for liked state.
+const iconStop = "/assets/home/close-circle.svg";
 
 const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
     lesson,
     onClick,
     onAddToFolder,
     onAddToFavorite,
+    onStop,
     isLiked = false,
     showRemoveIcon = false,
     showActions = true
 }) => {
     const isProcessing = lesson.status === 'PROCESSING' || lesson.status === 'PENDING';
+    const [isStoppable, setIsStoppable] = useState(false);
+
+    useEffect(() => {
+        if (!isProcessing) return;
+
+        const checkStoppable = () => {
+            const createdAt = new Date(lesson.created_at).getTime();
+            const now = new Date().getTime();
+            const diffInS = (now - createdAt) / 1000;
+            setIsStoppable(diffInS < 60);
+        };
+
+        checkStoppable();
+        const interval = setInterval(checkStoppable, 1000);
+        return () => clearInterval(interval);
+    }, [lesson.created_at, isProcessing]);
 
     if (isProcessing) {
         return (
-            <div className="home-lesson-card processing-stub">
+            <div className="home-lesson-card processing-stub" onClick={onClick}>
                 <div className="lesson-thumbnail stub-thumbnail">
                     <div className="creating-lesson-banner">Creating lesson...</div>
                 </div>
-                <div className="home-lesson-info stub-info">
-                    <div className="stub-title-line"></div>
-                    <div className="stub-title-line short"></div>
+                <div className="home-lesson-info">
+                    <h3>
+                        {capitalizeFirstLetter(
+                            (lesson.you_tube_title?.trim()
+                                || lesson.tags?.lesson_theme
+                                || lesson.lesson_topic
+                                || 'Lesson') as string
+                        )}
+                    </h3>
+                    {isStoppable && (
+                        <div className="home-lesson-actions">
+                            {/* Empty div to push the stop button to the bottom position (liked button position) */}
+                            <div style={{ height: '24px' }}></div>
+                            <button
+                                className="action-btn stop-generation-btn"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onStop?.(e);
+                                }}
+                                title="Stop lesson generation"
+                            >
+                                <img src={iconStop} alt="Stop" />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         );

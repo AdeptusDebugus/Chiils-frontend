@@ -5,27 +5,41 @@ interface MultipleChoiceBlockProps {
   block: LessonBlock;
   data: any;
   index: number;
+  grammarTopics?: string[] | null;
 }
 
-const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, index }) => {
+const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, index, grammarTopics }) => {
+  const grammarBadge = grammarTopics && grammarTopics.length > 0 ? grammarTopics[0] : null;
+
   const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedItems, setSubmittedItems] = useState<Record<number, boolean>>({});
 
   const isMultiItem = Array.isArray(data.items);
   const items = isMultiItem ? data.items : [{ options: data.options, correct_answer: data.correct_answer }];
 
   const handleSelect = (itemIdx: number, option: string) => {
-    if (isSubmitted) return;
+    // If this item is already correctly answered and submitted, don't allow change
+    if (submittedItems[itemIdx] && selectedOptions[itemIdx] === items[itemIdx].correct_answer) return;
+    
     setSelectedOptions(prev => ({ ...prev, [itemIdx]: option }));
+    
+    // If the item was previously submitted, reset its submitted state to clear feedback
+    if (submittedItems[itemIdx]) {
+      setSubmittedItems(prev => ({ ...prev, [itemIdx]: false }));
+    }
   };
 
   const handleCheck = () => {
-    setIsSubmitted(true);
+    const newSubmitted: Record<number, boolean> = {};
+    items.forEach((_: any, i: number) => {
+      newSubmitted[i] = true;
+    });
+    setSubmittedItems(newSubmitted);
   };
 
   const handleReset = () => {
     setSelectedOptions({});
-    setIsSubmitted(false);
+    setSubmittedItems({});
   };
 
   return (
@@ -36,12 +50,14 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
         {block.type === 'big_picture' && <div className="exercise-badge">Listen once</div>}
         {block.type === 'vocabulary_unlock' && <div className="exercise-badge">Before watching</div>}
         {block.type === 'fact_check' && <div className="exercise-badge">Listen again</div>}
+        {block.type === 'make_the_right_choice' && grammarBadge && <div className="exercise-badge">{grammarBadge}</div>}
       </div>
       <p className="exercise-instruction">{block.static.instruction}</p>
 
       <div className="exercise-questions">
         {items.map((item: any, i: number) => {
           const selected = selectedOptions[i];
+          const isItemSubmitted = submittedItems[i];
           const isCorrect = selected === item.correct_answer;
           const isRowLayout = block.static.title?.includes('5B');
           
@@ -53,24 +69,24 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
                 </p>
               )}
               <div className="multiple-choice-options">
-                {item.options.map((option: string, optIdx: number) => {
-                  const isOptSelected = selected === option;
-                  const isOptCorrect = option === item.correct_answer;
-                  
-                  let className = "option-button";
-                  if (isOptSelected) className += " selected";
-                  if (isSubmitted && isOptSelected) {
-                    if (isOptCorrect) className += " correct";
-                    else className += " incorrect";
-                  }
+                  {item.options.map((option: string, optIdx: number) => {
+                    const isOptSelected = selected === option;
+                    const isOptCorrect = option === item.correct_answer;
+                    
+                    let className = "option-button";
+                    if (isOptSelected) className += " selected";
+                    if (isItemSubmitted && isOptSelected) {
+                      if (isOptCorrect) className += " correct";
+                      else className += " incorrect";
+                    }
 
-                  return (
-                    <button
-                      key={optIdx}
-                      className={className}
-                      onClick={() => handleSelect(i, option)}
-                      disabled={isSubmitted}
-                    >
+                    return (
+                      <button
+                        key={optIdx}
+                        className={className}
+                        onClick={() => handleSelect(i, option)}
+                        disabled={isItemSubmitted && isOptSelected && isOptCorrect}
+                      >
                       <span className="option-circle" />
                       <span className="option-text">{option}</span>
                     </button>
@@ -86,7 +102,11 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
         <button className="reset-button" onClick={handleReset}>
           <img src="/assets/lesson/refresh.svg" alt="Reset" />
         </button>
-        <button className="check-button" onClick={handleCheck} disabled={isSubmitted && Object.keys(selectedOptions).length === 0}>
+        <button 
+          className="check-button" 
+          onClick={handleCheck} 
+          disabled={Object.keys(selectedOptions).length === 0}
+        >
            <span>Check</span>
         </button>
       </div>

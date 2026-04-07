@@ -515,7 +515,12 @@
 
 .draggable-item.dragging {
   opacity: 0.5;
-  border-style: dashed;
+  border: 2px dashed var(--color-orange);
+}
+
+.matching-item.drag-over {
+  border: 2px dashed var(--color-orange);
+  background: #fff5f2;
 }
 
 .static-item {
@@ -637,11 +642,9 @@
   border-radius: 14.211px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
-.correction-item-wrapper {
-  margin-bottom: 16px;
-}
+
 
 .correction-item {
   display: flex;
@@ -672,6 +675,8 @@
   border: none;
   background: transparent;
   font-size: 15.79px;
+  padding-left: 0;
+  font-family: inherit;
   color: var(--color-text);
   outline: none;
 }
@@ -688,28 +693,44 @@
   font-size: 15.79px;
   font-weight: 400;
   padding: 0 20px;
+  width: 150px;
   height: 44px;
   white-space: nowrap;
   transition: all 0.2s ease;
   font-family: var(--font-family-heros);
 }
 
-.toggle-answer-btn:hover {
+.revealed-answer-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .revealed-answer {
-  margin-top: 10px;
-  margin-left: 20px;
-  padding: 12px 16px;
-  border: black 1px solid;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
   border-radius: 14.211px;
-  width: fit-content;
+  border: 1px solid black;
+}
+
+.item-number-hidden {
+  font-size: 15.79px;
+  color: var(--color-text);
+  visibility: hidden;
 }
 
 .revealed-answer-text {
   margin: 0;
   font-size: 15.79px;
-  font-weight: 500;
+  font-family: inherit;
+  font-weight: 400;
+}
+
+.toggle-answer-btn-placeholder {
+  width: 150px;
 }
 
 .correction-answer-box {

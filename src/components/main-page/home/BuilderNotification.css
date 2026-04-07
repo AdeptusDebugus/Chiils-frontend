@@ -1,0 +1,77 @@
+.builder-notification {
+    display: flex;
+    align-items: center;
+    background: #FFFFFF;
+    border: 1px solid #2a2b2a;
+    border-radius: 22.106px;
+    padding: 10px 20px;
+    gap: 44px;
+    position: relative;
+    max-width: fit-content;
+    animation: slide-in-top 0.3s ease;
+    z-index: 100;
+}
+
+.notification-text {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 15.79px;
+    font-weight: 400;
+    color: #000000;
+    line-height: 19.74px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.notification-text .underline {
+    text-decoration: underline;
+}
+
+.notification-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.undo-btn {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 15.79px;
+    font-weight: 400;
+    color: #000000;
+    line-height: 19.74px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.undo-btn:hover {
+    opacity: 0.7;
+}
+
+.close-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.close-icon:hover {
+    transform: scale(1.1);
+}
+
+.builder-notification.success {
+    border-color: #4CAF50;
+}
+
+.builder-notification.error {
+    border-color: #F44336;
+}
+
+@keyframes slide-in-top {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

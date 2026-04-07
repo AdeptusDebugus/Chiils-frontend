@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getFolderLessons, removeLessonFromFolder, type FolderLesson } from '../../../services/folderService.ts';
 import { type LessonLite } from '../../../services/lessonService.ts';
+import { fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import HomeLessonCard from './HomeLessonCard.tsx';
 import './FolderPopup.css';
 
@@ -52,6 +53,36 @@ const FolderPopup: React.FC<FolderPopupProps> = ({
         fetchLessons();
     }, [folderId]);
 
+    // Fetch YouTube titles for folder lessons
+    useEffect(() => {
+        const lessonsToFetch = lessons.filter(l => !l.you_tube_title && l.youtube_url);
+        if (lessonsToFetch.length === 0) return;
+
+        const fetchTitles = async () => {
+            let updated = false;
+            const newLessons = await Promise.all(lessons.map(async (l) => {
+                if (!l.you_tube_title && l.youtube_url) {
+                    try {
+                        const title = await fetchYouTubeTitle(l.youtube_url);
+                        if (title) {
+                            updated = true;
+                            return { ...l, you_tube_title: title };
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+                return l;
+            }));
+
+            if (updated) {
+                setLessons(newLessons);
+            }
+        };
+
+        fetchTitles();
+    }, [lessons]);
+
     // Handle removing lesson from this folder
     const handleRemoveFromFolder = async (lessonId: string) => {
         // Optimistic update
@@ -85,6 +116,7 @@ const FolderPopup: React.FC<FolderPopupProps> = ({
         return {
             id: liked.lesson_id,
             youtube_url: liked.youtube_url,
+            you_tube_title: liked.you_tube_title,
             lesson_topic: liked.lesson_topic,
             created_at: liked.created_at,
             tags: {
@@ -92,7 +124,7 @@ const FolderPopup: React.FC<FolderPopupProps> = ({
                 lesson_theme: liked.tags?.lesson_theme || liked.lesson_topic,
             },
             duration: '10:00',
-            status: 'ACTIVE'
+            status: (liked as any).status || 'ACTIVE'
         };
     };
 

@@ -48,30 +48,9 @@ const LessonPage: React.FC = () => {
     const iconShared = "/assets/home/shared.svg";
     const iconExternal = "/assets/home/external.svg";
 
-    const ensureYouTubeAPI = (): Promise<void> => {
-        return new Promise((resolve) => {
-            const w = window as any;
-            if (w.YT && w.YT.Player) {
-                resolve();
-                return;
-            }
-            const prev = document.getElementById('youtube-iframe-api') as HTMLScriptElement | null;
-            if (!prev) {
-                const tag = document.createElement('script');
-                tag.id = 'youtube-iframe-api';
-                tag.src = 'https://www.youtube.com/iframe_api';
-                document.body.appendChild(tag);
-            }
-            const existingCallback = w.onYouTubeIframeAPIReady;
-            w.onYouTubeIframeAPIReady = () => {
-                if (existingCallback) existingCallback();
-                resolve();
-            };
-        });
-    };
-
     const initPlayer = async (videoId: string) => {
         setIsPlayerReady(false);
+        const { ensureYouTubeAPI } = await import('../../../utils/youtube.ts');
         await ensureYouTubeAPI();
         const w = window as any;
 
@@ -316,6 +295,7 @@ const LessonPage: React.FC = () => {
                                 block={block}
                                 data={lesson.preset_data?.[block.id]}
                                 index={idx}
+                                grammarTopics={lesson.grammar_topics}
                             />
                         ))}
                     </div>

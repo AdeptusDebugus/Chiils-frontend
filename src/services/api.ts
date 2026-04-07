@@ -70,6 +70,7 @@ export interface LessonReadyResponse {
   message?: string
   is_ready?: boolean
   lesson_id?: string
+  status?: string
 }
 
 export const createLesson = async (data: CreateLessonRequest): Promise<CreateLessonResponse> => {
@@ -106,18 +107,21 @@ export const checkLessonReady = async (lessonId: string): Promise<LessonReadyRes
   try {
     console.log('Checking lesson ready status for:', lessonId)
 
-    const response = await api.get<boolean>(`/lessons/is-lesson-ready/${lessonId}`)
+    const response = await api.get<any>(`/lessons/is-lesson-ready/${lessonId}`)
 
     console.log('checkLessonReady response:', response.data)
 
-    // Бэкенд возвращает просто boolean true/false
-    const isReady = response.data === true
+    // Handle both boolean and object responses
+    const data = response.data
+    const isReady = data === true || (typeof data === 'object' && data !== null && data.is_ready === true)
+    const status = typeof data === 'object' && data !== null ? data.status : (isReady ? 'READY' : 'PROCESSING')
 
     const result: LessonReadyResponse = {
       success: true,
       is_ready: isReady,
+      status: status,
       lesson_id: lessonId,
-      message: isReady ? 'Lesson is ready' : 'Lesson is not ready'
+      message: status === 'ERROR' ? 'Lesson generation failed' : (isReady ? 'Lesson is ready' : 'Lesson is not ready')
     }
 
     console.log('checkLessonReady processed response:', result)

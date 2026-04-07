@@ -182,6 +182,18 @@
     box-shadow: 0 0 0 1px #f44336;
 }
 
+.lb-input.validating {
+    background-image: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: lb-shimmer 2s infinite;
+    cursor: wait;
+}
+
+@keyframes lb-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
 .filter-dropdown.has-error .filter-dropdown-trigger {
     border-color: #f44336;
     box-shadow: 0 0 0 1px #f44336;

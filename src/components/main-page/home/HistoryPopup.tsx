@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getHistory, type HistoryResponse, type HistoryItem } from '../../../services/lessonService.ts';
 import { useAuth } from '../../../contexts/AuthContext.tsx';
+import { fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import HomeLessonCard from './HomeLessonCard.tsx';
 import './HistoryPopup.css';
 
@@ -48,6 +49,55 @@ const HistoryPopup: React.FC<HistoryPopupProps> = ({ onClose, likedLessonIds, on
             }
         })();
     }, [user?.email, data]);
+
+    // Fetch YouTube titles for history items
+    useEffect(() => {
+        if (!data) return;
+
+        const allItems = [...(data.recent || []), ...(data.lastWeek || []), ...(data.thisMonth || [])];
+        const itemsToFetch = allItems.filter(item => {
+            const anyItem = item as any;
+            return !anyItem.you_tube_title && (anyItem.youtubeUrl || anyItem.youtube_url || anyItem.you_tube_url);
+        });
+
+        if (itemsToFetch.length === 0) return;
+
+        const fetchTitles = async () => {
+            let updated = false;
+            const updateGroup = async (group: HistoryItem[]) => {
+                return await Promise.all(group.map(async (item) => {
+                    const anyItem = item as any;
+                    const url = anyItem.youtubeUrl || anyItem.youtube_url || anyItem.you_tube_url;
+                    if (!anyItem.you_tube_title && url) {
+                        try {
+                            const title = await fetchYouTubeTitle(url);
+                            if (title) {
+                                updated = true;
+                                return { ...item, you_tube_title: title };
+                            }
+                        } catch (e) {
+                            // ignore
+                        }
+                    }
+                    return item;
+                }));
+            };
+
+            const newRecent = await updateGroup(data.recent || []);
+            const newLastWeek = await updateGroup(data.lastWeek || []);
+            const newThisMonth = await updateGroup(data.thisMonth || []);
+
+            if (updated) {
+                setData({
+                    recent: newRecent,
+                    lastWeek: newLastWeek,
+                    thisMonth: newThisMonth
+                });
+            }
+        };
+
+        fetchTitles();
+    }, [data]);
 
     // Scroll Handler (scrolls all rows simultaneously)
     const handleScroll = (direction: 'left' | 'right') => {
@@ -112,9 +162,10 @@ const HistoryPopup: React.FC<HistoryPopupProps> = ({ onClose, likedLessonIds, on
                         const lessonLite: any = {
                             id: id,
                             youtube_url: anyItem.youtubeUrl || anyItem.youtube_url || anyItem.you_tube_url || anyItem.url,
+                            you_tube_title: anyItem.you_tube_title,
                             lesson_topic: topic,
                             created_at: anyItem.createdAt || anyItem.created_at,
-                            status: 'ACTIVE',
+                            status: anyItem.status || 'ACTIVE',
                             tags: {
                                 lesson_theme: topic,
                                 ...(anyItem.tags && !Array.isArray(anyItem.tags) ? anyItem.tags : {})

@@ -1,0 +1,89 @@
+.lesson-error-notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(2px);
+}
+
+.lesson-error-notification-card {
+    background: white;
+    width: 620px;
+    height: 217px;
+    border-radius: 22px;
+    box-shadow: 0px 3px 12px 3px rgba(0, 0, 0, 0.2), 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 40px 25px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.lesson-error-notification-card h2 {
+    font-family: 'TeX Gyre Heros', 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: #000;
+    margin: 0;
+    text-align: center;
+}
+
+.lesson-error-notification-card p {
+    font-family: 'TeX Gyre Heros', 'Inter', sans-serif;
+    font-size: 20px;
+    line-height: 1.25;
+    color: #000;
+    margin: 0;
+    text-align: center;
+    max-width: 100%;
+}
+
+.lesson-error-notification-card .ok-button {
+    align-self: flex-end;
+    background: white;
+    border: 1px solid #2a2b2a;
+    border-radius: 14px;
+    width: 145px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    margin-top: 10px;
+}
+
+.lesson-error-notification-card .ok-button span {
+    font-family: 'TeX Gyre Heros', 'Inter', sans-serif;
+    font-size: 15.8px;
+    color: #2a2b2a;
+}
+
+.lesson-error-notification-card .ok-button:hover {
+    background-color: #2a2b2a;
+}
+
+.lesson-error-notification-card .ok-button:hover span {
+    color: white;
+}
+
+@media (max-width: 650px) {
+    .lesson-error-notification-card {
+        width: 90%;
+        height: auto;
+        padding: 20px;
+    }
+    
+    .lesson-error-notification-card p {
+        font-size: 18px;
+        margin: 20px 0;
+    }
+}

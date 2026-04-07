@@ -7,7 +7,7 @@ import {
     LANGUAGES, CEFR_LEVELS, PRESETS, GRAMMAR_TOPICS_BY_LEVEL,
     type CefrLevel
 } from '../../../utils/filters.ts';
-import { extractYouTubeId } from '../../../utils/youtube.ts';
+import { extractYouTubeId, fetchYouTubeDuration } from '../../../utils/youtube.ts';
 
 interface LessonBuilderPopupProps {
     isOpen: boolean;
@@ -28,6 +28,8 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
     const [selectedPreset, setSelectedPreset] = useState<string>();
     const [selectedGrammar, setSelectedGrammar] = useState<string[]>([]);
     const [selectedSegmentIndex, setSelectedSegmentIndex] = useState<number | undefined>(undefined);
+    const [duration, setDuration] = useState<number | null>(null);
+    const [isValidatingLink, setIsValidatingLink] = useState(false);
 
     // UI State
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -42,6 +44,28 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
             setEmail(user.email || '');
         }
     }, [isOpen, user]);
+
+    // Fetch video duration and validate
+    useEffect(() => {
+        const videoId = extractYouTubeId(youtubeLink);
+        if (videoId) {
+            setIsValidatingLink(true);
+            fetchYouTubeDuration(videoId).then(d => {
+                setDuration(d);
+                setIsValidatingLink(false);
+                if (d && d > 3600) { // 60 minutes
+                    setErrors(prev => ({ ...prev, link: true }));
+                } else if (errors.link) {
+                    setErrors(prev => ({ ...prev, link: false }));
+                }
+            }).catch(() => {
+                setDuration(null);
+                setIsValidatingLink(false);
+            });
+        } else {
+            setDuration(null);
+        }
+    }, [youtubeLink]);
 
     // Helpers
     const toggleDropdown = (name: string) => {
@@ -60,22 +84,42 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
         setSelectedGrammar([]);
     };
 
+    useEffect(() => {
+        setSelectedSegmentIndex(undefined);
+    }, [duration]);
+
     const handlePresetToggle = (preset: string) => {
         setSelectedPreset(preset);
     };
 
     const handleGrammarToggle = (topic: string) => {
         if (errors['grammar']) setErrors(prevErrors => ({ ...prevErrors, grammar: false }));
-        setSelectedGrammar([topic]);
-        setOpenDropdown(null);
+        
+        if (selectedGrammar.includes(topic)) {
+            setSelectedGrammar([]);
+        } else {
+            setSelectedGrammar([topic]);
+        }
     };
 
-    const segments = [
-        { label: '0:00 – 0:15', start: 0, end: 15 },
-        { label: '0:15 – 0:30', start: 15, end: 30 },
-        { label: '0:30 – 0:45', start: 30, end: 45 },
-        { label: '0:45 – 1:00', start: 45, end: 60 }
-    ];
+    const segments = useMemo(() => {
+        if (!duration) return [];
+        const segs = [];
+        const fifteenMins = 15 * 60; // 900 seconds
+        for (let i = 0; i < duration; i += fifteenMins) {
+            const start = i;
+            const end = Math.min(i + fifteenMins, duration);
+            
+            const formatMin = (s: number) => Math.floor(s / 60);
+            
+            segs.push({
+                label: `${formatMin(start)} – ${formatMin(end)} min`,
+                start,
+                end
+            });
+        }
+        return segs;
+    }, [duration]);
 
     // Available Grammar
     const availableGrammarTopics = useMemo(() => {
@@ -129,14 +173,22 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                 languageLevel: selectedCefrLevels[0],
                 grammarTopics: selectedGrammar,
                 preset: selectedPreset === 'Claudia (classic, guided, balanced)' ? 'claudia' : (selectedPreset || ''),
-                segmentStartMin: selectedSegment ? selectedSegment.start : null,
-                segmentEndMin: selectedSegment ? selectedSegment.end : null
+                segmentStartMin: selectedSegment ? selectedSegment.start /60 : null,
+                segmentEndMin: selectedSegment ? selectedSegment.end / 60 : null
             };
 
-            await createLesson(requestData as any);
+            const response = await createLesson(requestData as any);
+            const lessonId = response.lesson_id;
 
             // Signal refresh for HomePage
             window.dispatchEvent(new CustomEvent('lessonCreated'));
+            // Signal immediate building status for notification (60s duration with Undo)
+            window.dispatchEvent(new CustomEvent('lessonBuildingStarted', { 
+                detail: { 
+                    name: name || youtubeLink || 'New Lesson',
+                    lessonId: lessonId
+                } 
+            }));
 
             onClose();
             // detailed reset is not needed because the component unmounts on close
@@ -302,8 +354,8 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                 <div className="lb-field-container">
                                     <p className="lb-helper-text">Max length: 60 minutes</p>
                                     <input
-                                        className={`lb-input ${errors.link ? 'has-error' : ''}`}
-                                        value={errors.link ? "Please enter a valid YouTube link" : youtubeLink}
+                                        className={`lb-input ${errors.link ? 'has-error' : ''} ${isValidatingLink ? 'validating' : ''}`}
+                                        value={errors.link && duration && duration > 3600 ? "Video is too long (max 60 min)" : (errors.link ? "Please enter a valid YouTube link" : youtubeLink)}
                                         onChange={e => {
                                             setYoutubeLink(e.target.value);
                                             if (errors.link) {
@@ -316,7 +368,8 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                                 setErrors(prev => ({ ...prev, link: false }));
                                             }
                                         }}
-                                        placeholder="Paste Youtube link"
+                                        disabled={isValidatingLink}
+                                        placeholder={isValidatingLink ? "Checking video length..." : "Paste Youtube link"}
                                         style={errors.link ? { color: '#f44336' } : {}}
                                     />
                                 </div>

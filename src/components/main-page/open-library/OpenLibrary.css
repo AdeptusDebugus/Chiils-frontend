@@ -53,8 +53,11 @@
   gap: 20px;
 }
 
-
-/* lesson-builder-button styles removed - now in LessonBuilderButton.css */
+.header-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
 
 
 .open-library-header h1 {

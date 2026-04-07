@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLikedLessons, unlikeLesson, type LikedLessonLite, type LessonLite } from '../../../services/lessonService.ts';
+import { fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import HomeLessonCard from './HomeLessonCard.tsx';
 import './FavoritesPopup.css';
 
@@ -36,6 +37,36 @@ const FavoritesPopup: React.FC<FavoritesPopupProps> = ({ onClose, onAddToFolder 
         }
         fetchFavorites();
     }, []);
+
+    // Fetch YouTube titles for favorite lessons
+    useEffect(() => {
+        const lessonsToFetch = lessons.filter(l => !l.you_tube_title && l.youtube_url);
+        if (lessonsToFetch.length === 0) return;
+
+        const fetchTitles = async () => {
+            let updated = false;
+            const newLessons = await Promise.all(lessons.map(async (l) => {
+                if (!l.you_tube_title && l.youtube_url) {
+                    try {
+                        const title = await fetchYouTubeTitle(l.youtube_url);
+                        if (title) {
+                            updated = true;
+                            return { ...l, you_tube_title: title };
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+                return l;
+            }));
+
+            if (updated) {
+                setLessons(newLessons);
+            }
+        };
+
+        fetchTitles();
+    }, [lessons]);
 
     // Handle Unliking within the popup
     const handleUnlike = async (lessonId: string) => {
@@ -76,7 +107,7 @@ const FavoritesPopup: React.FC<FavoritesPopupProps> = ({ onClose, onAddToFolder 
                 lesson_theme: liked.tags?.lesson_theme || liked.lesson_topic || '',
             },
             duration: '10:00',
-            status: 'ACTIVE'
+            status: (liked as any).status || 'ACTIVE'
         };
     };
 

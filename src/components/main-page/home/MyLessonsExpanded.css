@@ -9,7 +9,7 @@
     /* Fill remaining width */
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
+    z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -181,6 +181,8 @@
     overflow-y: auto;
     padding-right: 8px;
     /* space for scrollbar */
+    padding-bottom: 456px;
+    /* 356px footer + 100px gap */
 }
 
 /* ... rest of grid styles ... */

@@ -1,7 +1,7 @@
 // src/components/OpenLibrary.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLessonsLite, type LessonLite } from '../../../services/lessonService.ts';
+import { getLessonsLite, type LessonLite, deleteLesson } from '../../../services/lessonService.ts';
 import { useAuth } from '../../../contexts/AuthContext.tsx';
 import './OpenLibrary.css';
 import { extractYouTubeId, fetchYouTubeTitle } from '../../../utils/youtube.ts';
@@ -15,6 +15,8 @@ import {
 import { FilterDropdown, FilterPill } from '../FilterComponents.tsx';
 import LessonBuilderButton from '../lesson-builder/LessonBuilderButton.tsx';
 import { useLessonBuilder } from "../../../contexts/LessonBuilderContext.tsx";
+import BuilderNotification from '../home/BuilderNotification.tsx';
+import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 
 const OpenLibrary: React.FC = () => {
 
@@ -42,6 +44,7 @@ const OpenLibrary: React.FC = () => {
     const [selectedCefrLevels, setSelectedCefrLevels] = useState<string[]>([]);
     const [selectedGrammar, setSelectedGrammar] = useState<string[]>([]);
     const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+    const [notification, setNotification] = useState<{ message: string, type: 'success' | 'info' | 'error', lessonId?: string } | null>(null);
 
     // Imports from utils (simulated inside component for tool use compliance, but in real code strict imports)
     // Actually, I should import them at the top. I will add imports in a separate edit or use fully qualified if I can? 
@@ -213,6 +216,66 @@ const OpenLibrary: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        const handleLessonCreated = () => {
+            (async () => {
+                try {
+                    const data = await getLessonsLite({ page: 0, size: 24, sort: '-createdAt' });
+                    setLessons(data ?? []);
+                } catch (e) {
+                    console.error(e);
+                }
+            })();
+        };
+
+        const handleBuildingStarted = (e: any) => {
+            const lessonName = e.detail?.name || 'New Lesson';
+            const lessonId = e.detail?.lessonId;
+            setNotification({
+                message: `Building lesson "${lessonName}"...`,
+                type: 'info',
+                lessonId
+            });
+            // Building notification stays for 60 seconds
+            setTimeout(() => setNotification(null), 60000);
+        };
+
+        window.addEventListener('lessonCreated', handleLessonCreated);
+        window.addEventListener('lessonBuildingStarted', handleBuildingStarted);
+        return () => {
+            window.removeEventListener('lessonCreated', handleLessonCreated);
+            window.removeEventListener('lessonBuildingStarted', handleBuildingStarted);
+        };
+    }, []);
+
+    // Monitoring listener
+    useEffect(() => {
+        const unsubscribe = globalLessonMonitoring.subscribe((lessonId, lessonName) => {
+            // Refresh first page
+            (async () => {
+                try {
+                    const data = await getLessonsLite({ page: 0, size: 24, sort: '-createdAt' });
+                    setLessons(data ?? []);
+
+                    // Find if it failed or successed
+                    const lesson = data.find(l => l.id === lessonId);
+                    const isError = lesson?.status === 'ERROR';
+
+                    setNotification({
+                        message: isError
+                            ? `Failed to create lesson "${lessonName || 'Untitled'}".`
+                            : `Lesson "${lessonName || 'Untitled'}" is ready!`,
+                        type: isError ? 'error' : 'success'
+                    });
+                    setTimeout(() => setNotification(null), 10000);
+                } catch (e) {
+                    console.error('Failed to refresh data after monitoring update', e);
+                }
+            })();
+        });
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
         const missing = lessons.filter(l => !l.you_tube_title && Boolean(l.youtube_url));
         if (missing.length === 0) return;
 
@@ -300,7 +363,30 @@ const OpenLibrary: React.FC = () => {
                         All community-created lessons in one place — use tags to find what you need just in a few clicks.
                     </p>
                 </div>
-                {user?.role !== 'STUDENT' && <LessonBuilderButton />}
+                <div className="header-controls">
+                    {notification && (
+                        <BuilderNotification
+                            message={notification.message}
+                            type={notification.type}
+                            onClose={() => setNotification(null)}
+                            onUndo={() => {
+                                if (notification.lessonId) {
+                                    (async () => {
+                                        try {
+                                            await deleteLesson(notification.lessonId!);
+                                            const data = await getLessonsLite({ page: 0, size: 24, sort: '-createdAt' });
+                                            setLessons(data ?? []);
+                                        } catch (e) {
+                                            console.error('Failed to undo lesson creation', e);
+                                        }
+                                    })();
+                                }
+                                setNotification(null);
+                            }}
+                        />
+                    )}
+                    {user?.role !== 'STUDENT' && <LessonBuilderButton />}
+                </div>
             </div>
 
             <div className="filters-section">

@@ -14,6 +14,7 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
   const [orderedMeanings, setOrderedMeanings] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   useEffect(() => {
     // Shuffle meanings
@@ -32,16 +33,28 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
     e.dataTransfer.dropEffect = "move";
   };
 
+  const handleDragEnter = (e: React.DragEvent, idx: number) => {
+    e.preventDefault();
+    if (isSubmitted) return;
+    setDragOverIndex(idx);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverIndex(null);
+  };
+
   const handleDrop = (e: React.DragEvent, targetIdx: number) => {
     e.preventDefault();
+    setDragOverIndex(null);
     if (isSubmitted || draggedIndex === null || draggedIndex === targetIdx) return;
 
     const newOrder = [...orderedMeanings];
     const draggedItem = newOrder[draggedIndex];
+    const targetItem = newOrder[targetIdx];
     
-    // Remove from old position and insert at new position
-    newOrder.splice(draggedIndex, 1);
-    newOrder.splice(targetIdx, 0, draggedItem);
+    newOrder[targetIdx] = draggedItem;
+    newOrder[draggedIndex] = targetItem;
     
     setOrderedMeanings(newOrder);
     setDraggedIndex(null);
@@ -98,6 +111,7 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
               className += isCorrect ? " correct" : " incorrect";
             }
             if (draggedIndex === i) className += " dragging";
+            if (dragOverIndex === i && draggedIndex !== i) className += " drag-over";
 
             return (
               <div
@@ -106,6 +120,8 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
                 draggable={!isSubmitted}
                 onDragStart={(e) => handleDragStart(e, i)}
                 onDragOver={handleDragOver}
+                onDragEnter={(e) => handleDragEnter(e, i)}
+                onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, i)}
               >
                 {meaning}
