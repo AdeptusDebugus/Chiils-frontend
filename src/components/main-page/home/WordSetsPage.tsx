@@ -380,7 +380,6 @@ const WordSetsPage: React.FC = () => {
                                 </div>
                                 <span className="progress">{currentCardIndex + 1} / {activeSetWords.length}</span>
                                 <div className="action-group">
-                                    <button><img src={iconPlay} alt="Play" /></button>
                                     <button onClick={handleShuffle}><img src={iconShuffle} alt="Shuffle" /></button>
                                 </div>
                             </div>
@@ -481,15 +480,23 @@ const WordSetsPage: React.FC = () => {
                     </div>
 
                     <div className="terms-list">
-                        {isManageStudentsModalOpen && <SharedToSidebar key={studentsRefreshKey} />}
                         {isWordsLoading ? (
                             <div className="loading-state">Loading...</div>
                         ) : activeSetWords.map((word, index) => (
                             <div
                                 key={word.id}
-                                className={`vocab-sidebar-card ${currentCardIndex === index ? 'active' : ''}`}
-                                onClick={() => handleTermClick(index)}
+                                className={index === 0 ? 'first-vocab-card-anchor' : undefined}
                             >
+                                {index === 0 && isManageStudentsModalOpen && (
+                                    <SharedToSidebar
+                                        key={studentsRefreshKey}
+                                        variant="popup"
+                                    />
+                                )}
+                                <div
+                                    className={`vocab-sidebar-card ${currentCardIndex === index ? 'active' : ''}`}
+                                    onClick={() => handleTermClick(index)}
+                                >
                                 <div className="vocab-sidebar-content">
                                     <h3>{word.term} — {word.translation}</h3>
                                     <div className="time-code">
@@ -510,6 +517,7 @@ const WordSetsPage: React.FC = () => {
                                     {word.another_example && <p className="example">{word.another_example}</p>}
                                 </div>
                                 <div className="color-indicator" />
+                                </div>
                             </div>
                         ))}
                     </div>

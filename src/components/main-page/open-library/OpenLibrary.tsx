@@ -17,6 +17,7 @@ import LessonBuilderButton from '../lesson-builder/LessonBuilderButton.tsx';
 import { useLessonBuilder } from "../../../contexts/LessonBuilderContext.tsx";
 import BuilderNotification from '../home/BuilderNotification.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
+import NoResultsNotification from '../../common/NoResultsNotification.tsx';
 
 const OpenLibrary: React.FC = () => {
 
@@ -32,6 +33,7 @@ const OpenLibrary: React.FC = () => {
     const getLanguageLevel = (l: LessonLite): string => l.tags?.language_level || 'B1';
     const getGrammarTopics = (l: LessonLite): string[] => l.tags?.grammar_topics || [];
     const getTopics = (l: LessonLite): string[] => l.tags?.lexical_fields || [];
+    const normalizeFilterValue = (value: string): string => value.trim().toLowerCase();
 
     // Derived Grammar Options
     // Note: We need to use selectedCefrLevels from state, but state is defined below. 
@@ -164,17 +166,17 @@ const OpenLibrary: React.FC = () => {
 
             // Grammar
             if (selectedGrammar.length > 0) {
-                const lessonGrammar = filteredLesson.tags?.grammar_topics || [];
+                const lessonGrammar = getGrammarTopics(filteredLesson).map(normalizeFilterValue);
                 // If lesson has ANY of the selected grammar topics? Or ALL?
                 // Typically 'any' is better for filters unless strict.
-                const has = selectedGrammar.some(g => lessonGrammar.includes(g));
+                const has = selectedGrammar.some(g => lessonGrammar.includes(normalizeFilterValue(g)));
                 if (!has) return false;
             }
 
             // Topics
             if (selectedTopics.length > 0) {
-                const lessonTopics = getTopics(filteredLesson);
-                const has = selectedTopics.some(t => lessonTopics.includes(t));
+                const lessonTopics = getTopics(filteredLesson).map(normalizeFilterValue);
+                const has = selectedTopics.some(t => lessonTopics.includes(normalizeFilterValue(t)));
                 if (!has) return false;
             }
 
@@ -589,7 +591,7 @@ const OpenLibrary: React.FC = () => {
 
                             {filteredLessons.length === 0 && (
                                 <div className="no-results">
-                                    <p>Seems like nothing matches your filters. Try adjusting them.</p>
+                                    <NoResultsNotification />
                                 </div>
                             )}
                         </>

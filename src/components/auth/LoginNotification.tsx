@@ -20,7 +20,7 @@ const LoginNotification: React.FC = () => {
 
     return (
         <div className="login-notification">
-            <span className="notification-text">Student? Use the email you gave your teacher.</span>
+            <span className="notification-text-login">Student? Use the email you gave your teacher.</span>
             <button onClick={handleClose} className="notification-close-btn">
                 <img src="/assets/home/close-circle.svg" alt="Close" />
             </button>

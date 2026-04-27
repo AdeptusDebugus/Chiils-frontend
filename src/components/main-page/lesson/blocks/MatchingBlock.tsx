@@ -5,9 +5,10 @@ interface MatchingBlockProps {
   block: LessonBlock;
   data: any;
   index: number;
+  previewMode?: boolean;
 }
 
-const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => {
+const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index, previewMode = false }) => {
   const { terms, meanings, answer_pairs } = data;
   
   // Initialize orderedMeanings with shuffled meanings on mount
@@ -23,19 +24,20 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
   }, [meanings]);
 
   const handleDragStart = (e: React.DragEvent, idx: number) => {
-    if (isSubmitted) return;
+    if (previewMode || isSubmitted) return;
     setDraggedIndex(idx);
     e.dataTransfer.effectAllowed = "move";
   };
 
   const handleDragOver = (e: React.DragEvent) => {
+    if (previewMode) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
   };
 
   const handleDragEnter = (e: React.DragEvent, idx: number) => {
     e.preventDefault();
-    if (isSubmitted) return;
+    if (previewMode || isSubmitted) return;
     setDragOverIndex(idx);
   };
 
@@ -47,7 +49,7 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
   const handleDrop = (e: React.DragEvent, targetIdx: number) => {
     e.preventDefault();
     setDragOverIndex(null);
-    if (isSubmitted || draggedIndex === null || draggedIndex === targetIdx) return;
+    if (previewMode || isSubmitted || draggedIndex === null || draggedIndex === targetIdx) return;
 
     const newOrder = [...orderedMeanings];
     const draggedItem = newOrder[draggedIndex];
@@ -61,10 +63,12 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
   };
 
   const handleCheck = () => {
+    if (previewMode) return;
     setIsSubmitted(true);
   };
 
   const handleReset = () => {
+    if (previewMode) return;
     setIsSubmitted(false);
     const shuffled = [...meanings].sort(() => Math.random() - 0.5);
     setOrderedMeanings(shuffled);
@@ -117,7 +121,7 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
               <div
                 key={i}
                 className={className}
-                draggable={!isSubmitted}
+                draggable={!previewMode && !isSubmitted}
                 onDragStart={(e) => handleDragStart(e, i)}
                 onDragOver={handleDragOver}
                 onDragEnter={(e) => handleDragEnter(e, i)}
@@ -132,10 +136,10 @@ const MatchingBlock: React.FC<MatchingBlockProps> = ({ block, data, index }) => 
       </div>
 
       <div className="exercise-actions">
-        <button className="reset-button" onClick={handleReset}>
+        <button className="reset-button" onClick={handleReset} disabled={previewMode}>
           <img src="/assets/lesson/refresh.svg" alt="Reset" />
         </button>
-        <button className="check-button" onClick={handleCheck} disabled={isSubmitted}>
+        <button className="check-button" onClick={handleCheck} disabled={previewMode || isSubmitted}>
            <span>Check</span>
         </button>
       </div>

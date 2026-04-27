@@ -12,22 +12,23 @@ interface BlockRendererProps {
   data: any;
   index: number;
   grammarTopics?: string[] | null;
+  previewMode?: boolean;
 }
 
-const BlockRenderer: React.FC<BlockRendererProps> = ({ block, data, index, grammarTopics }) => {
+const BlockRenderer: React.FC<BlockRendererProps> = ({ block, data, index, grammarTopics, previewMode = false }) => {
   if (!data) return null;
 
   switch (block.interaction_type) {
     case 'multiple_choice':
-      return <MultipleChoiceBlock block={block} data={data} index={index} grammarTopics={grammarTopics} />;
+      return <MultipleChoiceBlock block={block} data={data} index={index} grammarTopics={grammarTopics} previewMode={previewMode} />;
     case 'matching':
-      return <MatchingBlock block={block} data={data} index={index} />;
+      return <MatchingBlock block={block} data={data} index={index} previewMode={previewMode} />;
     case 'true_false':
-      return <TrueFalseBlock block={block} data={data} index={index} />;
+      return <TrueFalseBlock block={block} data={data} index={index} previewMode={previewMode} />;
     case 'explanation':
       return <ExplanationBlock block={block} data={data} index={index} grammarTopics={grammarTopics} />;
     case 'correction':
-      return <CorrectionBlock block={block} data={data} index={index} grammarTopics={grammarTopics} />;
+      return <CorrectionBlock block={block} data={data} index={index} grammarTopics={grammarTopics} previewMode={previewMode} />;
     case 'static':
       return <StaticBlock block={block} data={data} index={index} />;
     default:

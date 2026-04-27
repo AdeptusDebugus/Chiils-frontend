@@ -217,6 +217,7 @@
     padding: 10px 20px;
     border: 1px solid #FFFFFF;
     border-radius: 22px;
+    gap: 30px;
     backdrop-filter: blur(10px);
     z-index: 100;
     max-width: 501px;
@@ -254,4 +255,18 @@
     height: 24px;
     filter: brightness(0) invert(1);
     /* Make sure icon is white if it's black */
+}
+
+.notification-text-login {
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 15.79px;
+    font-weight: 400;
+    color: white;
+    line-height: 19.74px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.notification-text-login .underline {
+    text-decoration: underline;
 }

@@ -36,7 +36,8 @@ const LessonPage: React.FC = () => {
     const playerRef = useRef<any>(null);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
 
-    const { user } = useAuth();
+    const { user, isAuthenticated } = useAuth();
+    const isPreviewMode = !isAuthenticated || user?.plan == null;
     const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
     const [isManageStudentsModalOpen, setIsManageStudentsModalOpen] = useState(false);
     const [studentsRefreshKey, setStudentsRefreshKey] = useState(0);
@@ -143,11 +144,11 @@ const LessonPage: React.FC = () => {
     }, [id]);
 
     useEffect(() => {
-        if (id) {
+        if (id && !isPreviewMode) {
             openLesson(id).catch(err => console.error('Failed to track lesson open', err));
             addLessonWords(id).catch(err => console.error('Failed to add lesson words', err));
         }
-    }, [id]);
+    }, [id, isPreviewMode]);
 
     useEffect(() => {
         if (!lesson) return;
@@ -239,7 +240,7 @@ const LessonPage: React.FC = () => {
     const presetBlocks = lesson.preset_name ? PRESETS[lesson.preset_name] : [];
 
     return (
-        <div className="lesson-page">
+        <div className={`lesson-page ${isPreviewMode ? 'preview-mode' : ''}`}>
             <div className="page-title">
                 <h1 className="page-title-text">{displayTitle}</h1>
             </div>
@@ -259,13 +260,26 @@ const LessonPage: React.FC = () => {
                     <div className="sidebar-actions">
                         {user?.role !== 'STUDENT' && (
                             <>
-                                <button onClick={() => setIsAddStudentModalOpen(true)} title="Add Student">
+                                <button
+                                    onClick={() => {
+                                        if (!isPreviewMode) {
+                                            setIsAddStudentModalOpen(true);
+                                        }
+                                    }}
+                                    title="Add Student"
+                                    disabled={isPreviewMode}
+                                >
                                     <img src={iconExternal} alt="Open" />
                                 </button>
                                 <button
-                                    onClick={() => setIsManageStudentsModalOpen(!isManageStudentsModalOpen)}
+                                    onClick={() => {
+                                        if (!isPreviewMode) {
+                                            setIsManageStudentsModalOpen(!isManageStudentsModalOpen);
+                                        }
+                                    }}
                                     className={isManageStudentsModalOpen ? 'active' : ''}
                                     title="Manage Students"
+                                    disabled={isPreviewMode}
                                 >
                                     <img src={iconShared} alt="Manage Students" />
                                 </button>
@@ -296,6 +310,7 @@ const LessonPage: React.FC = () => {
                                 data={lesson.preset_data?.[block.id]}
                                 index={idx}
                                 grammarTopics={lesson.grammar_topics}
+                                previewMode={isPreviewMode}
                             />
                         ))}
                     </div>

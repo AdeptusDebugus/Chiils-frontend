@@ -6,9 +6,10 @@ interface CorrectionBlockProps {
   data: any;
   index: number;
   grammarTopics?: string[] | null;
+  previewMode?: boolean;
 }
 
-const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index, grammarTopics }) => {
+const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index, grammarTopics, previewMode = false }) => {
   const grammarBadge = grammarTopics && grammarTopics.length > 0 ? grammarTopics[0] : null;
 
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
@@ -17,10 +18,12 @@ const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index, g
   const items = data.items || [];
 
   const handleInputChange = (idx: number, val: string) => {
+    if (previewMode) return;
     setUserAnswers(prev => ({ ...prev, [idx]: val }));
   };
 
   const toggleAnswer = (idx: number) => {
+    if (previewMode) return;
     setShowAnswers(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
@@ -51,11 +54,13 @@ const CorrectionBlock: React.FC<CorrectionBlockProps> = ({ block, data, index, g
                     defaultValue={item.incorrect}
                     onChange={(e) => handleInputChange(i, e.target.value)}
                     className="correction-input"
+                    disabled={previewMode}
                   />
                 </div>
                 <button 
                   className="toggle-answer-btn" 
                   onClick={() => toggleAnswer(i)}
+                  disabled={previewMode}
                 >
                   {isAnswerVisible ? (
                     <>

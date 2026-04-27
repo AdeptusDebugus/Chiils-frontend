@@ -4,6 +4,7 @@ import { getFolderLessons, removeLessonFromFolder, type FolderLesson } from '../
 import { type LessonLite } from '../../../services/lessonService.ts';
 import { fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import HomeLessonCard from './HomeLessonCard.tsx';
+import NoResultsNotification from '../../common/NoResultsNotification.tsx';
 import './FolderPopup.css';
 
 // Assets
@@ -163,7 +164,7 @@ const FolderPopup: React.FC<FolderPopupProps> = ({
                     ) : error ? (
                         <div className="error-state">{error}</div>
                     ) : lessons.length === 0 ? (
-                        <div className="folder-empty-state">No lessons in this folder yet.</div>
+                        <NoResultsNotification />
                     ) : (
                         <div className="folder-grid-container" ref={gridRef}>
                             <div className="folder-scroll-content">

@@ -11,6 +11,7 @@ import {
 import { FilterDropdown, FilterPill } from '../FilterComponents.tsx';
 import { fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import HomeLessonCard from './HomeLessonCard.tsx';
+import NoResultsNotification from '../../common/NoResultsNotification.tsx';
 import './MyLessonsExpanded.css';
 
 // Assets
@@ -395,7 +396,7 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
                         {loading ? (
                             <div>Loading...</div>
                         ) : filteredLessons.length === 0 ? (
-                            <div>No lessons found.</div>
+                            <NoResultsNotification />
                         ) : (
                             <div className="popup-lessons-grid" ref={gridRef}>
                                 {filteredLessons.map(lesson => (

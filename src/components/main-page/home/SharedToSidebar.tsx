@@ -8,9 +8,15 @@ interface SharedToSidebarProps {
     lessonId?: string;
     wordSetId?: string;
     refreshKey?: number;
+    variant?: 'default' | 'popup';
 }
 
-const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId, refreshKey }) => {
+const SharedToSidebar: React.FC<SharedToSidebarProps> = ({
+    lessonId,
+    wordSetId,
+    refreshKey,
+    variant = 'default'
+}) => {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -55,11 +61,11 @@ const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId, 
     if (error) return <div className="shared-sidebar-placeholder error">{error}</div>;
 
     return (
-        <div className="shared-to-container">
+        <div className={`shared-to-container ${variant === 'popup' ? 'popup' : ''}`}>
             <h3 className="shared-to-title">Shared to</h3>
             <div className="students-scroll-list">
                 {students.length === 0 ? (
-                    <div className="empty-state">No students added yet.</div>
+                    <div className="empty-shared">No students added yet.</div>
                 ) : (
                     students.map(student => (
                         <div key={student.id} className="student-row">
@@ -88,6 +94,15 @@ const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId, 
                     width: 100%;
                     margin-bottom: 12px;
                 }
+                .shared-to-container.popup {
+                    position: absolute;
+                    top: -5px;
+                    right: -5px;
+                    width: min(320px, calc(100vw - 64px));
+                    margin-bottom: 0;
+                    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.16);
+                    z-index: 20;
+                }
                 .shared-to-title {
                     font-family: 'TeX Gyre Heros', sans-serif;
                     font-size: 15px;
@@ -100,6 +115,8 @@ const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId, 
                     display: flex;
                     flex-direction: column;
                     gap: 12px;
+                    max-height: 240px;
+                    overflow-y: auto;
                 }
                 .student-row {
                     display: flex;
@@ -146,7 +163,7 @@ const SharedToSidebar: React.FC<SharedToSidebarProps> = ({ lessonId, wordSetId, 
                 .shared-sidebar-placeholder.error {
                     color: #D32F2F;
                 }
-                .empty-state {
+                .empty-shared {
                     font-size: 13px;
                     color: #999999;
                     font-style: italic;

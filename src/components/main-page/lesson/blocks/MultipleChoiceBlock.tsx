@@ -6,9 +6,10 @@ interface MultipleChoiceBlockProps {
   data: any;
   index: number;
   grammarTopics?: string[] | null;
+  previewMode?: boolean;
 }
 
-const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, index, grammarTopics }) => {
+const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, index, grammarTopics, previewMode = false }) => {
   const grammarBadge = grammarTopics && grammarTopics.length > 0 ? grammarTopics[0] : null;
 
   const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
@@ -18,6 +19,7 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
   const items = isMultiItem ? data.items : [{ options: data.options, correct_answer: data.correct_answer }];
 
   const handleSelect = (itemIdx: number, option: string) => {
+    if (previewMode) return;
     // If this item is already correctly answered and submitted, don't allow change
     if (submittedItems[itemIdx] && selectedOptions[itemIdx] === items[itemIdx].correct_answer) return;
     
@@ -30,6 +32,7 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
   };
 
   const handleCheck = () => {
+    if (previewMode) return;
     const newSubmitted: Record<number, boolean> = {};
     items.forEach((_: any, i: number) => {
       newSubmitted[i] = true;
@@ -38,6 +41,7 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
   };
 
   const handleReset = () => {
+    if (previewMode) return;
     setSelectedOptions({});
     setSubmittedItems({});
   };
@@ -85,7 +89,7 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
                         key={optIdx}
                         className={className}
                         onClick={() => handleSelect(i, option)}
-                        disabled={isItemSubmitted && isOptSelected && isOptCorrect}
+                        disabled={previewMode || (isItemSubmitted && isOptSelected && isOptCorrect)}
                       >
                       <span className="option-circle" />
                       <span className="option-text">{option}</span>
@@ -99,13 +103,13 @@ const MultipleChoiceBlock: React.FC<MultipleChoiceBlockProps> = ({ block, data, 
       </div>
 
       <div className="exercise-actions">
-        <button className="reset-button" onClick={handleReset}>
+        <button className="reset-button" onClick={handleReset} disabled={previewMode}>
           <img src="/assets/lesson/refresh.svg" alt="Reset" />
         </button>
         <button 
           className="check-button" 
           onClick={handleCheck} 
-          disabled={Object.keys(selectedOptions).length === 0}
+          disabled={previewMode || Object.keys(selectedOptions).length === 0}
         >
            <span>Check</span>
         </button>

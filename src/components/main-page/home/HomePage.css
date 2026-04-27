@@ -88,7 +88,7 @@
   display: grid;
   grid-template-columns: 1fr 451px;
   /* Updated from 280px to 451px per Figma */
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   min-height: 100vh;
   background: #FFFFFF;
   font-family: 'TeX Gyre Heros', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
@@ -119,6 +119,16 @@
   line-height: 1.2;
   color: #222222;
   margin: 0;
+}
+
+.teacher-homepage-layout .dashboard-header {
+  grid-column: 1 / -1;
+  padding: 32px 24px 0 42px;
+  margin-bottom: 0;
+}
+
+.teacher-homepage-layout .dashboard-main-content {
+  padding-top: 32px;
 }
 
 .header-controls {
@@ -577,8 +587,7 @@
   border: 1px solid #E9E9E7;
   padding: 36px 24px;
 
-  /*Дизейбл элемента*/
-  opacity: 0.5;
+
   pointer-events: none;
   user-select: none;
 }
@@ -597,17 +606,20 @@
 
 .students-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 185px);
   gap: 16px;
+  justify-content: start;
 }
 
 .student-card {
   background: #FFFFFF;
   border: 1px solid #E0E0E0;
   border-radius: 12px;
-  padding: 20px;
-  min-height: 180px;
-  text-align: center;
+  padding: 24px;
+  position: relative;
+  min-height: 185px;
+  max-width: 185px;
+  text-align: left;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -619,15 +631,46 @@
 }
 
 
-.student-card p {
-  font-size: 14px;
-  color: #666666;
-  margin: 4px 0;
+.student-info {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  text-align: left;
+}
+
+.student-info h3 {
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18.57px;
+  color: #222222;
+  margin: 0 0 8px 0;
 }
 
 .student-lessons {
-  font-size: 12px;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
   color: #999999;
+  margin: 0;
+}
+
+.student-icon {
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.student-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Right Sidebar - Word Bank */
@@ -932,6 +975,13 @@
   /* Ensure scrollbar works inside the rounded card */
   /* If content overflows, scrollbar should be inside the padding? Or cut off by radius? */
   /* Standard behavior is scrollbar at edge. If radius is large, scrollbar corners might look odd but acceptable. */
+}
+
+.word-bank-section.locked {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.5);
+  cursor: not-allowed;
 }
 
 .word-bank-title {

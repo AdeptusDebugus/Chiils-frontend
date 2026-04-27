@@ -44,6 +44,12 @@ const iconFlag = "/assets/home/flag.svg";
 const iconUser = "/assets/user.svg";
 const iconReduce = "/assets/home/reduce.svg";
 
+const studentProgressStub = [
+  { id: 1, name: 'Student 1', lessons: 0, icon: '/assets/home/student-stub/stub1.webp' },
+  { id: 2, name: 'Student 2', lessons: 0, icon: '/assets/home/student-stub/stub2.webp' },
+  { id: 3, name: 'Student 3', lessons: 0, icon: '/assets/home/student-stub/stub3.webp' },
+];
+
 const TeacherHomePage: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -482,27 +488,28 @@ const TeacherHomePage: React.FC = () => {
   ];
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page teacher-homepage-layout">
+      <header className="dashboard-header">
+        <h1>Hello, {firstName}</h1>
+        <div className="header-controls">
+          {notification && (
+            <BuilderNotification
+              message={notification.message}
+              type={notification.type}
+              onClose={() => setNotification(null)}
+              onUndo={() => {
+                if (notification.lessonId) {
+                  handleStopLesson(notification.lessonId);
+                }
+                setNotification(null);
+              }}
+            />
+          )}
+          <LessonBuilderButton />
+        </div>
+      </header>
+
       <main className="dashboard-main-content">
-        <header className="dashboard-header">
-          <h1>Hello, {firstName}</h1>
-          <div className="header-controls">
-            {notification && (
-              <BuilderNotification
-                message={notification.message}
-                type={notification.type}
-                onClose={() => setNotification(null)}
-                onUndo={() => {
-                  if (notification.lessonId) {
-                    handleStopLesson(notification.lessonId);
-                  }
-                  setNotification(null);
-                }}
-              />
-            )}
-            <LessonBuilderButton />
-          </div>
-        </header>
 
         <section className="my-lessons-section">
           <div className="my-lessons-container">
@@ -708,10 +715,15 @@ const TeacherHomePage: React.FC = () => {
               </div>
             </div>
             <div className="students-grid">
-              {[1, 2, 3, 4, 5, 6].map((student) => (
-                <div key={student} className="student-card">
-                  <p>Student {student}</p>
-                  <p className="student-lessons">0 lessons</p>
+              {studentProgressStub.map((student) => (
+                <div key={student.id} className="student-card">
+                  <div className="student-info">
+                    <h3>{student.name}</h3>
+                    <p className="student-lessons">{student.lessons} lessons</p>
+                  </div>
+                  <div className="student-icon">
+                    <img src={student.icon} alt={student.name} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -794,7 +806,7 @@ const TeacherHomePage: React.FC = () => {
           </div>
         )}
 
-        <div className="word-bank-section">
+        <div className={`word-bank-section ${user?.permissions && !user.permissions.can_use_collections ? 'locked' : ''}`}>
           <div className="word-bank-title">
             <h2>Word Bank</h2>
             <button className="create-set-btn" onClick={() => {

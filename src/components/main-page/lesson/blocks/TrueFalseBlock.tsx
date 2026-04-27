@@ -5,24 +5,27 @@ interface TrueFalseBlockProps {
   block: LessonBlock;
   data: any;
   index: number;
+  previewMode?: boolean;
 }
 
-const TrueFalseBlock: React.FC<TrueFalseBlockProps> = ({ block, data, index }) => {
+const TrueFalseBlock: React.FC<TrueFalseBlockProps> = ({ block, data, index, previewMode = false }) => {
   const [selections, setSelections] = useState<Record<number, boolean | null>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { statements, answers } = data;
 
   const handleSelect = (idx: number, val: boolean) => {
-    if (isSubmitted) return;
+    if (previewMode || isSubmitted) return;
     setSelections(prev => ({ ...prev, [idx]: val }));
   };
 
   const handleCheck = () => {
+    if (previewMode) return;
     setIsSubmitted(true);
   };
 
   const handleReset = () => {
+    if (previewMode) return;
     setSelections({});
     setIsSubmitted(false);
   };
@@ -60,14 +63,14 @@ const TrueFalseBlock: React.FC<TrueFalseBlockProps> = ({ block, data, index }) =
                 <button
                   className={`option-button ${selection === true ? 'selected' : ''} ${isSubmitted && selection === true ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
                   onClick={() => handleSelect(i, true)}
-                  disabled={isSubmitted}
+                  disabled={previewMode || isSubmitted}
                 >
                   <div className="option-circle" />
                 </button>
                 <button
                   className={`option-button ${selection === false ? 'selected' : ''} ${isSubmitted && selection === false ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
                   onClick={() => handleSelect(i, false)}
-                  disabled={isSubmitted}
+                  disabled={previewMode || isSubmitted}
                 >
                   <div className="option-circle" />
                 </button>
@@ -78,10 +81,10 @@ const TrueFalseBlock: React.FC<TrueFalseBlockProps> = ({ block, data, index }) =
       </div>
 
       <div className="exercise-actions">
-        <button className="reset-button" onClick={handleReset}>
+        <button className="reset-button" onClick={handleReset} disabled={previewMode}>
           <img src="/assets/lesson/refresh.svg" alt="Reset" />
         </button>
-        <button className="check-button" onClick={handleCheck} disabled={isSubmitted && Object.keys(selections).length === 0}>
+        <button className="check-button" onClick={handleCheck} disabled={previewMode || (isSubmitted && Object.keys(selections).length === 0)}>
            <span>Check</span>
         </button>
       </div>
