@@ -48,6 +48,7 @@ const studentProgressStub = [
   { id: 1, name: 'Student 1', lessons: 0, icon: '/assets/home/student-stub/stub1.webp' },
   { id: 2, name: 'Student 2', lessons: 0, icon: '/assets/home/student-stub/stub2.webp' },
   { id: 3, name: 'Student 3', lessons: 0, icon: '/assets/home/student-stub/stub3.webp' },
+
 ];
 
 const TeacherHomePage: React.FC = () => {
