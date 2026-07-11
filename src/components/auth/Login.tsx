@@ -29,6 +29,10 @@ const Login: React.FC = () => {
     navigate('/profile');
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   // If user is already authenticated, show their profile info
   if (isAuthenticated && user) {
     return (
@@ -91,6 +95,7 @@ const Login: React.FC = () => {
         <div className="login-form-content">
           <button onClick={handleGoogleLogin} className="google-login-btn">
             <img src="/assets/autorization/google-logo.svg" alt="Google" className="google-icon" />
+            <span className="google-login-text">Continue with Google</span>
           </button>
 
           {!hideSignInLink && (
@@ -107,6 +112,10 @@ const Login: React.FC = () => {
           <Link to="/privacypolicy">Privacy Policy</Link>.
         </p>
       </div>
+
+      <button type="button" className="mobile-login-back-btn" onClick={handleGoBack}>
+        Go back
+      </button>
     </div>
   );
 };

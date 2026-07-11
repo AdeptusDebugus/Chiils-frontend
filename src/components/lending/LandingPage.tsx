@@ -10,18 +10,20 @@ import ComparePlansPopup from './ComparePlansPopup.tsx';
 //IMAGES
 const imgHeroImage = "/assets/lending/about-hero-human.webp";
 const imgChiilsLogo = "/assets/chiils-white-logo.svg";
+const imgChiilsBlackLogo = "/assets/chiils-black-logo.svg";
 const imgFeatureCardSmall1 = "/assets/lending/feature-card-small-1.svg";
 const imgFeatureCardSmall2 = "/assets/lending/feature-card-small-2.svg";
 const imgPricingBackground = "/assets/lending/pricing-background.webp";
 const imgAboutBackground = "/assets/lending/about-background.webp";
-const imgLessonBuilderBackground = "/assets/lending/lending-lesson-builder-background.webp";
-const imgOpenLibBackground = "/assets/lending/lending-open-library-background.webp";
+const imgLessonBuilderBackground = "/assets/lending/openlib-background.webp";
+const imgOpenLibBackground = "/assets/lending/openlib-background.webp";
 const imgFAQProfile1 = "/assets/lending/portrait-1.webp";
 const imgFAQProfile2 = "/assets/lending/portrait-2.webp";
 const imgFAQProfile3 = "/assets/lending/portrait-3.webp";
 const imgFAQProfile4 = "/assets/lending/portrait-4.webp";
 const imgFAQProfile5 = "/assets/lending/portrait-5.webp";
 const imgJoyfulWomanPortrait = "/assets/lending/cta-background.webp";
+const imgMobileStub = "/assets/lending/stub_for_moblie.webp";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -29,13 +31,64 @@ const LandingPage: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
   const { openAuthPrompt } = useAuthPrompt();
   const [showComparePopup, setShowComparePopup] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMobilePlansOpen, setIsMobilePlansOpen] = React.useState(false);
+  const [isMobileStubOpen, setIsMobileStubOpen] = React.useState(false);
+  const [expandedFaqIndex, setExpandedFaqIndex] = React.useState<number | null>(null);
+  const [mobileStubAction, setMobileStubAction] = React.useState<(() => void) | null>(null);
+
+  React.useEffect(() => {
+    if (!isMobileMenuOpen && !isMobileStubOpen && !isMobilePlansOpen) {
+      return;
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (isMobilePlansOpen) {
+          setIsMobilePlansOpen(false);
+        } else if (isMobileStubOpen) {
+          setIsMobileStubOpen(false);
+        } else {
+          setIsMobileMenuOpen(false);
+        }
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isMobileMenuOpen, isMobileStubOpen, isMobilePlansOpen]);
+
+  const isMobileViewport = () => window.matchMedia('(max-width: 839px)').matches;
+
+  const runWithMobileStub = (action: () => void) => {
+    if (isMobileViewport()) {
+      setMobileStubAction(() => action);
+      setIsMobileStubOpen(true);
+      return;
+    }
+
+    action();
+  };
+
+  const continueFromMobileStub = () => {
+    const action = mobileStubAction;
+    setIsMobileStubOpen(false);
+    setIsMobileMenuOpen(false);
+    setMobileStubAction(null);
+    action?.();
+  };
 
   const handleSignUp = () => {
-    navigate('/login');
+    runWithMobileStub(() => navigate('/login'));
   };
 
   const handleSignIn = () => {
-    navigate('/login', { state: { hideSignInLink: true } });
+    runWithMobileStub(() => navigate('/login', { state: { hideSignInLink: true } }));
   };
 
   const handleOpenLib = () => {
@@ -43,16 +96,136 @@ const LandingPage: React.FC = () => {
   };
 
   const handleLessonBuilder = () => {
-    if (isAuthenticated) {
-      navigate('/open-library');
-      openLessonBuilder();
-    } else {
-      openAuthPrompt();
-    }
+    runWithMobileStub(() => {
+      if (isAuthenticated) {
+        navigate('/open-library');
+        openLessonBuilder();
+      } else {
+        openAuthPrompt();
+      }
+    });
   };
 
+  const handleMobileHome = () => {
+    runWithMobileStub(() => {
+      navigate('/');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  };
+
+  const handleMobileSection = (sectionId: string) => {
+    runWithMobileStub(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    });
+  };
+
+  const handleMobileSignIn = () => {
+    runWithMobileStub(() => navigate('/login', { state: { hideSignInLink: true } }));
+  };
+
+  const handleMobileSignUp = () => {
+    runWithMobileStub(() => navigate('/login'));
+  };
+
+  const handleMobileSupport = () => {
+    runWithMobileStub(() => {
+      window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer');
+    });
+  };
+
+  const handleMobileEmail = () => {
+    runWithMobileStub(() => {
+      window.location.href = 'mailto:team@chiils.com';
+    });
+  };
+
+  const handleToolsClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+
+    if (target.closest('button, a')) {
+      return;
+    }
+
+    const container = event.currentTarget;
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+    if (maxScrollLeft <= 0) {
+      return;
+    }
+
+    const nextScrollLeft = container.scrollLeft >= maxScrollLeft - 8 ? 0 : maxScrollLeft;
+    container.scrollTo({ left: nextScrollLeft, behavior: 'smooth' });
+  };
+
+  const handleLandingLinkCapture = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isMobileViewport() || isMobileStubOpen) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    const anchor = target.closest('a[href]') as HTMLAnchorElement | null;
+    if (!anchor || !event.currentTarget.contains(anchor) || anchor.closest('.mobile-desktop-stub')) {
+      return;
+    }
+
+    const href = anchor.getAttribute('href');
+    if (!href) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    runWithMobileStub(() => {
+      if (href.startsWith('#')) {
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      if (href.startsWith('mailto:')) {
+        window.location.href = href;
+        return;
+      }
+
+      if (href.startsWith('http')) {
+        window.open(anchor.href, anchor.target || '_self', 'noopener,noreferrer');
+        return;
+      }
+
+      navigate(href);
+    });
+  };
+
+  const faqItems = [
+    {
+      image: imgFAQProfile5,
+      question: 'How is it different from Chat GPT?',
+      answer: 'Chiils delivers a complete, beautifully structured lesson — from engaging lead-in to production — packed with every exercise type you need, perfectly balanced, no prompts required. All that in a couple of clicks.'
+    },
+    {
+      image: imgFAQProfile1,
+      question: 'Do I need to know how to use AI tools?',
+      answer: 'Not at all. Chiils was built to make AI feel invisible, you just bring the content, and we handle the rest.'
+    },
+    {
+      image: imgFAQProfile2,
+      question: 'Are there any limits or rules I should know about?',
+      answer: "Only a few. Chiils supports public YouTube videos and podcasts shorter than 120 minutes. We don't support private links, everything else is wide open."
+    },
+    {
+      image: imgFAQProfile3,
+      question: 'How long does it take to create a custom lesson?',
+      answer: 'It depends on the length of your video. Usually, it takes around 5-10 minutes, but longer videos (30+ minutes) might require more time.'
+    },
+    {
+      image: imgFAQProfile4,
+      question: 'Can I share my lessons with students?',
+      answer: 'Yes! You can instantly share your full lesson with students via a simple public link. No sign-up, no login, no extra steps required.'
+    }
+  ];
+
   return (
-    <div className="home-page" data-name="Public Space">
+    <div className="home-page" data-name="Public Space" onClickCapture={handleLandingLinkCapture}>
       {/* Navigation Header - Matching Figma Design */}
       {/* Hero Section */}
       <div className="hero-section">
@@ -69,6 +242,16 @@ const LandingPage: React.FC = () => {
               <div className="header-logo" data-name="Logo">
                 <img alt="Chiils" src={imgChiilsLogo} className="logo-chiils-img" />
               </div>
+
+              <button
+                className="mobile-menu-button"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded={isMobileMenuOpen}
+                onClick={() => setIsMobileMenuOpen(true)}
+              >
+                <img src="/assets/lending/burger.svg" alt="" aria-hidden="true" />
+              </button>
 
               {/* Navigation Links */}
               <div className="nav-links">
@@ -127,15 +310,19 @@ const LandingPage: React.FC = () => {
 
       {/* Feature Cards Section */}
       <div className="features-cards-section" id="about">
-        <div className="about-background">
-          <img src={imgAboutBackground} alt="Hero" className="hero-image" />
-        </div>
-        <div className="main-container">
-          {/* Video Demo Placeholder */}
-          <div className="video-demo-placeholder">
-            <p className="video-demo-text">Video demo coming soon</p>
+        <div className="video-demo-section">
+          <div className="about-background">
+            <img src={imgAboutBackground} alt="Hero" className="hero-image" />
           </div>
+          <div className="main-container">
+          {/* Video Demo Placeholder */}
+            <div className="video-demo-placeholder">
+              <p className="video-demo-text">Video demo coming soon</p>
+            </div>
+          </div>
+        </div>
 
+        <div className="main-container">
           {/* Section Title */}
           <h2 className="focus-on-teaching-title">
             Focus on teaching <br />— we handle the prep.
@@ -171,9 +358,8 @@ const LandingPage: React.FC = () => {
               </p>
               <div className="feature-large-card-icon-wrapper">
                 <button className="create-first-lesson-btn" onClick={handleLessonBuilder}>
-                  Create your first lesson
+                  Create your first lesson →
                 </button>
-                <img src="/assets/lending/feature-card-large.svg" alt="Feature icon" className="feature-icon-img-large" />
               </div>
             </div>
           </div>
@@ -187,7 +373,7 @@ const LandingPage: React.FC = () => {
             Spark chills in every lesson.<br />Explore our tools.
           </h2>
 
-          <div className="tools-container">
+          <div className="tools-container" onClick={handleToolsClick}>
             {/* Open Library Card */}
             <div className="tool-card-large">
               <div className="tool-card-content">
@@ -200,6 +386,10 @@ const LandingPage: React.FC = () => {
                 <button className="tool-card-arrow-btn" onClick={handleOpenLib}>
                   →
                 </button>
+                <div className="tool-card-dots" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
               <div className="tool-card-image-placeholder">
                 <p>Demo coming soon</p>
@@ -218,6 +408,10 @@ const LandingPage: React.FC = () => {
                 <button className="tool-card-arrow-btn" onClick={handleLessonBuilder}>
                   →
                 </button>
+                <div className="tool-card-dots" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
               <div className="tool-card-image-placeholder">
                 <p>Demo coming soon</p>
@@ -239,7 +433,7 @@ const LandingPage: React.FC = () => {
               <p className="pricing-text">
                 Minutes are counted by actual video length. 1 minute of video = 1 minute used.
                 <br />
-                Start / Plus / Pro plans include a 7-day free trial. Cancel anytime.
+                Start / Plus plans include a 7-day free trial. Cancel anytime.
               </p>
             </div>
             <div className="pricing-cards">
@@ -296,29 +490,25 @@ const LandingPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Pro Card */}
-              <div className="pricing-card">
-                <h3>Pro</h3>
-                <div className="pricing-divider"></div>
-                <p className="price">€30<span>/ month</span></p>
-                <ul className="price-features">
-                  <li>7 days free trial</li>
-                  <li>Everything in Plus</li>
-                  <li>800 minutes / month of YouTube content included</li>
-                  <li>Student progress</li>
-                </ul>
-                <button className="get-started-btn" onClick={handleSignUp}>
-                  <span className="btn-text">Start for free</span>
-                </button>
-              </div>
             </div>
-            <button className="compare-plan-btn" onClick={() => setShowComparePopup(true)}>Compare plans →</button>
+            <button
+              className="compare-plan-btn"
+              onClick={() => {
+                if (isMobileViewport()) {
+                  setIsMobilePlansOpen(true);
+                  return;
+                }
+                setShowComparePopup(true);
+              }}
+            >
+              Compare plans →
+            </button>
           </div>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="faq-section">
+      <div className="faq-section" id="faq">
         <div className="main-container">
           <div className="faq-section-header">
             <div className="faq-section-left">
@@ -335,61 +525,31 @@ const LandingPage: React.FC = () => {
               </p>
             </div>
             <div className="faq-grid">
-              <div className="faq-card">
-                <div className="faq-profile-image">
-                  <img src={imgFAQProfile5} alt="Profile" />
-                </div>
-                <div className="faq-content">
-                  <h3>How is it different from Chat GPT?</h3>
-                  <div className="faq-answer">
-                    <p>Chiils delivers a complete, beautifully structured lesson — from engaging lead-in to production — packed with every exercise type you need, perfectly balanced, no prompts required. All that in a couple of clicks. </p>
+              {faqItems.map((faq, index) => {
+                const isExpanded = expandedFaqIndex === index;
+
+                return (
+                  <div className={`faq-card ${isExpanded ? 'faq-card-expanded' : ''}`} key={faq.question}>
+                    <div className="faq-profile-image">
+                      <img src={faq.image} alt="Profile" />
+                    </div>
+                    <div className="faq-content">
+                      <button
+                        type="button"
+                        className="faq-question-btn"
+                        aria-expanded={isExpanded}
+                        onClick={() => setExpandedFaqIndex(isExpanded ? null : index)}
+                      >
+                        <span className="faq-question-text">{faq.question}</span>
+                      </button>
+                      <div className="faq-answer">
+                        <p>{faq.answer}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="faq-card">
-                <div className="faq-profile-image">
-                  <img src={imgFAQProfile1} alt="Profile" />
-                </div>
-                <div className="faq-content">
-                  <h3>Do I need to know how to use AI tools?</h3>
-                  <div className="faq-answer">
-                    <p>Not at all. Chiils was built to make AI feel invisible, you just bring the content, and we handle the rest.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="faq-card">
-                <div className="faq-profile-image">
-                  <img src={imgFAQProfile2} alt="Profile" />
-                </div>
-                <div className="faq-content">
-                  <h3>Are there any limits or rules I should know about?</h3>
-                  <div className="faq-answer">
-                    <p>Only a few. Chiils supports public YouTube videos and podcasts shorter than 120 minutes. We don't support private links, everything else is wide open.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="faq-card">
-                <div className="faq-profile-image">
-                  <img src={imgFAQProfile3} alt="Profile" />
-                </div>
-                <div className="faq-content">
-                  <h3>How long does it take to create a custom lesson?</h3>
-                  <div className="faq-answer">
-                    <p>It depends on the length of your video. Usually, it takes around 5–10 minutes, but longer videos (30+ minutes) might require more time.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="faq-card">
-                <div className="faq-profile-image">
-                  <img src={imgFAQProfile4} alt="Profile" />
-                </div>
-                <div className="faq-content">
-                  <h3>Can I share my lessons with students?</h3>
-                  <div className="faq-answer">
-                    <p>Yes! You can instantly share your full lesson with students via a simple public link. No sign-up, no login, no extra steps required.</p>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
+              {false}
             </div>
           </div>
         </div>
@@ -431,6 +591,125 @@ const LandingPage: React.FC = () => {
       <div className="footer">
         <Footer />
       </div>
+
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+          <div className="mobile-menu-panel">
+            <div className="mobile-menu-top">
+              <img src={imgChiilsLogo} alt="Chiils" className="mobile-menu-logo" />
+              <button
+                className="mobile-menu-close"
+                type="button"
+                aria-label="Close navigation menu"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                x
+              </button>
+            </div>
+
+            <nav className="mobile-menu-nav" aria-label="Mobile navigation links">
+              <button type="button" onClick={handleMobileHome}>Home</button>
+              <button type="button" onClick={handleMobileSignIn}>Student log in</button>
+              <button type="button" onClick={() => handleMobileSection('tools')}>Tools</button>
+              <button type="button" onClick={() => handleMobileSection('pricing')}>Pricing</button>
+              <button type="button" onClick={() => handleMobileSection('faq')}>Questions &amp; Answers</button>
+              <button type="button" className="mobile-menu-nav-disabled-auth" disabled aria-disabled="true">
+                Log in / Sign up
+              </button>
+              <p className="mobile-menu-nav-disabled-note">Available on Desktop</p>
+            </nav>
+
+            <div className="mobile-menu-actions">
+              <button type="button" onClick={handleMobileSupport}>
+                Contact support
+              </button>
+              <button type="button" onClick={handleMobileEmail}>team@chiils.com</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isMobileStubOpen && (
+        <div className="mobile-desktop-stub" role="dialog" aria-modal="true" aria-label="Desktop-only notice">
+          <div className="mobile-desktop-stub-panel">
+            <div className="mobile-desktop-stub-top">
+              <img src={imgChiilsBlackLogo} alt="Chiils" className="mobile-desktop-stub-logo" />
+            </div>
+            <button
+              className="mobile-desktop-stub-back"
+              type="button"
+              aria-label="Go back"
+              onClick={() => setIsMobileStubOpen(false)}
+            >
+              Go back
+            </button>
+
+            <h2>Built for typing, not tapping</h2>
+            <p className="mobile-desktop-stub-copy">
+              Chiils was built for a bigger screen. Leave your email and we'll send a link so you can pick this up
+              later.
+            </p>
+            <img src={imgMobileStub} alt="" aria-hidden="true" className="mobile-desktop-stub-image" />
+
+            <div className="mobile-desktop-stub-email" aria-hidden="true">youareamazing@email.com</div>
+            <button type="button" className="mobile-desktop-stub-continue" onClick={continueFromMobileStub}>
+              Send me the link
+            </button>
+
+            <p className="mobile-desktop-stub-legal">
+              By submitting an email, you agree to our <strong>Terms &amp; Conditions</strong> and{' '}
+              <strong>Privacy Policy</strong>.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {isMobilePlansOpen && (
+        <div className="mobile-plans-overlay" role="dialog" aria-modal="true" aria-label="Compare plans">
+          <div className="mobile-plans-frame">
+            <h2 className="mobile-plans-title">Plans that keep the thrill alive.</h2>
+
+            <div className="mobile-plans-table-wrap">
+              <table className="mobile-plans-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>
+                      <span>Free</span>
+                      <span>0 EUR / month</span>
+                    </th>
+                    <th>
+                      <span>Open Library</span>
+                      <span>5 EUR / month</span>
+                    </th>
+                    <th>
+                      <span>Start</span>
+                      <span>10 EUR / month</span>
+                    </th>
+                    <th>
+                      <span>Plus</span>
+                      <span>20 EUR / month</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Community lessons</td><td>Preview</td><td>Full</td><td>Full</td><td>Full</td></tr>
+                  <tr><td>Flashcards &amp; Quizlet export</td><td>Preview</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                  <tr><td>Grammar hints</td><td>Preview</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                  <tr><td>Lesson builder</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+                  <tr><td>Minutes included</td><td>--</td><td>--</td><td>300</td><td>600</td></tr>
+                  <tr><td>Lesson scenarios</td><td>--</td><td>--</td><td>Yes</td><td>Yes</td></tr>
+                  <tr><td>Collections</td><td>--</td><td>--</td><td>No</td><td>Yes</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button type="button" className="mobile-plans-got-it" onClick={() => setIsMobilePlansOpen(false)}>
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
 
       {showComparePopup && <ComparePlansPopup onClose={() => setShowComparePopup(false)} />}
     </div>

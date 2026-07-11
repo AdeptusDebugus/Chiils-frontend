@@ -1,6 +1,7 @@
 /* Home Page Styles - Matching Figma Design */
 
 .home-page {
+  --border-radius-large: 22.106px;
   width: 100%;
   min-height: 100vh;
   margin: 0;
@@ -450,6 +451,20 @@
 }
 
 /* Video Placeholder */
+.video-demo-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.video-demo-section .about-background {
+  z-index: 0;
+}
+
+.video-demo-section .main-container {
+  z-index: 1;
+}
+
 .video-demo-placeholder {
   width: 100%;
   height: 648px;
@@ -752,7 +767,7 @@
 
 .tool-card-large {
   background: white;
-  border-radius: 22.106px;
+  border-radius: var(--border-radius-large);
   padding: 0;
   width: 100%;
   height: 373px;
@@ -1214,11 +1229,10 @@
   gap: 20px;
   min-height: 180px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease;
 }
 
 .faq-card:hover {
-  transform: translateX(-100px);
+  transform: none;
 }
 
 .faq-profile-image {
@@ -1239,19 +1253,28 @@
   flex: 1;
 }
 
-.faq-card h3 {
+.faq-question-btn {
+  width: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0 0 15px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-question-text {
+  display: block;
   font-family: 'TeX Gyre Heros', sans-serif;
   font-size: 24px;
   font-weight: 400;
   line-height: normal;
   color: #2a2b2a;
-  margin: 0 0 15px;
 }
 
 .faq-answer {
-  background: #f5f5f5;
-  border-radius: 22px;
-  padding: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
   min-height: 87px;
 }
 
@@ -1379,6 +1402,7 @@
 
   .feature-card-large .feature-card-text {
     padding-right: 0;
+    color: #8A8A8A;
     padding-bottom: 20px;
   }
 
@@ -1588,6 +1612,22 @@
   background: white;
 }
 
+.mobile-menu-button {
+  display: none;
+}
+
+.mobile-menu-overlay {
+  display: none;
+}
+
+.mobile-desktop-stub {
+  display: none;
+}
+
+.mobile-plans-overlay {
+  display: none;
+}
+
 /* Media Queries */
 
 @media (max-width: 1200px) {
@@ -1638,6 +1678,7 @@
 
   .header-content {
     flex-direction: column;
+    padding-top: 50px;
     gap: 20px;
   }
 
@@ -1807,5 +1848,2433 @@
 
   .cta-button {
     width: 100%;
+  }
+}
+
+@media (max-width: 839px) {
+  .home-page {
+    background: #f5f4ee;
+    justify-content: flex-start;
+  }
+
+  .main-container {
+    max-width: 390px;
+    padding: 0 20px;
+  }
+
+  .header {
+    padding: 12px 0 0;
+  }
+
+  .header .main-container {
+    padding: 0 20px;
+  }
+
+  .header-content {
+    min-height: 60px;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+  }
+
+  .header-logo {
+    width: 180px;
+    height: 51px;
+  }
+
+  .mobile-menu-button {
+    display: inline-flex;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    max-width: 60px;
+    min-height: 60px;
+    max-height: 60px;
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    flex: 0 0 60px;
+    line-height: 1;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .mobile-menu-button img {
+    display: block;
+    width: 60px;
+    height: 60px;
+    flex: 0 0 60px;
+  }
+
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: block;
+    width: 100vw;
+    height: 100dvh;
+    overflow-y: auto;
+    background:
+      radial-gradient(circle at 82% 30%, rgba(138, 37, 15, 0.76) 0, rgba(138, 37, 15, 0.26) 28%, transparent 54%),
+      radial-gradient(circle at 53% 91%, rgba(255, 180, 106, 0.95) 0, rgba(246, 111, 39, 0.95) 24%, rgba(128, 36, 15, 0.65) 52%, transparent 73%),
+      linear-gradient(180deg, #030303 0%, #160905 35%, #f8dcb4 100%);
+  }
+
+  .mobile-menu-panel {
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+    min-height: 891px;
+    margin: 0 auto;
+    padding: 56px 20px 24px;
+    box-sizing: border-box;
+  }
+
+  .mobile-menu-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .mobile-menu-logo {
+    width: 101px;
+    height: auto;
+    display: block;
+  }
+
+  .mobile-menu-close {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: 1px solid #f7f4ee;
+    border-radius: 50%;
+    background: transparent;
+    color: #f7f4ee;
+    display: grid;
+    place-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 0;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .mobile-menu-close::before,
+  .mobile-menu-close::after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 1px;
+    background: #f7f4ee;
+  }
+
+  .mobile-menu-close::before {
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu-close::after {
+    transform: rotate(-45deg);
+  }
+
+  .mobile-menu-nav {
+    display: flex;
+    flex-direction: column;
+    margin-top: 70px;
+  }
+
+  .mobile-menu-nav button {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    margin: 0 0 20px;
+    padding: 0 64px 0 3px;
+    border: 0;
+    border-radius: 0;
+    background:
+      linear-gradient(rgba(247, 244, 238, 1), rgba(247, 244, 238, 1)) left bottom / calc(100% - 48px) 1px no-repeat;
+    color: #fff;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 25px;
+    text-align: left;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .mobile-menu-nav button::after {
+    content: "";
+    position: absolute;
+    top: 29px;
+    right: 2px;
+    width: 25px;
+    height: 1px;
+    background: #f7f4ee;
+  }
+
+  .mobile-menu-nav button::before {
+    content: "";
+    position: absolute;
+    top: 24px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid #f7f4ee;
+    border-right: 1px solid #f7f4ee;
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu-nav button:disabled {
+    color: #999;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .mobile-menu-nav button:disabled::before,
+  .mobile-menu-nav button:disabled::after {
+    display: none;
+  }
+
+  .mobile-menu-nav .mobile-menu-nav-disabled-auth {
+    margin: 0;
+    background: transparent;
+    font-weight: 700;
+    color: #999;
+  }
+
+  .mobile-menu-nav .mobile-menu-nav-disabled-note {
+    color: #999;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: left;
+  }
+
+  .mobile-menu-actions {
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px;
+    gap: 15px;
+  }
+
+  .mobile-menu-actions a,
+  .mobile-menu-actions button {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #2a2b2a;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2a2b2a;
+    text-decoration: none;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 20px;
+    box-sizing: border-box;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .mobile-desktop-stub {
+    position: fixed;
+    inset: 0;
+    z-index: 21000;
+    display: block;
+    width: 100vw;
+    height: 100dvh;
+    overflow-y: auto;
+    background: #fff;
+  }
+
+  .mobile-desktop-stub-panel {
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+    min-height: 891px;
+    margin: 0 auto;
+    padding: 56px 24px 48px;
+    box-sizing: border-box;
+    color: #2a2b2a;
+    background: white;
+  }
+
+  .mobile-desktop-stub-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .mobile-desktop-stub-logo {
+    width: 101px;
+    height: auto;
+    margin-top: 7px;
+    display: block;
+  }
+
+  .mobile-desktop-stub-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 40px 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #999;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .mobile-desktop-stub-back::before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    background: center / 24px 24px no-repeat url('/assets/lending/go-back.svg');
+    flex: 0 0 24px;
+  }
+
+  .mobile-desktop-stub-close {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: 1px solid #2a2b2a;
+    border-radius: 50%;
+    background: transparent;
+    color: #2a2b2a;
+    display: grid;
+    place-items: center;
+    font-size: 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .mobile-desktop-stub-close::before,
+  .mobile-desktop-stub-close::after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 1px;
+    background: #2a2b2a;
+  }
+
+  .mobile-desktop-stub-close::before {
+    transform: rotate(45deg);
+  }
+
+  .mobile-desktop-stub-close::after {
+    transform: rotate(-45deg);
+  }
+
+  .mobile-desktop-stub h2 {
+    margin: 45px 0 0;
+    color: #2a2b2a;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 45px;
+    text-align: center;
+  }
+
+  .mobile-desktop-stub-copy {
+    width: 342px;
+    max-width: 100%;
+    margin: 32px auto 0;
+    color: #2a2b2a;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+  }
+
+  .mobile-desktop-stub-image {
+    width: calc(100% + 48px);
+    max-width: none;
+    height: 150px;
+    margin: 0 -24px;
+    display: block;
+    object-fit: cover;
+    border-radius: 0;
+  }
+
+  .mobile-desktop-stub-email {
+    width: 100%;
+    height: 48px;
+    margin-top: 23px;
+    padding: 0 20px;
+    border: 1px solid rgba(42, 43, 42, 0.45);
+    border-radius: 24px;
+    color: #999;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 48px;
+    box-sizing: border-box;
+  }
+
+  .mobile-desktop-stub-continue {
+    width: 100%;
+    height: 48px;
+    margin-top: 20px;
+    border: 1px solid #2a2b2a;
+    border-radius: 24px;
+    background: #2a2b2a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 20px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+  }
+
+  .nav-links,
+  .header-buttons,
+  .student-link {
+    display: none;
+  }
+
+  .hero-section {
+    height: 623px;
+    min-height: 623px;
+    background:
+      radial-gradient(circle at 70% 50%, rgba(219, 68, 25, 0.7) 0, rgba(219, 68, 25, 0.22) 28%, transparent 55%),
+      linear-gradient(145deg, #101211 4%, #672010 58%, #211413 100%);
+  }
+
+  .hero-background {
+    display: none;
+  }
+
+  .hero-content {
+    padding: 0;
+  }
+
+  .hero-content .main-container {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 250px;
+  }
+
+  .hero-title-row {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 14px;
+    margin: 0;
+  }
+
+  .hero-title {
+    font-size: 32px;
+    line-height: 35px;
+    max-width: 342px;
+  }
+
+  .hero-subtitle-lines {
+    max-width: 342px;
+  }
+
+  .hero-subtitle-line {
+    font-size: 17px;
+    line-height: 24px;
+  }
+
+  .hero-buttons {
+    position: static;
+    width: 100%;
+    gap: 11px;
+    margin-top: 70px;
+  }
+
+  .community-lessons-btn,
+  .first-lesson-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 25px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 20px;
+  }
+
+  .community-lessons-btn {
+    background: #fff;
+    border-color: #000;
+    color: #2a2b2a;
+  }
+
+  .first-lesson-btn {
+    background: transparent;
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .features-cards-section {
+    min-height: 832px;
+    padding: 40px 0 33px;
+    background: #f5f4ee;
+    gap: 0;
+  }
+
+  .video-demo-section {
+    display: none;
+  }
+
+  .focus-on-teaching-title {
+    padding: 0;
+    margin: 0 0 40px;
+    color: #2a2b2a;
+    font-size: 32px;
+    line-height: 36px;
+  }
+
+  .features-cards-container {
+    gap: 20px;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 181px;
+    padding: 20px;
+    border-radius: 8px;
+    background: #2a2b2a;
+    box-shadow: none;
+    overflow: hidden;
+    transform: none;
+  }
+
+  .feature-card-small:hover,
+  .feature-card-large:hover {
+    transform: none;
+  }
+
+  .feature-card-large {
+    min-height: 244px;
+    justify-content: flex-start;
+  }
+
+  .feature-card-title {
+    max-width: 80%;
+    min-height: 58px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: left;
+  }
+
+  .feature-card-divider {
+    margin-bottom: 10px;
+  }
+
+  .feature-card-text {
+    font-size: 20px;
+    line-height: 24px;
+    flex: initial;
+  }
+
+  .feature-card-small .feature-card-text {
+    max-width: 80%;
+    color: #8A8A8A;
+    text-align: left;
+  }
+
+  .feature-icon-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 14px;
+  }
+
+  .feature-large-card-icon-wrapper {
+    position: static;
+    align-items: flex-end;
+  }
+
+  .feature-icon-img,
+  .feature-icon-img-large {
+    width: 68px;
+    height: 68px;
+  }
+
+  .feature-card-large .feature-icon-img-large {
+    display: none;
+  }
+
+  .create-first-lesson-btn {
+    width: 100%;
+    height: 33px;
+    border-radius: 18px;
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .tools-section {
+    min-height: 745px;
+    padding: 12px 0 61px;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .tools-section-title {
+    margin-bottom: 40px;
+    color: #2a2b2a;
+    font-size: 32px;
+    line-height: 32px;
+  }
+
+  .tools-container {
+    width: calc(100% + 40px);
+    margin: 0 -20px;
+    padding: 0 20px 8px;
+    flex-direction: row;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 20px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tools-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tool-card-large {
+    width: 333px;
+    min-width: 333px;
+    height: 536px;
+    border-radius: 8px;
+    box-shadow: none;
+    flex-direction: column;
+    scroll-snap-align: start;
+    overflow: hidden;
+    background: linear-gradient(180deg, #c51f05 0%, #ff9965 100%);
+  }
+
+  .tool-card-content {
+    flex: 1 1 auto;
+    min-height: 191px;
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 27px;
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: 10px;
+    row-gap: 10px;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .tool-card-large h3 {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    font-size: 24px;
+    line-height: 29px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .tool-card-divider {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .tool-card-description {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: none;
+    margin: 0;
+    font-size: 17px;
+    line-height: 24px;
+    color: #fff;
+  }
+
+  .tool-card-arrow-btn {
+    grid-column: 1;
+    grid-row: 4;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    align-self: end;
+    justify-self: start;
+    font-size: 17px;
+    background: #2a2b2a;
+    color: #fff;
+  }
+
+  .tool-card-dots {
+    grid-column: 2;
+    grid-row: 4;
+    width: 27px;
+    height: 10px;
+    align-self: end;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tool-card-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+
+  .mobile-plans-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 21500;
+    display: block;
+    width: 100vw;
+    height: 100dvh;
+    overflow-y: auto;
+    background:
+      radial-gradient(circle at 82% 30%, rgba(138, 37, 15, 0.76) 0, rgba(138, 37, 15, 0.26) 28%, transparent 54%),
+      radial-gradient(circle at 53% 91%, rgba(255, 180, 106, 0.95) 0, rgba(246, 111, 39, 0.95) 24%, rgba(128, 36, 15, 0.65) 52%, transparent 73%),
+      linear-gradient(180deg, #030303 0%, #160905 35%, #f8dcb4 100%);
+  }
+
+  .mobile-plans-frame {
+    width: 392px;
+    max-width: 100%;
+    min-height: 832px;
+    margin: 0 auto;
+    padding: 57px 0 29px 23px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .mobile-plans-title {
+    width: 329px;
+    margin: 0;
+    color: #f7f4ee;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 32px;
+  }
+
+  .mobile-plans-table-wrap {
+    margin-top: 53px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mobile-plans-table-wrap::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-plans-table {
+    width: 1150px;
+    border-collapse: collapse;
+    color: #fff;
+    font-family: 'TeX Gyre Heros', sans-serif;
+  }
+
+  .mobile-plans-table th,
+  .mobile-plans-table td {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.95);
+    text-align: center;
+    font-size: 17px;
+    line-height: 20px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .mobile-plans-table th:first-child,
+  .mobile-plans-table td:first-child {
+    width: 160px;
+    padding-right: 13px;
+    text-align: left;
+    white-space: normal;
+    font-weight: 700;
+  }
+
+  .mobile-plans-table th:not(:first-child),
+  .mobile-plans-table td:not(:first-child) {
+    width: 130px;
+  }
+
+  .mobile-plans-table th {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.95);
+    vertical-align: bottom;
+    font-weight: 700;
+  }
+
+  .mobile-plans-table th span {
+    display: block;
+  }
+
+  .mobile-plans-table th span:last-child {
+    margin-top: 10px;
+    font-weight: 700;
+  }
+
+  .mobile-plans-got-it {
+    position: absolute;
+    left: 23px;
+    right: 27px;
+    bottom: 29px;
+    height: 48px;
+    border: 0;
+    border-radius: 24px;
+    background: #2a2b2a;
+    color: #fff;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 24px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .tool-card-dots span:first-child {
+    background: #2a2b2a;
+  }
+
+  .tool-card-dots span:last-child {
+    border: 1px solid #2a2b2a;
+    background: #fff;
+  }
+
+  .tool-card-image-placeholder {
+    display: flex;
+    min-height: 345px;
+    margin: 0;
+    border-radius: 0;
+    background: #d9d9d9;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 20px;
+  }
+
+  .pricing-section {
+    min-height: 845px;
+    padding: 35px 0 42px;
+    overflow: hidden;
+  }
+
+  .pricing-section .main-container {
+    max-width: none;
+  }
+
+  .pricing-content {
+    gap: 40px;
+  }
+
+  .pricing-header {
+    gap: 40px;
+  }
+
+  .pricing-title {
+    max-width: 342px;
+    font-size: 32px;
+    line-height: 32px;
+  }
+
+  .pricing-text {
+    max-width: 342px;
+    max-height: 48px;
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .pricing-text br {
+    display: none;
+  }
+
+  .pricing-cards {
+    display: flex;
+    flex-direction: row;
+    width: calc(100% + 40px);
+    margin: 0 -20px;
+    padding: 0 20px 1px;
+    flex-wrap: nowrap;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 20px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pricing-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pricing-card {
+    width: 325px;
+    min-width: 325px;
+    height: 483px;
+    padding: 22px 21px;
+    border-radius: 8px;
+    flex: 0 0 325px;
+    scroll-snap-align: start;
+  }
+
+  .pricing-card:hover {
+    transform: none;
+  }
+
+  .pricing-card h3 {
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  .pricing-divider {
+    margin: 10px 0 25px;
+  }
+
+  .price {
+    margin: 0 0 40px;
+    font-size: 24px;
+    line-height: 25px;
+  }
+
+  .price span {
+    font-size: 20px;
+  }
+
+  .price-features li {
+    margin-bottom: 10px;
+    padding-left: 45px;
+    font-size: 16px;
+    line-height: 25px;
+  }
+
+  .get-started-btn {
+    height: 33px;
+    border-radius: 18px;
+    font-size: 16px;
+  }
+
+  .compare-plan-btn {
+    width: 100%;
+    height: 48px;
+    margin-top: 0;
+    color: #2a2b2a;
+    background: transparent;
+    border-color: #2a2b2a;
+    font-size: 20px;
+  }
+
+  .faq-section {
+    padding: 46px 0 90px;
+    background: #f5f4ee;
+  }
+
+  .faq-section-header {
+    flex-direction: column;
+    gap: 40px;
+    margin: 0;
+  }
+
+  .faq-section-left {
+    max-width: none;
+    flex: none;
+  }
+
+  .faq-section .section-title {
+    margin: 0;
+    color: #2a2b2a;
+    font-size: 32px;
+    line-height: 32px;
+  }
+
+  .faq-intro,
+  .faq-profile-image {
+    display: none;
+  }
+
+  .faq-grid {
+    width: 100%;
+    gap: 0;
+  }
+
+  .faq-card {
+    min-height: 70px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(42, 43, 42, 0.35);
+    transform: none;
+  }
+
+  .faq-card:hover {
+    transform: none;
+  }
+
+  .faq-content {
+    width: 100%;
+  }
+
+  .faq-question-btn {
+    position: relative;
+    display: block;
+    min-height: 50px;
+    margin-top: 10px;
+    padding: 0 62px 20px 0;
+  }
+
+  .faq-question-text {
+    min-height: 50px;
+    margin: 0;
+    color: #2a2b2a;
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .faq-question-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    background: center / 40px 40px no-repeat url('/assets/lending/plus.svg');
+  }
+
+  .faq-answer {
+    display: none;
+    min-height: 0;
+  }
+
+  .faq-answer p {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .faq-card.faq-card-expanded .faq-answer {
+    display: block;
+  }
+
+  .faq-card.faq-card-expanded .faq-question-btn::after {
+    content: "";
+    background-image: url('/assets/lending/close.svg');
+    background-size: 28px 28px;
+  }
+
+  .cta-section {
+    min-height: 426px;
+    background: #2a2b2a;
+  }
+
+  .cta-background {
+    display: none;
+  }
+
+  .cta-content {
+    padding: 48px 0 0;
+  }
+
+  .cta-title {
+    width: 100%;
+    margin: 0 0 66px;
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .cta-bottom-bar {
+    position: static;
+    height: auto;
+    padding: 0;
+  }
+
+  .cta-bottom-bar::before {
+    display: none;
+  }
+
+  .cta-bar-inner {
+    max-width: 390px;
+    padding: 0 24px;
+    align-items: flex-start;
+  }
+
+  .cta-text-group {
+    width: 100%;
+  }
+
+  .cta-text-group p {
+    display: none;
+  }
+
+  .cta-button {
+    width: 100%;
+    height: 48px;
+    margin: 0;
+    border-radius: 18px;
+    font-size: 16px;
+  }
+
+  .footer {
+    background: #2a2b2a;
+  }
+
+  .footer .figma-footer {
+    height: auto;
+    min-height: 430px;
+    background: #2a2b2a;
+  }
+
+  .footer .footer-background {
+    padding: 20px 20px 26px;
+    background: #2a2b2a;
+  }
+
+  .footer .footer-logo-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 180px;
+    height: 51px;
+  }
+
+  .footer .footer-email-container {
+    position: absolute;
+    top: 95px;
+    left: 0;
+    right: 0;
+    width: auto;
+    padding: 0 20px;
+    margin: 0;
+    flex-direction: column-reverse;
+    gap: 14px;
+    box-sizing: border-box;
+  }
+
+  .mobile-desktop-stub-legal {
+    width: 342px;
+    max-width: 100%;
+    margin: 74px auto 0;
+    color: #999;
+    font-family: 'TeX Gyre Heros', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+  }
+
+  .mobile-desktop-stub-legal strong {
+    font-weight: 700;
+  }
+
+  .footer .email-pill,
+  .footer .contact-support-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 24px;
+    box-sizing: border-box;
+    font-size: 17px;
+  }
+
+  .footer .email-pill {
+    background: transparent;
+    border: 1px solid #fff;
+  }
+
+  .footer .email-text {
+    color: #fff;
+    font-size: 17px;
+    line-height: 24px;
+  }
+
+  .footer .footer-bottom-section {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    height: 100%;
+    display: block;
+  }
+
+  .footer .footer-bottom-links {
+    position: absolute;
+    top: 250px;
+    left: 0;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .footer .footer-bottom-item,
+  .footer .copyright-text {
+    color: #fff;
+    font-size: 20px;
+    line-height: 25px;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 839px) {
+  .home-page .main-container {
+    max-width: 839px;
+    padding: 0 32px;
+  }
+
+  .features-cards-section {
+    min-height: auto;
+    padding: 44px 0 48px;
+  }
+
+  .features-cards-section .main-container,
+  .pricing-section .main-container {
+    max-width: 839px;
+  }
+
+  .features-cards-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    transform: none;
+  }
+
+  .feature-card-small {
+    min-height: 220px;
+  }
+
+  .feature-card-large {
+    grid-column: 1 / -1;
+    min-height: 260px;
+  }
+
+  .feature-card-small:hover,
+  .feature-card-large:hover,
+  .pricing-card:hover {
+    transform: none;
+  }
+
+  .feature-card-title {
+    max-width: none;
+    min-height: auto;
+  }
+
+  .feature-card-small .feature-card-text {
+    max-width: none;
+  }
+
+  .feature-icon-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 14px;
+  }
+
+  .pricing-section {
+    min-height: auto;
+    padding: 40px 0 48px;
+  }
+
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    gap: 16px;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .pricing-card {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 483px;
+    flex: auto;
+    scroll-snap-align: none;
+  }
+}
+
+@media (min-width: 840px) and (max-width: 1024px) {
+  .home-page {
+    background: #f5f4ee;
+  }
+
+  .home-page .main-container {
+    max-width: 1024px;
+    padding: 0 40px;
+  }
+
+  .header {
+    padding: 64px 0 0;
+  }
+
+  .header-content {
+    align-items: flex-start;
+  }
+
+  .nav-links {
+    flex: 0 1 auto;
+    justify-content: flex-start;
+    gap: 70px;
+    margin-left: 60px;
+  }
+
+  .nav-link {
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .header-buttons {
+    gap: 24px;
+  }
+
+  .sign-up-btn {
+    width: 156px;
+    min-width: 156px;
+    height: 33px;
+    padding: 4px 38px;
+    background: #fff;
+    border-color: #fff;
+    color: #2a2b2a;
+  }
+
+  .login-btn,
+  .logout-btn {
+    width: auto;
+    min-width: 0;
+    height: 25px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #fff;
+  }
+
+  .hero-section {
+    height: 900px;
+    min-height: 900px;
+  }
+
+  .hero-image {
+    object-position: 50% 50%;
+  }
+
+  .hero-content .main-container {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 365px;
+  }
+
+  .hero-title-row {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    margin: 0;
+  }
+
+  .hero-title {
+    max-width: 540px;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .hero-subtitle-lines {
+    max-width: 405px;
+  }
+
+  .student-link {
+    top: 417px;
+    right: 41px;
+    transform: none;
+    gap: 20px;
+    min-width: 212px;
+    justify-content: flex-end;
+  }
+
+  .hero-buttons {
+    right: 40px;
+    bottom: 50px;
+    gap: 18px;
+  }
+
+  .community-lessons-btn,
+  .first-lesson-btn {
+    width: 238px;
+    height: 37px;
+  }
+
+  .features-cards-section {
+    min-height: auto;
+    padding: 0 0 90px;
+    background: #f5f4ee;
+    gap: 0;
+  }
+
+  .video-demo-section {
+    display: block;
+    padding: 74px 0;
+    background: #f5f4ee;
+    overflow: hidden;
+  }
+
+  .video-demo-section .about-background {
+    display: block;
+  }
+
+  .video-demo-placeholder {
+    width: 100%;
+    height: 587px;
+    margin: 0;
+    border-radius: 20px;
+    background: #fff;
+  }
+
+  .video-demo-text {
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .focus-on-teaching-title {
+    padding: 20px 0 40px;
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .features-cards-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, 180px);
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 0;
+    padding: 20px;
+    border-radius: 22px;
+    background: #2a2b2a;
+    box-shadow: none;
+    transform: none;
+    overflow: hidden;
+  }
+
+  .feature-card-small:hover,
+  .feature-card-large:hover,
+  .pricing-card:hover {
+    transform: none;
+  }
+
+  .feature-card-large {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-content: flex-start;
+  }
+
+  .feature-card-small:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .feature-card-small:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .feature-card-title {
+    min-height: auto;
+    max-width: none;
+    margin-bottom: 10px;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 700;
+  }
+
+  .feature-card-divider {
+    margin-bottom: 10px;
+  }
+
+  .feature-card-text {
+    max-width: none;
+    font-size: 17px;
+    line-height: 22px;
+    color: #cfcfcf;
+    flex: initial;
+  }
+
+  .feature-card-small .feature-card-text {
+    max-width: calc(100% - 88px);
+    padding-bottom: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .feature-icon-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .feature-icon-img,
+  .feature-icon-img-large {
+    width: 68px;
+    height: 68px;
+  }
+
+  .feature-large-card-icon-wrapper {
+    margin-top: auto;
+    align-items: flex-end;
+  }
+
+  .create-first-lesson-btn {
+    width: min(342px, 100%);
+    height: 48px;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 24px;
+  }
+
+  .tools-section {
+    min-height: 762px;
+    padding: 0 0 100px;
+    background: #f7f4ee;
+    overflow: hidden;
+  }
+
+  .tools-section-title {
+    margin-bottom: 40px;
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .tools-container {
+    width: calc(100% + 40px);
+    flex-direction: row;
+    gap: 15px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .tools-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tool-card-large {
+    width: 796px;
+    min-width: 796px;
+    height: 507px;
+    box-shadow: none;
+    flex-direction: column;
+  }
+
+  .tool-card-content {
+    flex: 0 0 190px;
+    min-height: 190px;
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 30px;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+  }
+
+  .tool-card-large h3 {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    color: #fff;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 700;
+  }
+
+  .tool-card-divider {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .tool-card-description {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 420px;
+    color: #fff;
+    font-size: 17px;
+    line-height: 22px;
+  }
+
+  .tool-card-arrow-btn {
+    grid-column: 1;
+    grid-row: 4;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    align-self: end;
+    justify-self: start;
+    font-size: 17px;
+    background: #2a2b2a;
+  }
+
+  .tool-card-dots {
+    grid-column: 2;
+    grid-row: 4;
+    width: 27px;
+    height: 10px;
+    align-self: end;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tool-card-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .tool-card-dots span:first-child {
+    background: #2a2b2a;
+  }
+
+  .tool-card-dots span:last-child {
+    background: #fff;
+    border: 1px solid #2a2b2a;
+  }
+
+  .tool-card-image-placeholder {
+    flex: 1 1 auto;
+    min-height: 317px;
+    background: #d9d9d9;
+  }
+
+  .pricing-section {
+    min-height: 888px;
+    padding: 71px 0 40px;
+    overflow: hidden;
+  }
+
+  .pricing-content {
+    gap: 58px;
+  }
+
+  .pricing-header {
+    gap: 27px;
+  }
+
+  .pricing-title {
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .pricing-text {
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .pricing-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 20px;
+    width: calc(100% + 80px);
+    margin: 0 -40px;
+    padding: 0 40px 1px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 40px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
+
+  .pricing-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pricing-card {
+    width: 325px;
+    min-width: 325px;
+    height: 483px;
+    padding: 22px 21px;
+    border-radius: 22.106px;
+    flex: 0 0 325px;
+    scroll-snap-align: start;
+  }
+
+  .pricing-card h3 {
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  .pricing-divider {
+    margin: 10px 0 25px;
+  }
+
+  .price {
+    margin: 0 0 40px;
+  }
+
+  .price-features li {
+    margin-bottom: 10px;
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .compare-plan-btn {
+    width: 342px;
+    height: 54px;
+    margin: 0 auto;
+    border-color: #2a2b2a;
+    color: #2a2b2a;
+    background: #f7f4ee;
+  }
+
+  .faq-section {
+    padding: 70px 0 70px;
+    background: #f7f4ee;
+  }
+
+  .faq-section-header {
+    display: grid;
+    grid-template-columns: 342px minmax(0, 470px);
+    gap: calc(100% - 812px);
+    align-items: flex-start;
+    margin: 0;
+  }
+
+  .faq-section-left {
+    max-width: 342px;
+  }
+
+  .faq-section .section-title {
+    margin-bottom: 85px;
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .faq-intro {
+    display: block;
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .faq-grid {
+    width: 470px;
+    gap: 0;
+  }
+
+  .faq-card {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    border-bottom: 1px solid rgba(42, 43, 42, 0.55);
+  }
+
+  .faq-profile-image {
+    display: none;
+  }
+
+  .faq-question-btn {
+    position: relative;
+    min-height: 65px;
+    padding: 0 62px 18px 0;
+  }
+
+  .faq-question-text {
+    color: #2a2b2a;
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .faq-question-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: center / 30px 30px no-repeat url('/assets/lending/plus.svg');
+  }
+
+  .faq-answer {
+    display: none;
+    min-height: 0;
+    padding: 0 62px 20px 0;
+  }
+
+  .faq-card.faq-card-expanded .faq-answer {
+    display: block;
+  }
+
+  .faq-card.faq-card-expanded .faq-question-btn::after {
+    background-image: url('/assets/lending/close.svg');
+    background-size: 24px 24px;
+  }
+
+  .cta-section {
+    min-height: 789px;
+  }
+
+  .cta-background img {
+    object-position: center bottom;
+  }
+
+  .cta-content {
+    padding: 57px 0 0;
+  }
+
+  .cta-title {
+    width: 100%;
+    font-size: 80px;
+    line-height: 85px;
+  }
+
+  .cta-bottom-bar {
+    height: 227px;
+  }
+
+  .cta-bottom-bar::before {
+    left: -10px;
+    right: -10px;
+    border-radius: 18px;
+  }
+
+  .cta-bar-inner {
+    max-width: 1024px;
+    padding: 0 40px;
+  }
+
+  .cta-text-group {
+    width: 100%;
+  }
+
+  .cta-button {
+    width: 342px;
+    height: 54px;
+    margin-left: auto;
+  }
+
+  .footer .figma-footer {
+    height: 359px;
+    min-height: 359px;
+  }
+
+  .footer .footer-background {
+    padding: 20px 40px;
+  }
+
+  .footer .footer-email-container {
+    right: auto;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .footer .email-pill,
+  .footer .contact-support-btn {
+    width: 209px;
+    height: 33px;
+    border-radius: 18px;
+    box-sizing: border-box;
+  }
+
+  .footer .footer-bottom-section {
+    left: 40px;
+    right: 40px;
+    bottom: 50px;
+    height: 72px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .footer .footer-logo-container {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: 220px;
+    height: 63px;
+    margin-right: 0;
+  }
+
+  .footer .footer-bottom-links {
+    gap: 13px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-page {
+    background: #f7f4ee;
+  }
+
+  .home-page .main-container {
+    max-width: 1440px;
+    padding: 0 40px;
+  }
+
+  .header {
+    padding: 29px 0 0;
+  }
+
+  .nav-links {
+    gap: 120px;
+  }
+
+  .sign-up-btn {
+    width: 156px;
+    min-width: 156px;
+    height: 33px;
+    background: #fff;
+    border-color: #fff;
+    color: #2a2b2a;
+  }
+
+  .login-btn,
+  .logout-btn {
+    width: auto;
+    min-width: 0;
+    height: 25px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #fff;
+  }
+
+  .hero-section {
+    height: 900px;
+    min-height: 900px;
+  }
+
+  .hero-content .main-container {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 365px;
+  }
+
+  .hero-title-row {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    margin: 0;
+  }
+
+  .hero-title {
+    max-width: 560px;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .hero-subtitle-lines {
+    max-width: 405px;
+  }
+
+  .student-link {
+    top: 417px;
+    right: 45px;
+    transform: none;
+    gap: 20px;
+    min-width: 212px;
+    justify-content: flex-end;
+  }
+
+  .hero-buttons {
+    right: 45px;
+    bottom: 77px;
+    gap: 18px;
+  }
+
+  .community-lessons-btn,
+  .first-lesson-btn {
+    width: 238px;
+    height: 37px;
+  }
+
+  .features-cards-section {
+    min-height: auto;
+    padding: 0 0 100px;
+    background: #f7f4ee;
+    background-image: none;
+    gap: 0;
+  }
+
+  .video-demo-section {
+    display: block;
+    padding: 74px 0;
+    background: #f7f4ee;
+    overflow: hidden;
+  }
+
+  .video-demo-section .about-background {
+    display: block;
+  }
+
+  .video-demo-placeholder {
+    width: 100%;
+    height: 845px;
+    margin: 0;
+    border-radius: 20px;
+    background: #fff;
+  }
+
+  .video-demo-text {
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .focus-on-teaching-title {
+    padding: 67px 0 33px;
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .features-cards-container {
+    display: grid;
+    grid-template-columns: minmax(0, 325px) minmax(0, 325px) minmax(0, 657px);
+    gap: 20px;
+    align-items: stretch;
+    justify-content: space-between;
+  }
+
+  .feature-card-small,
+  .feature-card-large {
+    width: 100%;
+    min-width: 0;
+    height: 281px;
+    min-height: 0;
+    padding: 20px;
+    border-radius: 20px;
+    background: #2a2b2a;
+    box-shadow: none;
+    transform: none;
+    overflow: hidden;
+  }
+
+  .feature-card-small:hover,
+  .feature-card-large:hover,
+  .pricing-card:hover {
+    transform: none;
+  }
+
+  .feature-card-large {
+    grid-column: 3;
+    justify-content: flex-start;
+  }
+
+  .feature-card-title {
+    min-height: auto;
+    max-width: none;
+    margin-bottom: 10px;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 700;
+  }
+
+  .feature-card-divider {
+    margin-bottom: 10px;
+  }
+
+  .feature-card-text {
+    max-width: none;
+    font-size: 17px;
+    line-height: 22px;
+    color: #cfcfcf;
+    flex: initial;
+  }
+
+  .feature-card-small .feature-card-text {
+    max-width: calc(100% - 88px);
+    padding-bottom: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .feature-icon-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 19px;
+  }
+
+  .feature-icon-img {
+    width: 68px;
+    height: 68px;
+  }
+
+  .feature-large-card-icon-wrapper {
+    margin-top: auto;
+    align-items: flex-end;
+  }
+
+  .create-first-lesson-btn {
+    width: 342px;
+    height: 48px;
+    border-radius: 24px;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .tools-section {
+    min-height: auto;
+    padding: 0 0 100px;
+    background: #f7f4ee;
+    overflow: hidden;
+  }
+
+  .tools-section-title {
+    margin-bottom: 69px;
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .tools-container {
+    width: calc(100% + 40px);
+    flex-direction: row;
+    gap: 30px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tools-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tool-card-large {
+    width: 796px;
+    min-width: 796px;
+    height: 507px;
+    border-radius: var(--border-radius-large);
+    box-shadow: none;
+    flex-direction: column;
+  }
+
+  .tool-card-content {
+    flex: 0 0 190px;
+    min-height: 190px;
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 30px;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+  }
+
+  .tool-card-large h3 {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    color: #fff;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 700;
+  }
+
+  .tool-card-divider {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .tool-card-description {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 420px;
+    color: #fff;
+    font-size: 17px;
+    line-height: 22px;
+  }
+
+  .tool-card-arrow-btn {
+    grid-column: 1;
+    grid-row: 4;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    align-self: end;
+    justify-self: start;
+    font-size: 17px;
+    background: #2a2b2a;
+  }
+
+  .tool-card-dots {
+    grid-column: 2;
+    grid-row: 4;
+    width: 27px;
+    height: 10px;
+    align-self: end;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tool-card-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .tool-card-dots span:first-child {
+    background: #2a2b2a;
+  }
+
+  .tool-card-dots span:last-child {
+    background: #fff;
+    border: 1px solid #2a2b2a;
+  }
+
+  .tool-card-image-placeholder {
+    flex: 1 1 auto;
+    min-height: 317px;
+    background: #d9d9d9;
+  }
+
+  .pricing-section {
+    min-height: 936px;
+    padding: 71px 0 48px;
+    overflow: hidden;
+  }
+
+  .pricing-content {
+    gap: 91px;
+  }
+
+  .pricing-header {
+    gap: 27px;
+  }
+
+  .pricing-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    margin: 0;
+    padding: 0 0 1px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pricing-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pricing-card {
+    width: 325px;
+    min-width: 325px;
+    height: 483px;
+    padding: 22px 21px;
+    border-radius: var(--border-radius-large);
+    flex: 0 0 325px;
+    scroll-snap-align: start;
+  }
+
+  .pricing-card h3 {
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  .pricing-divider {
+    margin: 10px 0 25px;
+  }
+
+  .price {
+    margin: 0 0 40px;
+  }
+
+  .price-features li {
+    margin-bottom: 10px;
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .compare-plan-btn {
+    width: 342px;
+    height: 54px;
+    margin: 0 auto;
+    border-color: #2a2b2a;
+    color: #2a2b2a;
+    background: #f7f4ee;
+  }
+
+  .faq-section {
+    padding: 108px 0 110px;
+    background: #f7f4ee;
+  }
+
+  .faq-section-header {
+    display: grid;
+    grid-template-columns: 350px minmax(0, 838px);
+    gap: 110px;
+    align-items: flex-start;
+    margin: 0;
+  }
+
+  .faq-section-left {
+    max-width: 350px;
+    flex: none;
+  }
+
+  .faq-section .section-title {
+    margin: 0 0 98px;
+    color: #2a2b2a;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .faq-intro {
+    display: block;
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .faq-grid {
+    width: 100%;
+    gap: 0;
+  }
+
+  .faq-card {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    border-bottom: 1px solid rgba(42, 43, 42, 0.55);
+  }
+
+  .faq-profile-image {
+    display: none;
+  }
+
+  .faq-question-btn {
+    position: relative;
+    min-height: 67px;
+    margin: 0;
+    padding: 0 62px 20px 0;
+  }
+
+  .faq-question-text {
+    color: #2a2b2a;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 700;
+  }
+
+  .faq-question-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: center / 30px 30px no-repeat url('/assets/lending/plus.svg');
+  }
+
+  .faq-answer {
+    display: none;
+    min-height: 0;
+    padding: 0 62px 20px 0;
+  }
+
+  .faq-card.faq-card-expanded .faq-answer {
+    display: block;
+  }
+
+  .faq-card.faq-card-expanded .faq-question-btn::after {
+    background-image: url('/assets/lending/close.svg');
+    background-size: 24px 24px;
+  }
+
+  .cta-section {
+    min-height: 789px;
+  }
+
+  .cta-background img {
+    object-position: center bottom;
+  }
+
+  .cta-content {
+    padding: 53px 0 0;
+  }
+
+  .cta-title {
+    width: 100%;
+    font-size: 80px;
+    line-height: 85px;
+  }
+
+  .cta-bottom-bar {
+    height: 227px;
+  }
+
+  .cta-button {
+    width: 342px;
+    height: 54px;
+    margin-left: auto;
   }
 }

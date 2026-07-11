@@ -1,6 +1,6 @@
 // src/components/OpenLibrary.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getLessonsLite, type LessonLite, deleteLesson } from '../../../services/lessonService.ts';
 import { useAuth } from '../../../contexts/AuthContext.tsx';
 import './OpenLibrary.css';
@@ -19,10 +19,17 @@ import BuilderNotification from '../home/BuilderNotification.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 import NoResultsNotification from '../../common/NoResultsNotification.tsx';
 
+const imgChiilsBlackLogo = "/assets/chiils-black-logo.svg";
+type MobileFilterPanel = 'language' | 'level' | 'grammar' | 'topic';
+
 const OpenLibrary: React.FC = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const { user } = useAuth();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+    const [mobileFilterPanel, setMobileFilterPanel] = useState<MobileFilterPanel | null>(null);
     const [lessons, setLessons] = useState<LessonLite[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -47,6 +54,37 @@ const OpenLibrary: React.FC = () => {
     const [selectedGrammar, setSelectedGrammar] = useState<string[]>([]);
     const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
     const [notification, setNotification] = useState<{ message: string, type: 'success' | 'info' | 'error', lessonId?: string } | null>(null);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+
+        const mainContent = document.querySelector<HTMLElement>('.main-content');
+        mainContent?.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, [location.key]);
+
+    useEffect(() => {
+        if (!isMobileMenuOpen && !isMobileFiltersOpen) {
+            return;
+        }
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setIsMobileMenuOpen(false);
+                setIsMobileFiltersOpen(false);
+                setMobileFilterPanel(null);
+            }
+        };
+
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [isMobileMenuOpen, isMobileFiltersOpen]);
 
     // Imports from utils (simulated inside component for tool use compliance, but in real code strict imports)
     // Actually, I should import them at the top. I will add imports in a separate edit or use fully qualified if I can? 
@@ -355,9 +393,153 @@ const OpenLibrary: React.FC = () => {
         return Array.from(topics).sort();
     }, [selectedCefrLevels]);
 
+    const mobileFilterSummary = [
+        selectedLanguage || 'English',
+        selectedCefrLevels[0] || 'B1',
+        selectedGrammar[0] || 'Past Perfect...'
+    ].join(', ');
+
+    const handleMobileHome = () => {
+        setIsMobileMenuOpen(false);
+        navigate('/');
+    };
+
+    const handleMobileStudentLogin = () => {
+        setIsMobileMenuOpen(false);
+        navigate('/login', { state: { hideSignInLink: true } });
+    };
+
+    const handleMobileSupport = () => {
+        window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer');
+    };
+
+    const handleMobileEmail = () => {
+        window.location.href = 'mailto:team@chiils.com';
+    };
+
+    const handleMobileResetFilters = () => {
+        setSelectedLanguage('English');
+        setSelectedCefrLevels([]);
+        setSelectedGrammar([]);
+        setSelectedTopics([]);
+    };
+
+    const handleMobileFilterBack = () => {
+        if (mobileFilterPanel) {
+            setMobileFilterPanel(null);
+            return;
+        }
+
+        setIsMobileFiltersOpen(false);
+    };
+
+    const formatMobileValue = (value: string) => value.length > 28 ? `${value.slice(0, 26)}...` : value;
+
+    const mobileFilterRows = [
+        { key: 'language' as const, label: 'Language', value: selectedLanguage || 'English' },
+        { key: 'level' as const, label: 'CEFR level', value: selectedCefrLevels[0] || 'B1' },
+        { key: 'grammar' as const, label: 'Grammar', value: selectedGrammar.length > 0 ? selectedGrammar.join(', ') : 'Past Perfect, Reported Spee...' },
+        { key: 'topic' as const, label: 'Topic', value: selectedTopics.length > 0 ? selectedTopics.join(', ') : 'Everyday life, Fashion & Be...' }
+    ];
+
+    const getMobilePanelTitle = () => {
+        switch (mobileFilterPanel) {
+            case 'language':
+                return 'Language';
+            case 'level':
+                return 'CEFR level';
+            case 'grammar':
+                return 'Grammar';
+            case 'topic':
+                return 'Topic';
+            default:
+                return 'Filters';
+        }
+    };
+
+    const getMobilePanelOptions = () => {
+        switch (mobileFilterPanel) {
+            case 'language':
+                return LANGUAGES;
+            case 'level':
+                return CEFR_LEVELS;
+            case 'grammar':
+                return availableGrammarTopics;
+            case 'topic':
+                return TOPICS;
+            default:
+                return [];
+        }
+    };
+
+    const isMobileOptionSelected = (option: string) => {
+        switch (mobileFilterPanel) {
+            case 'language':
+                return selectedLanguage === option;
+            case 'level':
+                return selectedCefrLevels.includes(option);
+            case 'grammar':
+                return selectedGrammar.includes(option);
+            case 'topic':
+                return selectedTopics.includes(option);
+            default:
+                return false;
+        }
+    };
+
+    const handleMobileOptionToggle = (option: string) => {
+        switch (mobileFilterPanel) {
+            case 'language':
+                setSelectedLanguage(selectedLanguage === option ? '' : option);
+                break;
+            case 'level':
+                handleCefrToggle(option);
+                break;
+            case 'grammar':
+                handleGrammarToggle(option);
+                break;
+            case 'topic':
+                handleTopicToggle(option);
+                break;
+            default:
+                break;
+        }
+    };
+
 
     return (
         <div className="open-library-page">
+            <div className="open-library-mobile-topbar" aria-label="Open Library mobile header">
+                <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-logo" />
+                <button
+                    className="open-library-mobile-menu"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded={isMobileMenuOpen}
+                    onClick={() => setIsMobileMenuOpen(true)}
+                >
+                    <img src="/assets/lending/burger.svg" alt="" aria-hidden="true" />
+                </button>
+            </div>
+
+            <div className="open-library-mobile-heading">
+                <h1>Open Library</h1>
+                <button className="open-library-mobile-filter" type="button" onClick={() => setIsMobileFiltersOpen(true)}>
+                    <img className="open-library-mobile-filter-icon" src="/assets/open-library/filter.svg" alt="" aria-hidden="true" />
+                    <span>{mobileFilterSummary}</span>
+                </button>
+                <div className="open-library-mobile-search">
+                    <span className="open-library-mobile-search-icon" aria-hidden="true"></span>
+                    <input
+                        type="text"
+                        placeholder="Search community lessons..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        aria-label="Search community lessons"
+                    />
+                </div>
+            </div>
+
             <div className="open-library-header">
                 <div>
                     <h1>Open Library</h1>
@@ -585,6 +767,14 @@ const OpenLibrary: React.FC = () => {
                                                 </span>
                                             </div>
                                         </div>
+                                        <div
+                                            className="lesson-mobile-actions"
+                                            aria-hidden="true"
+                                            onClick={(event) => event.stopPropagation()}
+                                        >
+                                            <span className="lesson-mobile-folder"></span>
+                                            <span className="lesson-mobile-favorite"></span>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -598,6 +788,170 @@ const OpenLibrary: React.FC = () => {
                     )}
                 </div>
             </div>
+            <div className="open-library-mobile-footer">
+                <div className="open-library-mobile-desktop-prompt">
+                    Switch to desktop
+                    <br />
+                    to explore the full
+                    <br />
+                    version
+                </div>
+                <div className="open-library-mobile-footer-panel">
+                    <button type="button" className="open-library-mobile-get-started" onClick={() => navigate('/')}>
+                        Get started →
+                    </button>
+                    <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-footer-logo" />
+                    <button
+                        type="button"
+                        className="open-library-mobile-footer-button"
+                        onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}
+                    >
+                        Contact support
+                    </button>
+                    <button
+                        type="button"
+                        className="open-library-mobile-footer-button"
+                        onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}
+                    >
+                        team@chiils.com
+                    </button>
+                    <div className="open-library-mobile-footer-links">
+                        <p>Privacy policy</p>
+                        <p>Terms &amp; Conditions</p>
+                        <p>Refund policy</p>
+                        <p>Copyright © Koala Station DOO Beograd, 2025</p>
+                    </div>
+                </div>
+            </div>
+            {isMobileFiltersOpen && (
+                <div className="open-library-mobile-filters-screen" role="dialog" aria-modal="true" aria-label="Open Library filters">
+                    <div className="open-library-mobile-topbar" aria-label="Open Library filters header">
+                        <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-logo" />
+                        <button
+                            className="open-library-mobile-menu"
+                            type="button"
+                            aria-label="Open navigation menu"
+                            aria-expanded={isMobileMenuOpen}
+                            onClick={() => setIsMobileMenuOpen(true)}
+                        >
+                            <img src="/assets/lending/burger.svg" alt="" aria-hidden="true" />
+                        </button>
+                    </div>
+
+                    <button className="open-library-mobile-filter-back" type="button" onClick={handleMobileFilterBack}>
+                        <img src="/assets/go-back.svg" alt="" aria-hidden="true" />
+                        {mobileFilterPanel ? 'Filters' : 'Open Library'}
+                    </button>
+
+                    <h1 className="open-library-mobile-filters-title">{getMobilePanelTitle()}</h1>
+
+                    {mobileFilterPanel ? (
+                        <div className={`open-library-mobile-option-list ${mobileFilterPanel === 'topic' ? 'topic-widget' : ''}`}>
+                            {getMobilePanelOptions().map(option => {
+                                const isSelected = isMobileOptionSelected(option);
+
+                                return (
+                                    <button
+                                        className={`open-library-mobile-option-row ${isSelected ? 'selected' : ''}`}
+                                        type="button"
+                                        key={option}
+                                        onClick={() => handleMobileOptionToggle(option)}
+                                    >
+                                        <span className="open-library-mobile-check" aria-hidden="true"></span>
+                                        <span>{option}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="open-library-mobile-filter-list">
+                            {mobileFilterRows.map(row => (
+                                <button
+                                    className="open-library-mobile-filter-row"
+                                    type="button"
+                                    key={row.label}
+                                    onClick={() => setMobileFilterPanel(row.key)}
+                                >
+                                    <span className="open-library-mobile-filter-row-label">{row.label}</span>
+                                    <span className="open-library-mobile-filter-row-value">{formatMobileValue(row.value)}</span>
+                                    <span className="open-library-mobile-filter-row-arrow" aria-hidden="true"></span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    <div className="open-library-mobile-filter-actions">
+                        <button type="button" onClick={() => {
+                            if (mobileFilterPanel) {
+                                setMobileFilterPanel(null);
+                            } else {
+                                setIsMobileFiltersOpen(false);
+                            }
+                        }}>Apply</button>
+                        <button type="button" onClick={handleMobileResetFilters}>Reset all</button>
+                    </div>
+
+                    <div className="open-library-mobile-footer-panel open-library-mobile-filters-footer-panel">
+                        <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-footer-logo" />
+                        <button
+                            type="button"
+                            className="open-library-mobile-footer-button"
+                            onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}
+                        >
+                            Contact support
+                        </button>
+                        <button
+                            type="button"
+                            className="open-library-mobile-footer-button"
+                            onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}
+                        >
+                            team@chiils.com
+                        </button>
+                        <div className="open-library-mobile-footer-links">
+                            <p>Privacy policy</p>
+                            <p>Terms &amp; Conditions</p>
+                            <p>Refund policy</p>
+                            <p>Copyright © Koala Station DOO Beograd, 2025</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {isMobileMenuOpen && (
+                <div className="mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+                    <div className="mobile-menu-panel">
+                        <div className="mobile-menu-top">
+                            <img src="/assets/chiils-white-logo.svg" alt="Chiils" className="mobile-menu-logo" />
+                            <button
+                                className="mobile-menu-close"
+                                type="button"
+                                aria-label="Close navigation menu"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                x
+                            </button>
+                        </div>
+
+                        <nav className="mobile-menu-nav" aria-label="Mobile navigation links">
+                            <button type="button" onClick={handleMobileHome}>Home</button>
+                            <button type="button" onClick={handleMobileStudentLogin}>Student log in</button>
+                            <button type="button" disabled aria-disabled="true">Tools</button>
+                            <button type="button" disabled aria-disabled="true">Pricing</button>
+                            <button type="button" disabled aria-disabled="true">Questions &amp; Answers</button>
+                            <button type="button" className="mobile-menu-nav-disabled-auth" disabled aria-disabled="true">
+                                Log in / Sign up
+                            </button>
+                            <p className="mobile-menu-nav-disabled-note">Available on Desktop</p>
+                        </nav>
+
+                        <div className="mobile-menu-actions">
+                            <button type="button" onClick={handleMobileSupport}>
+                                Contact support
+                            </button>
+                            <button type="button" onClick={handleMobileEmail}>team@chiils.com</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 };

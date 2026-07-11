@@ -8,7 +8,7 @@
   background: #2A2B2A;
   position: relative;
   left: 0;
-  z-index: 15000;
+  z-index: 9000;
   overflow: hidden;
   /* Prevent content overflow */
 }
@@ -200,62 +200,6 @@
   .footer-bottom-section {
     left: 15px;
     right: 15px;
-  }
-}
-
-/* Tablet (768px - 1023px) */
-@media (max-width: 1023px) and (min-width: 768px) {
-  .figma-footer {
-    height: auto;
-    min-height: 220px;
-  }
-
-  .footer-background {
-    padding: 15px;
-  }
-
-
-  .footer-email-container {
-    position: relative;
-    left: auto;
-    top: auto;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-  }
-
-  .footer-bottom-section {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    height: auto;
-    margin-top: auto;
-  }
-
-  .footer-bottom-links {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .footer-logo-container {
-    width: 200px;
-    height: 57px;
-    margin-right: 0;
-  }
-
-  .copyright-text,
-  .footer-bottom-item {
-    font-size: 18px;
-  }
-
-  .email-text {
-    font-size: 15px;
   }
 }
 

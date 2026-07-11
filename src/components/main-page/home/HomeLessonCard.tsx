@@ -8,10 +8,12 @@ interface HomeLessonCardProps {
     onClick: () => void;
     onAddToFolder?: (e: React.MouseEvent) => void;
     onAddToFavorite?: (e: React.MouseEvent) => void;
+    onDelete?: (e: React.MouseEvent) => void;
     onStop?: (e: React.MouseEvent) => void;
     isLiked?: boolean;
     showRemoveIcon?: boolean;
     showActions?: boolean;
+    showDelete?: boolean;
 }
 
 const imgLessonThumbnail = "/assets/dashboard/lesson-thumbnail.jpg";
@@ -19,16 +21,19 @@ const iconFolder = "/assets/home/folder.svg";
 const iconRemove = "/assets/home/remove-from-folder.svg";
 const iconFavorites = "/assets/home/favorite.svg";
 const iconStop = "/assets/home/close-circle.svg";
+const iconDelete = "/assets/home/close-circle-white.svg";
 
 const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
     lesson,
     onClick,
     onAddToFolder,
     onAddToFavorite,
+    onDelete,
     onStop,
     isLiked = false,
     showRemoveIcon = false,
-    showActions = true
+    showActions = true,
+    showDelete = false
 }) => {
     const isProcessing = lesson.status === 'PROCESSING' || lesson.status === 'PENDING';
     const [isStoppable, setIsStoppable] = useState(false);
@@ -113,6 +118,18 @@ const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
                     <div className="completion-badge">
                         <span className="check-icon">✓</span>
                     </div>
+                )}
+                {showDelete && (
+                    <button
+                        className="lesson-thumbnail-delete-btn"
+                        aria-label="Delete lesson"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete?.(e);
+                        }}
+                    >
+                        <img src={iconDelete} alt="" />
+                    </button>
                 )}
             </div>
 

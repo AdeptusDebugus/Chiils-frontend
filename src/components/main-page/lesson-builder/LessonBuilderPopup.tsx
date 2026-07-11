@@ -228,7 +228,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                 <label className="lb-label">Language</label>
                                 <div className="lb-field-container">
                                     <FilterDropdown
-                                        label={selectedLanguage || "Select target language"}
+                                        label={selectedLanguage || "Select a language"}
                                         isOpen={openDropdown === 'language'}
                                         onToggle={() => toggleDropdown('language')}
                                         activeCount={selectedLanguage ? 1 : 0}
@@ -322,7 +322,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                         <p className="lb-helper-text">Select a language and a CEFR level first</p>
                                     )}
                                     <FilterDropdown
-                                        label={selectedGrammar.length > 0 ? selectedGrammar.join(', ') : "Select grammar topic"}
+                                        label={selectedGrammar.length > 0 ? selectedGrammar.join(', ') : "Select a grammar point"}
                                         isOpen={openDropdown === 'grammar'}
                                         onToggle={() => toggleDropdown('grammar')}
                                         activeCount={selectedGrammar.length}
@@ -369,7 +369,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                             }
                                         }}
                                         disabled={isValidatingLink}
-                                        placeholder={isValidatingLink ? "Checking video length..." : "Paste Youtube link"}
+                                        placeholder={isValidatingLink ? "Checking video length..." : "Select a link"}
                                         style={errors.link ? { color: '#f44336' } : {}}
                                     />
                                 </div>

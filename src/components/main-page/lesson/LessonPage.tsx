@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getLessonFull, openLesson, addLessonWords, type LessonData } from '../../../services/lessonService.ts';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './LessonPage.css';
 import { extractYouTubeId, fetchYouTubeTitle } from '../../../utils/youtube.ts';
 import { capitalizeFirstLetter } from '../../../utils/text.ts';
@@ -35,9 +35,11 @@ const LessonPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const playerRef = useRef<any>(null);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    const navigate = useNavigate();
     const { user, isAuthenticated } = useAuth();
-    const isPreviewMode = !isAuthenticated || user?.plan == null;
+    const isPreviewMode = !isAuthenticated || user?.plan == null && user?.role != "STUDENT";
     const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
     const [isManageStudentsModalOpen, setIsManageStudentsModalOpen] = useState(false);
     const [studentsRefreshKey, setStudentsRefreshKey] = useState(0);
@@ -144,6 +146,26 @@ const LessonPage: React.FC = () => {
     }, [id]);
 
     useEffect(() => {
+        if (!isMobileMenuOpen) {
+            return;
+        }
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [isMobileMenuOpen]);
+
+    useEffect(() => {
         if (id && !isPreviewMode) {
             openLesson(id).catch(err => console.error('Failed to track lesson open', err));
             addLessonWords(id).catch(err => console.error('Failed to add lesson words', err));
@@ -238,9 +260,174 @@ const LessonPage: React.FC = () => {
 
     const lessonTopicTitle = capitalizeFirstLetter(lesson.lesson_topic || '');
     const presetBlocks = lesson.preset_name ? PRESETS[lesson.preset_name] : [];
+    const wordItems = lesson.word_bank?.items ?? [];
+    const videoUrl = lesson.youtube_url || lesson.you_tube_url || '';
+    const videoId = videoUrl ? extractYouTubeId(videoUrl) : null;
+    const mobileTags = [
+        lesson.tags?.language,
+        lesson.tags?.language_level,
+        lesson.grammar_topics?.[0],
+        lesson.preset_name && capitalizeFirstLetter(lesson.preset_name)
+    ].filter(Boolean).join(', ');
+    const mobileExerciseSummaries = presetBlocks.map(block => ({
+        title: block.static?.title?.replace(/^Exercise\s+\S+\s+[–—-]\s+/i, '') || capitalizeFirstLetter(block.type.replace(/_/g, ' ')),
+        description: block.static?.instruction || ''
+    }));
 
     return (
         <div className={`lesson-page ${isPreviewMode ? 'preview-mode' : ''}`}>
+            <div className="lesson-mobile-view">
+                <div className="lesson-mobile-topbar">
+                    <img src="/assets/chiils-black-logo.svg" alt="Chiils" className="lesson-mobile-logo" />
+                    <button
+                        className="lesson-mobile-menu-button"
+                        type="button"
+                        aria-label="Open navigation menu"
+                        aria-expanded={isMobileMenuOpen}
+                        onClick={() => setIsMobileMenuOpen(true)}
+                    >
+                        <img src="/assets/lending/burger.svg" alt="" aria-hidden="true" />
+                    </button>
+                </div>
+
+                <button className="lesson-mobile-back" type="button" onClick={() => navigate('/open-library')}>
+                    <img src="/assets/go-back.svg" alt="" aria-hidden="true" />
+                    Open Library
+                </button>
+
+                <h1 className="lesson-mobile-title">{displayTitle}</h1>
+
+                <div className="lesson-mobile-stats">
+                    <div className="lesson-mobile-stat">
+                        <span className="lesson-mobile-stat-icon check"></span>
+                        {presetBlocks.length || 7} exercises
+                    </div>
+                    <div className="lesson-mobile-stat">
+                        <span className="lesson-mobile-stat-icon words"></span>
+                        {wordItems.length || 10} new words
+                    </div>
+                    <div className="lesson-mobile-stat">
+                        <span className="lesson-mobile-stat-icon flag"></span>
+                        {(lesson.grammar_topics?.length || 1)} grammar point
+                    </div>
+                </div>
+
+                <div className="lesson-mobile-tags-line">
+                    <span className="lesson-mobile-check-ring"></span>
+                    <span>{mobileTags || 'English, B1'}</span>
+                </div>
+
+                <div className="lesson-mobile-video">
+                    {videoId ? (
+                        <img src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} alt={displayTitle} />
+                    ) : (
+                        <div className="lesson-mobile-video-placeholder"></div>
+                    )}
+                </div>
+
+                <section className="lesson-mobile-words">
+                    <h2>Words inside</h2>
+                    <div className="lesson-mobile-section-line"></div>
+                    <div className="lesson-mobile-word-strip">
+                        {wordItems.slice(0, 4).map((word, index) => (
+                            <div className="lesson-mobile-word-card" key={`${word.expression}-${index}`}>
+                                <h3>{word.expression}</h3>
+                                <p>{word.meaning}</p>
+                                <p className="lesson-mobile-word-quote">"{word.quote}"</p>
+                                {word.timestamp !== null && (
+                                    <button type="button" onClick={() => {
+                                        const seconds = parseTimestampToSeconds(word.timestamp);
+                                        if (seconds !== null) scrollToPlayerAndSeek(seconds);
+                                    }}>
+                                        {formatTime(word.timestamp)}
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="lesson-mobile-exercises">
+                    <h2>Exercises inside</h2>
+                    <div className="lesson-mobile-section-line"></div>
+                    <div className="lesson-mobile-exercise-list">
+                        {mobileExerciseSummaries.map((item, index) => (
+                            <div className="lesson-mobile-exercise-item" key={`${item.title}-${index}`}>
+                                <div>
+                                    <span className="lesson-mobile-check-ring"></span>
+                                    <h3>{item.title}</h3>
+                                </div>
+                                <p>{item.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <div className="lesson-mobile-desktop-prompt">
+                    Log in on desktop
+                    <br />
+                    to explore the full
+                    <br />
+                    version
+                </div>
+
+                <div className="lesson-mobile-footer-panel">
+                    <button type="button" className="lesson-mobile-get-started" onClick={() => navigate('/')}>
+                        Get started →
+                    </button>
+                    <img src="/assets/chiils-black-logo.svg" alt="Chiils" className="lesson-mobile-footer-logo" />
+                    <button
+                        type="button"
+                        className="lesson-mobile-footer-button"
+                        onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}
+                    >
+                        Contact support
+                    </button>
+                    <button
+                        type="button"
+                        className="lesson-mobile-footer-button"
+                        onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}
+                    >
+                        team@chiils.com
+                    </button>
+                    <div className="lesson-mobile-footer-links">
+                        <p>Privacy policy</p>
+                        <p>Terms &amp; Conditions</p>
+                        <p>Refund policy</p>
+                        <p>Copyright © Koala Station DOO Beograd, 2025</p>
+                    </div>
+                </div>
+
+                {isMobileMenuOpen && (
+                    <div className="lesson-mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+                        <div className="lesson-mobile-menu-panel">
+                            <div className="lesson-mobile-menu-top">
+                                <img src="/assets/chiils-white-logo.svg" alt="Chiils" className="lesson-mobile-menu-logo" />
+                                <button
+                                    className="lesson-mobile-menu-close"
+                                    type="button"
+                                    aria-label="Close navigation menu"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    x
+                                </button>
+                            </div>
+                            <nav className="lesson-mobile-menu-nav" aria-label="Mobile navigation links">
+                                <button type="button" onClick={() => { setIsMobileMenuOpen(false); navigate('/'); }}>Home</button>
+                                <button type="button" onClick={() => { setIsMobileMenuOpen(false); navigate('/login', { state: { hideSignInLink: true } }); }}>Student log in</button>
+                                <button type="button" onClick={() => { setIsMobileMenuOpen(false); navigate('/open-library'); }}>Open Library</button>
+                                <button type="button" disabled aria-disabled="true">Log in / Sign up</button>
+                                <p>Available on Desktop</p>
+                            </nav>
+                            <div className="lesson-mobile-menu-actions">
+                                <button type="button" onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}>Contact support</button>
+                                <button type="button" onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}>team@chiils.com</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
             <div className="page-title">
                 <h1 className="page-title-text">{displayTitle}</h1>
             </div>
@@ -260,29 +447,39 @@ const LessonPage: React.FC = () => {
                     <div className="sidebar-actions">
                         {user?.role !== 'STUDENT' && (
                             <>
-                                <button
-                                    onClick={() => {
-                                        if (!isPreviewMode) {
-                                            setIsAddStudentModalOpen(true);
-                                        }
-                                    }}
-                                    title="Add Student"
-                                    disabled={isPreviewMode}
-                                >
-                                    <img src={iconExternal} alt="Open" />
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        if (!isPreviewMode) {
-                                            setIsManageStudentsModalOpen(!isManageStudentsModalOpen);
-                                        }
-                                    }}
-                                    className={isManageStudentsModalOpen ? 'active' : ''}
-                                    title="Manage Students"
-                                    disabled={isPreviewMode}
-                                >
-                                    <img src={iconShared} alt="Manage Students" />
-                                </button>
+                                <div className="lesson-share-buttons">
+                                    <button
+                                        onClick={() => {
+                                            if (!isPreviewMode) {
+                                                setIsAddStudentModalOpen(true);
+                                            }
+                                        }}
+                                        title="Add Student"
+                                        disabled={isPreviewMode}
+                                    >
+                                        <img src={iconExternal} alt="Open" />
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (!isPreviewMode) {
+                                                setIsManageStudentsModalOpen(!isManageStudentsModalOpen);
+                                            }
+                                        }}
+                                        className={isManageStudentsModalOpen ? 'active' : ''}
+                                        title="Manage Students"
+                                        disabled={isPreviewMode}
+                                    >
+                                        <img src={iconShared} alt="Manage Students" />
+                                    </button>
+                                </div>
+                                {isManageStudentsModalOpen && id && (
+                                    <div className="lesson-shared-to-popover">
+                                        <SharedToSidebar
+                                            lessonId={id}
+                                            refreshKey={studentsRefreshKey}
+                                        />
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>
@@ -324,13 +521,6 @@ const LessonPage: React.FC = () => {
                         <div className="vocabulary-header">
                             <h2>Word Bank</h2>
                         </div>
-
-                        {isManageStudentsModalOpen && id && (
-                            <SharedToSidebar
-                                lessonId={id}
-                                refreshKey={studentsRefreshKey}
-                            />
-                        )}
 
                         <div className="vocabulary-list">
                             {lesson.word_bank?.items.map((word, i) => {

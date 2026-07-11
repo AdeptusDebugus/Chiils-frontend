@@ -11,7 +11,8 @@ import {
   getWordBank,
   type LessonLite,
   type Word,
-  deleteLesson
+  deleteLesson,
+  deleteReadyLesson
 } from '../../../services/lessonService.ts';
 import { getFolders, type Folder } from '../../../services/folderService.ts';
 import { getWordSetsCount } from '../../../services/wordSetService.ts';
@@ -32,6 +33,7 @@ import AddToFolderModal from './AddToFolderModal.tsx';
 import HomeLessonCard from './HomeLessonCard.tsx';
 import WordSetsPopup from './WordSetsPopup.tsx';
 import BuilderNotification from './BuilderNotification.tsx';
+import ConfirmModal from './ConfirmModal.tsx';
 
 // Assets
 const iconHistory = "/assets/home/book.svg";
@@ -97,6 +99,8 @@ const TeacherHomePage: React.FC = () => {
   const [isFolderManagementOpen, setIsFolderManagementOpen] = useState(false);
   const [activeFolderPopup, setActiveFolderPopup] = useState<{ id: number, name: string } | null>(null);
   const [addToFolderModal, setAddToFolderModal] = useState<{ lessonId: string } | null>(null);
+  const [lessonToDelete, setLessonToDelete] = useState<LessonLite | null>(null);
+  const [isDeletingLesson, setIsDeletingLesson] = useState(false);
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'info' | 'error', lessonId?: string } | null>(null);
 
   const [wordBankWords, setWordBankWords] = useState<Word[]>([]);
@@ -397,6 +401,32 @@ const TeacherHomePage: React.FC = () => {
     }
   };
 
+  const handleConfirmDeleteLesson = async () => {
+    if (!lessonToDelete || isDeletingLesson) return;
+
+    const lessonId = lessonToDelete.id;
+    try {
+      setIsDeletingLesson(true);
+      await deleteReadyLesson(lessonId);
+      setUserLessons(prev => prev.filter(lesson => lesson.id !== lessonId));
+      setLikedLessonIds(prev => {
+        const next = new Set(prev);
+        if (next.delete(lessonId)) {
+          setFavoritesCount(count => Math.max(0, count - 1));
+        }
+        return next;
+      });
+      setHistoryCount(count => Math.max(0, count - 1));
+      setLessonToDelete(null);
+      refreshFolders();
+    } catch (e) {
+      console.error('Failed to delete lesson', e);
+      alert('Failed to delete lesson. Please try again.');
+    } finally {
+      setIsDeletingLesson(false);
+    }
+  };
+
   const handleLessonScroll = (direction: 'left' | 'right') => {
     if (lessonsGridRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = lessonsGridRef.current;
@@ -547,8 +577,10 @@ const TeacherHomePage: React.FC = () => {
                     onClick={() => handleLessonClick(lesson.id)}
                     onAddToFolder={() => setAddToFolderModal({ lessonId: lesson.id })}
                     onAddToFavorite={() => handleToggleLike(lesson.id)}
+                    onDelete={() => setLessonToDelete(lesson)}
                     onStop={() => handleStopLesson(lesson.id)}
                     isLiked={likedLessonIds.has(lesson.id)}
+                    showDelete
                   />
                 ))}
                 {isFetchingMore && (
@@ -652,6 +684,19 @@ const TeacherHomePage: React.FC = () => {
           />
         )}
 
+        {lessonToDelete && (
+          <ConfirmModal
+            title="Do you want to delete this lesson?"
+            secondaryText="Go back"
+            primaryText={isDeletingLesson ? 'Deleting...' : 'Delete'}
+            variant="danger"
+            onSecondary={() => {
+              if (!isDeletingLesson) setLessonToDelete(null);
+            }}
+            onPrimary={handleConfirmDeleteLesson}
+          />
+        )}
+
         <section className="collections-section">
           <div className={`collections-container ${user?.permissions && !user.permissions.can_use_collections ? 'locked' : ''}`}>
             <div className="section-header">
@@ -697,7 +742,7 @@ const TeacherHomePage: React.FC = () => {
         </section>
 
         <section className="student-progress-section">
-          <div className="student-progress-container">
+          <div className="student-progress-container locked">
             <div className="section-header">
               <div className="header-title-group">
                 <h2>Student progress</h2>

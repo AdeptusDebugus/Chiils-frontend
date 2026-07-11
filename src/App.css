@@ -336,6 +336,32 @@
   }
 }
 
+@media (max-width: 839px) {
+  .app.open-library-route .figma-sidebar,
+  .app.open-library-route .figma-footer {
+    display: none;
+  }
+
+  .main-content.open-library-route {
+    margin-left: 0;
+    padding-bottom: 0;
+    min-height: 100dvh;
+  }
+}
+
+@media (max-width: 839px) {
+  .app.lesson-route .figma-sidebar,
+  .app.lesson-route .figma-footer {
+    display: none;
+  }
+
+  .main-content.lesson-route {
+    margin-left: 0;
+    padding-bottom: 0;
+    min-height: 100dvh;
+  }
+}
+
 /* Notification Container */
 .notification-container {
   position: fixed;

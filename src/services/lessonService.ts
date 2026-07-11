@@ -412,3 +412,11 @@ export async function deleteLesson(lessonId: string): Promise<void> {
         throw e
     }
 }
+
+export async function deleteReadyLesson(lessonId: string): Promise<void> {
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+    await api.delete(`/lessons/${lessonId}/ready`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+}

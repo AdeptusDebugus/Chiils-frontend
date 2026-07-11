@@ -35,15 +35,28 @@ const LessonBuilderPopupWrapper = () => {
   return isOpen ? <LessonBuilderPopup isOpen={isOpen} onClose={closeLessonBuilder} /> : null;
 };
 
+const HomeRoute = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
+
+  return isAuthenticated ? <HomePage /> : <LandingPage />;
+};
+
 const AppContent = () => {
   const location = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const { isOnboardingOpen, closeOnboarding } = useOnboarding();
 
   const authRoutes = ['/login', '/login/success'];
   const isAuthRoute = authRoutes.includes(location.pathname);
   const standaloneRoutes = ['/', '/termsofservice', '/refundpolicy', '/privacypolicy', '/cookies'];
-  const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
+  const isGuestHomeRoute = location.pathname === '/home' && !isLoading && !isAuthenticated;
+  const isStandaloneRoute = standaloneRoutes.includes(location.pathname) || isGuestHomeRoute;
+  const isOpenLibraryRoute = location.pathname === '/open-library';
+  const isLessonRoute = location.pathname.startsWith('/lesson/');
 
   const shouldShowSidebar = !isAuthRoute && !isStandaloneRoute;
   const shouldShowFooter = !isAuthRoute && !isStandaloneRoute;
@@ -57,6 +70,12 @@ const AppContent = () => {
   }
   if (isStandaloneRoute) {
     mainContentClasses.push('standalone');
+  }
+  if (isOpenLibraryRoute) {
+    mainContentClasses.push('open-library-route');
+  }
+  if (isLessonRoute) {
+    mainContentClasses.push('lesson-route');
   }
 
   // Prevent body scrolling on auth routes (Login pages)
@@ -79,7 +98,7 @@ const AppContent = () => {
 
 
   return (
-    <div className="app">
+    <div className={`app ${isOpenLibraryRoute ? 'open-library-route' : ''} ${isLessonRoute ? 'lesson-route' : ''}`}>
       {/* Sidebar first in DOM order */}
       {shouldShowSidebar && <Sidebar />}
 
@@ -88,7 +107,7 @@ const AppContent = () => {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/home" element={<HomeRoute />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/success" element={<LoginSuccess />} />
           <Route path="/open-library" element={<OpenLibrary />} />

@@ -88,6 +88,10 @@
     object-fit: contain;
 }
 
+.google-login-text {
+    display: none;
+}
+
 .signin-link-text {
     font-size: 16px;
     color: #1a1a1a;
@@ -269,4 +273,181 @@
 
 .notification-text-login .underline {
     text-decoration: underline;
+}
+
+.mobile-login-back-btn {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .login-container {
+        width: 100%;
+        min-height: 100dvh;
+        height: 100dvh;
+        align-items: flex-start;
+        justify-content: flex-start;
+        background-image:
+            radial-gradient(circle at 82% 30%, rgba(138, 37, 15, 0.76) 0, rgba(138, 37, 15, 0.26) 28%, transparent 54%),
+            radial-gradient(circle at 53% 91%, rgba(255, 180, 106, 0.95) 0, rgba(246, 111, 39, 0.95) 24%, rgba(128, 36, 15, 0.65) 52%, transparent 73%),
+            linear-gradient(180deg, #030303 0%, #160905 35%, #f8dcb4 100%);
+        background-size: cover;
+        background-position: center;
+        padding: 0 20px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        font-family: 'TeX Gyre Heros', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .login-logo {
+        top: 63px;
+        left: 24px;
+        width: 101px;
+        height: auto;
+        filter: none;
+    }
+
+    .login-notification {
+        display: none;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: none;
+        height: auto;
+        max-height: none;
+        min-height: 0;
+        margin-top: 181px;
+        padding: 0;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        color: #fff;
+        justify-content: flex-start;
+        text-align: center;
+    }
+
+    .login-card-header h1 {
+        color: #fff;
+        font-family: 'TeX Gyre Heros', sans-serif;
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 46.5px;
+        letter-spacing: 0;
+    }
+
+    .login-form-content {
+        margin-top: 94px;
+        gap: 18px;
+    }
+
+    .google-login-btn {
+        width: 350px;
+        max-width: 100%;
+        height: 38px;
+        padding: 0 24px;
+        border: 1px solid #fff;
+        border-radius: 25px;
+        background: transparent;
+        color: #fff;
+        transform: none;
+        gap: 12px;
+    }
+
+    .google-login-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #fff;
+        transform: none;
+    }
+
+    .google-icon {
+        width: 21px;
+        height: 21px;
+        object-fit: none;
+        object-position: left center;
+        flex: 0 0 21px;
+    }
+
+    .google-login-text {
+        display: inline;
+        color: #fff;
+        font-family: 'TeX Gyre Heros', sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 25px;
+    }
+
+    .signin-link-text {
+        color: #fff;
+        font-family: 'TeX Gyre Heros', sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 25px;
+    }
+
+    .signin-link {
+        color: #fff;
+        font-weight: 400;
+    }
+
+    .login-footer-text {
+        position: fixed;
+        left: 20px;
+        right: 20px;
+        bottom: 189px;
+        max-width: none;
+        color: #fff;
+        font-family: 'TeX Gyre Heros', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24px;
+        text-align: center;
+        z-index: 2;
+    }
+
+    .login-footer-text a {
+        color: #fff;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .mobile-login-back-btn {
+        position: fixed;
+        left: 20px;
+        right: 20px;
+        bottom: 102px;
+        display: flex;
+        height: 48px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #2a2b2a;
+        border-radius: 25px;
+        background: transparent;
+        color: #2a2b2a;
+        font-family: 'TeX Gyre Heros', sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 20px;
+        cursor: pointer;
+        box-sizing: border-box;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .logged-in-card {
+        margin-top: 150px;
+        padding: 0;
+        gap: 24px;
+    }
+
+    .logged-in-card .login-card-header h1,
+    .logged-in-card .user-name,
+    .logged-in-card .user-email,
+    .logged-in-card .login-footer-text {
+        color: #fff;
+    }
+
+    .logged-in-card .action-buttons {
+        justify-content: center;
+    }
 }

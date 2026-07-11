@@ -50,7 +50,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className={`overlay-col ${hoveredCol === 1 ? 'col-highlighted' : ''}`}></div>
                         <div className={`overlay-col ${hoveredCol === 2 ? 'col-highlighted' : ''}`}></div>
                         <div className={`overlay-col ${hoveredCol === 3 ? 'col-highlighted' : ''}`}></div>
-                        <div className={`overlay-col ${hoveredCol === 4 ? 'col-highlighted' : ''}`}></div>
                     </div>
 
                     {/* Header Row */}
@@ -88,14 +87,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                             <div className="plan-name">Plus</div>
                             <div className="plan-price">20€ / month</div>
                         </div>
-                        <div
-                            className="compare-cell plan-header"
-                            onMouseEnter={() => handleMouseEnter(4)}
-                            onMouseLeave={handleMouseLeave}
-                        >
-                            <div className="plan-name">Pro</div>
-                            <div className="plan-price">30€ / month</div>
-                        </div>
                     </div>
 
                     {/* Row: Community lessons */}
@@ -118,7 +109,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>Full<br />interactive</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>Full<br />interactive</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>Full<br />interactive</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}>Full<br />interactive</div>
                     </div>
 
                     {/* Row: Flashcards & Quizlet import */}
@@ -141,7 +131,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                     </div>
 
                     {/* Row: Grammar hints */}
@@ -164,7 +153,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                     </div>
 
                     {/* Row: Lesson Builder */}
@@ -187,7 +175,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>No</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                     </div>
 
                     {/* Row: Minutes included */}
@@ -210,7 +197,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>300 min</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>600 min</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}>800 min</div>
                     </div>
 
                     {/* Row: Extra 100 minutes */}
@@ -235,9 +221,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>3€
                             <span className="compare-cell font-color-orange"> (–40 %)</span>
                         </div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}>2€
-                            <span className="compare-cell font-color-orange"> (–60 %)</span>
-                        </div>
                     </div>
 
                     {/* Row: Collections (Smart Library) */}
@@ -260,7 +243,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>No</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                     </div>
 
                     {/* Row: Generation modes */}
@@ -283,7 +265,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>Homework<br />only</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>Homework<br />& Live</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}>Homework<br />& Live</div>
                     </div>
 
                     {/* Row: Student progress */}
@@ -306,7 +287,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>No</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>No</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(4)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                     </div>
 
                 </div>
