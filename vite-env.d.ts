@@ -11,6 +11,7 @@ interface ImportMetaEnv {
     readonly VITE_PADDLE_PRICE_OPEN_LIBRARY: string
     readonly VITE_PADDLE_PRICE_100_MINS_START: string
     readonly VITE_PADDLE_PRICE_100_MINS_PLUS: string
+    readonly VITE_BREVO_API_KEY: string
 }
 
 interface ImportMeta {

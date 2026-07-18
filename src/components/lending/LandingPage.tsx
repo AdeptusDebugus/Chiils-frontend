@@ -6,11 +6,11 @@ import { useAuthPrompt } from '../../contexts/AuthPromptContext.tsx';
 import './LandingPage.css';
 import Footer from '../footer/Footer.tsx';
 import ComparePlansPopup from './ComparePlansPopup.tsx';
+import MobileDesktopStub from './MobileDesktopStub.tsx';
 
 //IMAGES
 const imgHeroImage = "/assets/lending/about-hero-human.webp";
 const imgChiilsLogo = "/assets/chiils-white-logo.svg";
-const imgChiilsBlackLogo = "/assets/chiils-black-logo.svg";
 const imgFeatureCardSmall1 = "/assets/lending/feature-card-small-1.svg";
 const imgFeatureCardSmall2 = "/assets/lending/feature-card-small-2.svg";
 const imgPricingBackground = "/assets/lending/pricing-background.webp";
@@ -23,8 +23,6 @@ const imgFAQProfile3 = "/assets/lending/portrait-3.webp";
 const imgFAQProfile4 = "/assets/lending/portrait-4.webp";
 const imgFAQProfile5 = "/assets/lending/portrait-5.webp";
 const imgJoyfulWomanPortrait = "/assets/lending/cta-background.webp";
-const imgMobileStub = "/assets/lending/stub_for_moblie.webp";
-
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { openLessonBuilder } = useLessonBuilder();
@@ -92,6 +90,7 @@ const LandingPage: React.FC = () => {
   };
 
   const handleOpenLib = () => {
+    setIsMobileMenuOpen(false);
     navigate('/open-library');
   };
 
@@ -107,36 +106,28 @@ const LandingPage: React.FC = () => {
   };
 
   const handleMobileHome = () => {
-    runWithMobileStub(() => {
-      navigate('/');
+    setIsMobileMenuOpen(false);
+    navigate('/');
+    window.setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    }, 0);
   };
 
   const handleMobileSection = (sectionId: string) => {
-    runWithMobileStub(() => {
+    setIsMobileMenuOpen(false);
+    window.setTimeout(() => {
       document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-    });
-  };
-
-  const handleMobileSignIn = () => {
-    runWithMobileStub(() => navigate('/login', { state: { hideSignInLink: true } }));
-  };
-
-  const handleMobileSignUp = () => {
-    runWithMobileStub(() => navigate('/login'));
+    }, 0);
   };
 
   const handleMobileSupport = () => {
-    runWithMobileStub(() => {
-      window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer');
-    });
+    setIsMobileMenuOpen(false);
+    window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer');
   };
 
   const handleMobileEmail = () => {
-    runWithMobileStub(() => {
-      window.location.href = 'mailto:team@chiils.com';
-    });
+    setIsMobileMenuOpen(false);
+    window.location.href = 'mailto:team@chiils.com';
   };
 
   const handleToolsClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -481,9 +472,9 @@ const LandingPage: React.FC = () => {
                 <ul className="price-features">
                   <li>7 days free trial</li>
                   <li>Everything in Start</li>
+                  <li>Lesson Builder for creating your own lessons</li>
                   <li>600 minutes / month of YouTube videos included</li>
-                  <li>Personal collections</li>
-                  <li>2 generation modes</li>
+                  <li>Collections</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Start for free</span>
@@ -609,7 +600,7 @@ const LandingPage: React.FC = () => {
 
             <nav className="mobile-menu-nav" aria-label="Mobile navigation links">
               <button type="button" onClick={handleMobileHome}>Home</button>
-              <button type="button" onClick={handleMobileSignIn}>Student log in</button>
+              <button type="button" onClick={handleOpenLib}>Open Library</button>
               <button type="button" onClick={() => handleMobileSection('tools')}>Tools</button>
               <button type="button" onClick={() => handleMobileSection('pricing')}>Pricing</button>
               <button type="button" onClick={() => handleMobileSection('faq')}>Questions &amp; Answers</button>
@@ -630,38 +621,10 @@ const LandingPage: React.FC = () => {
       )}
 
       {isMobileStubOpen && (
-        <div className="mobile-desktop-stub" role="dialog" aria-modal="true" aria-label="Desktop-only notice">
-          <div className="mobile-desktop-stub-panel">
-            <div className="mobile-desktop-stub-top">
-              <img src={imgChiilsBlackLogo} alt="Chiils" className="mobile-desktop-stub-logo" />
-            </div>
-            <button
-              className="mobile-desktop-stub-back"
-              type="button"
-              aria-label="Go back"
-              onClick={() => setIsMobileStubOpen(false)}
-            >
-              Go back
-            </button>
-
-            <h2>Built for typing, not tapping</h2>
-            <p className="mobile-desktop-stub-copy">
-              Chiils was built for a bigger screen. Leave your email and we'll send a link so you can pick this up
-              later.
-            </p>
-            <img src={imgMobileStub} alt="" aria-hidden="true" className="mobile-desktop-stub-image" />
-
-            <div className="mobile-desktop-stub-email" aria-hidden="true">youareamazing@email.com</div>
-            <button type="button" className="mobile-desktop-stub-continue" onClick={continueFromMobileStub}>
-              Send me the link
-            </button>
-
-            <p className="mobile-desktop-stub-legal">
-              By submitting an email, you agree to our <strong>Terms &amp; Conditions</strong> and{' '}
-              <strong>Privacy Policy</strong>.
-            </p>
-          </div>
-        </div>
+        <MobileDesktopStub
+          onBack={() => setIsMobileStubOpen(false)}
+          onContinue={continueFromMobileStub}
+        />
       )}
 
       {isMobilePlansOpen && (

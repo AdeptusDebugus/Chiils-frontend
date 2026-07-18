@@ -1351,7 +1351,7 @@
     align-items: center;
     justify-content: space-between;
     height: 106px;
-    padding: 46px 22px 0 9px;
+    padding: 0;
     box-sizing: border-box;
   }
 
@@ -1383,7 +1383,7 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin: 27px 0 0 21px;
+    margin: 27px auto 0;
     padding: 0;
     border: 0;
     background: transparent;
@@ -1400,8 +1400,7 @@
   }
 
   .lesson-mobile-title {
-    width: 338px;
-    margin: 17px 0 0 26px;
+    margin: 17px auto 0;
     color: #2a2b2a;
     font-family: var(--font-family-heros);
     font-size: 32px;
@@ -1410,7 +1409,6 @@
   }
 
   .lesson-mobile-stats {
-    width: 343px;
     margin: 34px auto 0;
     padding: 12px 0;
     border-top: 1px solid rgba(42, 43, 42, 0.28);
@@ -1462,7 +1460,6 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 342px;
     margin: 26px auto 0;
     color: #2a2b2a;
     font-size: 17px;
@@ -1478,8 +1475,8 @@
   }
 
   .lesson-mobile-video {
-    width: 340px;
-    height: 192px;
+    aspect-ratio: 16 / 9;
+    height: auto;
     margin: 20px auto 0;
     border-radius: 22px;
     overflow: hidden;
@@ -1496,7 +1493,6 @@
 
   .lesson-mobile-words,
   .lesson-mobile-exercises {
-    width: 343px;
     margin: 50px auto 0;
   }
 
@@ -1516,7 +1512,7 @@
   }
 
   .lesson-mobile-word-strip {
-    width: calc(100% + 24px);
+    width: 100%;
     margin-top: 16px;
     display: flex;
     gap: 20px;
@@ -1584,7 +1580,7 @@
   }
 
   .lesson-mobile-exercise-item p {
-    width: 306px;
+    width: calc(100% - 34px);
     margin: 2px 0 0 34px;
     color: #999;
     font-size: 17px;
@@ -1595,26 +1591,28 @@
   .lesson-mobile-desktop-prompt {
     width: 100%;
     margin-top: 46px;
-    padding: 27px 24px;
+    padding: 25px 24px 0;
+    min-height: 150px;
     box-sizing: border-box;
     background: rgba(42, 43, 42, 0.7);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    color: #fff;
+    backdrop-filter: blur(15.6px);
+    -webkit-backdrop-filter: blur(15.6px);
+    color: #f7f4ee;
     font-size: 32px;
     font-weight: 700;
     line-height: 32px;
   }
 
   .lesson-mobile-footer-panel {
-    padding: 27px 23px 32px;
+    padding: 43px 24px 32px;
     background: #2a2b2a;
     color: #f7f4ee;
     box-sizing: border-box;
   }
 
   .lesson-mobile-get-started {
-    width: 342px;
+    width: 100%;
+    max-width: 342px;
     height: 48px;
     border: 0;
     border-radius: 24px;
@@ -1628,13 +1626,14 @@
   .lesson-mobile-footer-logo {
     width: 166px;
     height: auto;
-    margin: 90px 0 38px;
+    margin: 95px 0 38px;
     filter: brightness(0) invert(1);
     display: block;
   }
 
   .lesson-mobile-footer-button {
-    width: 342px;
+    width: 100%;
+    max-width: 342px;
     height: 48px;
     margin: 0 0 15px;
     border: 1px solid #f7f4ee;
@@ -1649,7 +1648,9 @@
   .lesson-mobile-footer-links {
     margin-top: 29px;
     color: #f7f4ee;
+    font-family: var(--font-family-heros);
     font-size: 20px;
+    font-weight: 400;
     line-height: 25px;
   }
 

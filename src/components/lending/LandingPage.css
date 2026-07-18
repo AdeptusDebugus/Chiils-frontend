@@ -1933,7 +1933,7 @@
     max-width: 390px;
     min-height: 891px;
     margin: 0 auto;
-    padding: 56px 20px 24px;
+    padding: 60px 24px 96px;
     box-sizing: border-box;
   }
 
@@ -1944,7 +1944,7 @@
   }
 
   .mobile-menu-logo {
-    width: 101px;
+    width: 102px;
     height: auto;
     display: block;
   }
@@ -2052,11 +2052,11 @@
     margin: 0;
     background: transparent;
     font-weight: 700;
-    color: #999;
+    color: #FFFFFF4D
   }
 
   .mobile-menu-nav .mobile-menu-nav-disabled-note {
-    color: #999;
+    color: #FFFFFF4D;
     font-family: 'TeX Gyre Heros', sans-serif;
     font-size: 17px;
     font-weight: 400;
@@ -2067,7 +2067,7 @@
   .mobile-menu-actions {
     display: flex;
     flex-direction: column;
-    padding-top: 50px;
+    padding-top: 49px;
     gap: 15px;
   }
 
@@ -2147,12 +2147,9 @@
     -webkit-appearance: none;
   }
 
-  .mobile-desktop-stub-back::before {
-    content: "";
+  .mobile-desktop-stub-back img {
     width: 24px;
     height: 24px;
-    background: center / 24px 24px no-repeat url('/assets/lending/go-back.svg');
-    flex: 0 0 24px;
   }
 
   .mobile-desktop-stub-close {
@@ -2859,13 +2856,17 @@
 
   .faq-question-btn {
     position: relative;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
     min-height: 50px;
     margin-top: 10px;
-    padding: 0 62px 20px 0;
+    padding: 0 0 20px;
   }
 
   .faq-question-text {
+    flex: 1;
     min-height: 50px;
     margin: 0;
     color: #2a2b2a;
@@ -2875,9 +2876,7 @@
 
   .faq-question-btn::after {
     content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
+    flex: 0 0 40px;
     width: 40px;
     height: 40px;
     background: center / 40px 40px no-repeat url('/assets/lending/plus.svg');
@@ -2949,7 +2948,6 @@
 
   .cta-button {
     width: 100%;
-    height: 48px;
     margin: 0;
     border-radius: 18px;
     font-size: 16px;
@@ -3003,8 +3001,15 @@
     text-align: center;
   }
 
-  .mobile-desktop-stub-legal strong {
+  .mobile-desktop-stub-legal a {
+    color: inherit;
     font-weight: 700;
+    text-decoration: none;
+  }
+
+  .mobile-desktop-stub-legal a:hover,
+  .mobile-desktop-stub-legal a:focus {
+    text-decoration: underline;
   }
 
   .footer .email-pill,
@@ -3058,6 +3063,59 @@
   .home-page .main-container {
     max-width: 839px;
     padding: 0 32px;
+  }
+
+  .hero-section {
+    height: 760px;
+    min-height: 760px;
+  }
+
+  .hero-image {
+    object-position: 50% 50%;
+  }
+
+  .hero-content .main-container {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 300px;
+  }
+
+  .hero-title-row {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    margin: 0;
+  }
+
+  .hero-title {
+    max-width: 540px;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .hero-subtitle-lines {
+    max-width: 405px;
+  }
+
+  .student-link {
+    top: 417px;
+    right: 32px;
+    transform: none;
+    gap: 20px;
+    min-width: 212px;
+    justify-content: flex-end;
+  }
+
+  .hero-buttons {
+    right: 32px;
+    bottom: 50px;
+    gap: 18px;
+  }
+
+  .community-lessons-btn,
+  .first-lesson-btn {
+    width: 238px;
+    height: 37px;
   }
 
   .features-cards-section {
@@ -3120,23 +3178,34 @@
   }
 
   .pricing-cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: calc(100% + 64px);
+    margin: 0 -32px;
+    padding: 0 32px 1px;
     gap: 16px;
-    overflow: visible;
-    scroll-snap-type: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 32px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
+
+  .pricing-cards::-webkit-scrollbar {
+    display: none;
   }
 
   .pricing-card {
-    width: 100%;
-    min-width: 0;
-    height: auto;
-    min-height: 483px;
-    flex: auto;
-    scroll-snap-align: none;
+    width: 325px;
+    min-width: 325px;
+    height: 483px;
+    min-height: 0;
+    flex: 0 0 325px;
+    scroll-snap-align: start;
   }
 }
 
@@ -3152,10 +3221,6 @@
 
   .header {
     padding: 64px 0 0;
-  }
-
-  .header-content {
-    align-items: flex-start;
   }
 
   .nav-links {
@@ -3601,7 +3666,7 @@
   }
 
   .faq-section .section-title {
-    margin-bottom: 85px;
+    margin-bottom: 40px;
     color: #2a2b2a;
     font-size: 40px;
     line-height: 50px;
@@ -3634,11 +3699,16 @@
 
   .faq-question-btn {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
     min-height: 65px;
-    padding: 0 62px 18px 0;
+    padding: 0 0 18px;
   }
 
   .faq-question-text {
+    flex: 1;
     color: #2a2b2a;
     font-size: 20px;
     line-height: 25px;
@@ -3646,9 +3716,7 @@
 
   .faq-question-btn::after {
     content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
+    flex: 0 0 30px;
     width: 30px;
     height: 30px;
     background: center / 30px 30px no-repeat url('/assets/lending/plus.svg');
@@ -3666,7 +3734,7 @@
 
   .faq-card.faq-card-expanded .faq-question-btn::after {
     background-image: url('/assets/lending/close.svg');
-    background-size: 24px 24px;
+    background-size: 21px 21px;
   }
 
   .cta-section {
@@ -4180,7 +4248,7 @@
   }
 
   .faq-section .section-title {
-    margin: 0 0 98px;
+    margin-bottom: 40px;
     color: #2a2b2a;
     font-size: 40px;
     line-height: 50px;
@@ -4213,12 +4281,17 @@
 
   .faq-question-btn {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
     min-height: 67px;
     margin: 0;
-    padding: 0 62px 20px 0;
+    padding: 0 0 20px;
   }
 
   .faq-question-text {
+    flex: 1;
     color: #2a2b2a;
     font-size: 20px;
     line-height: 25px;
@@ -4227,9 +4300,7 @@
 
   .faq-question-btn::after {
     content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
+    flex: 0 0 30px;
     width: 30px;
     height: 30px;
     background: center / 30px 30px no-repeat url('/assets/lending/plus.svg');
@@ -4247,7 +4318,7 @@
 
   .faq-card.faq-card-expanded .faq-question-btn::after {
     background-image: url('/assets/lending/close.svg');
-    background-size: 24px 24px;
+    background-size: 21px 21px;
   }
 
   .cta-section {

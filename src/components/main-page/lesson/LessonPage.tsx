@@ -10,6 +10,7 @@ import SharedToSidebar from '../home/SharedToSidebar';
 import AddStudentModal from '../home/AddStudentModal';
 import BlockRenderer from './blocks/BlockRenderer';
 import { PRESETS } from './blocks/presets';
+import MobileDesktopStub from '../../lending/MobileDesktopStub';
 
 const parseTimestampToSeconds = (ts: string | number | null): number | null => {
     if (ts === null || ts === undefined || ts === '') return null;
@@ -36,6 +37,7 @@ const LessonPage: React.FC = () => {
     const playerRef = useRef<any>(null);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMobileStubOpen, setIsMobileStubOpen] = useState(false);
 
     const navigate = useNavigate();
     const { user, isAuthenticated } = useAuth();
@@ -146,13 +148,14 @@ const LessonPage: React.FC = () => {
     }, [id]);
 
     useEffect(() => {
-        if (!isMobileMenuOpen) {
+        if (!isMobileMenuOpen && !isMobileStubOpen) {
             return;
         }
 
         const handleEscape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setIsMobileMenuOpen(false);
+                setIsMobileStubOpen(false);
             }
         };
 
@@ -163,7 +166,7 @@ const LessonPage: React.FC = () => {
             document.body.style.overflow = '';
             document.removeEventListener('keydown', handleEscape);
         };
-    }, [isMobileMenuOpen]);
+    }, [isMobileMenuOpen, isMobileStubOpen]);
 
     useEffect(() => {
         if (id && !isPreviewMode) {
@@ -372,7 +375,7 @@ const LessonPage: React.FC = () => {
                 </div>
 
                 <div className="lesson-mobile-footer-panel">
-                    <button type="button" className="lesson-mobile-get-started" onClick={() => navigate('/')}>
+                    <button type="button" className="lesson-mobile-get-started" onClick={() => setIsMobileStubOpen(true)}>
                         Get started →
                     </button>
                     <img src="/assets/chiils-black-logo.svg" alt="Chiils" className="lesson-mobile-footer-logo" />
@@ -425,6 +428,15 @@ const LessonPage: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                )}
+                {isMobileStubOpen && (
+                    <MobileDesktopStub
+                        onBack={() => setIsMobileStubOpen(false)}
+                        onContinue={() => {
+                            setIsMobileStubOpen(false);
+                            navigate('/');
+                        }}
+                    />
                 )}
             </div>
 

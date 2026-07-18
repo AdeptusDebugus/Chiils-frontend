@@ -18,6 +18,7 @@ import { useLessonBuilder } from "../../../contexts/LessonBuilderContext.tsx";
 import BuilderNotification from '../home/BuilderNotification.tsx';
 import { globalLessonMonitoring } from '../../../services/globalLessonMonitoring.ts';
 import NoResultsNotification from '../../common/NoResultsNotification.tsx';
+import MobileDesktopStub from '../../lending/MobileDesktopStub.tsx';
 
 const imgChiilsBlackLogo = "/assets/chiils-black-logo.svg";
 type MobileFilterPanel = 'language' | 'level' | 'grammar' | 'topic';
@@ -29,6 +30,7 @@ const OpenLibrary: React.FC = () => {
     const { user } = useAuth();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+    const [isMobileStubOpen, setIsMobileStubOpen] = useState(false);
     const [mobileFilterPanel, setMobileFilterPanel] = useState<MobileFilterPanel | null>(null);
     const [lessons, setLessons] = useState<LessonLite[]>([]);
     const [loading, setLoading] = useState(true);
@@ -65,7 +67,7 @@ const OpenLibrary: React.FC = () => {
     }, [location.key]);
 
     useEffect(() => {
-        if (!isMobileMenuOpen && !isMobileFiltersOpen) {
+        if (!isMobileMenuOpen && !isMobileFiltersOpen && !isMobileStubOpen) {
             return;
         }
 
@@ -73,6 +75,7 @@ const OpenLibrary: React.FC = () => {
             if (event.key === 'Escape') {
                 setIsMobileMenuOpen(false);
                 setIsMobileFiltersOpen(false);
+                setIsMobileStubOpen(false);
                 setMobileFilterPanel(null);
             }
         };
@@ -84,7 +87,7 @@ const OpenLibrary: React.FC = () => {
             document.body.style.overflow = '';
             document.removeEventListener('keydown', handleEscape);
         };
-    }, [isMobileMenuOpen, isMobileFiltersOpen]);
+    }, [isMobileMenuOpen, isMobileFiltersOpen, isMobileStubOpen]);
 
     // Imports from utils (simulated inside component for tool use compliance, but in real code strict imports)
     // Actually, I should import them at the top. I will add imports in a separate edit or use fully qualified if I can? 
@@ -797,7 +800,7 @@ const OpenLibrary: React.FC = () => {
                     version
                 </div>
                 <div className="open-library-mobile-footer-panel">
-                    <button type="button" className="open-library-mobile-get-started" onClick={() => navigate('/')}>
+                    <button type="button" className="open-library-mobile-get-started" onClick={() => setIsMobileStubOpen(true)}>
                         Get started →
                     </button>
                     <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-footer-logo" />
@@ -951,6 +954,15 @@ const OpenLibrary: React.FC = () => {
                         </div>
                     </div>
                 </div>
+            )}
+            {isMobileStubOpen && (
+                <MobileDesktopStub
+                    onBack={() => setIsMobileStubOpen(false)}
+                    onContinue={() => {
+                        setIsMobileStubOpen(false);
+                        navigate('/');
+                    }}
+                />
             )}
         </div >
     );

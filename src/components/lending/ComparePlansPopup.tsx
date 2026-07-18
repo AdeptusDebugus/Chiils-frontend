@@ -11,10 +11,7 @@ const DESCRIPTIONS: Record<string, string> = {
     "Grammar hints": "Instant grammar help inside every exercise",
     "Lesson builder": "Create your own lessons in a couple of clicks",
     "Minutes included": "1 minute of video = 1 minute used",
-    "Extra 100 minutes": "Add more minutes anytime",
-    "Collections": "Custom folders, favourites, personal vocab bank for reviews",
-    "Generation modes": "Choose your lesson scenario",
-    "Student progress": "Lesson history, status, personal vocab banks per student"
+    "Collections": "Custom folders, favourites, personal vocab bank for reviews"
 };
 const checkMark = "/assets/lending/pop-up/check-mark.svg"
 
@@ -199,30 +196,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>600 min</div>
                     </div>
 
-                    {/* Row: Extra 100 minutes */}
-                    <div className="compare-row">
-                        <div className="compare-cell feature-name">
-                            <div>
-                                Extra 100 minutes
-                                {activeInfoRow === "Extra 100 minutes" && (
-                                    <div className="feature-description">{DESCRIPTIONS["Extra 100 minutes"]}</div>
-                                )}
-                            </div>
-                            <span
-                                className="info-icon"
-                                onClick={(e) => handleInfoClick("Extra 100 minutes", e)}
-                            >
-                                ?
-                            </span>
-                        </div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(0)} onMouseLeave={handleMouseLeave}>—</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>5€</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>3€
-                            <span className="compare-cell font-color-orange"> (–40 %)</span>
-                        </div>
-                    </div>
-
                     {/* Row: Collections (Smart Library) */}
                     <div className="compare-row">
                         <div className="compare-cell feature-name">
@@ -243,50 +216,6 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>No</div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
-                    </div>
-
-                    {/* Row: Generation modes */}
-                    <div className="compare-row">
-                        <div className="compare-cell feature-name">
-                            <div>
-                                Generation modes
-                                {activeInfoRow === "Generation modes" && (
-                                    <div className="feature-description">{DESCRIPTIONS["Generation modes"]}</div>
-                                )}
-                            </div>
-                            <span
-                                className="info-icon"
-                                onClick={(e) => handleInfoClick("Generation modes", e)}
-                            >
-                                ?
-                            </span>
-                        </div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(0)} onMouseLeave={handleMouseLeave}>—</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>Homework<br />only</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>Homework<br />& Live</div>
-                    </div>
-
-                    {/* Row: Student progress */}
-                    <div className="compare-row">
-                        <div className="compare-cell feature-name">
-                            <div>
-                                Student progress
-                                {activeInfoRow === "Student progress" && (
-                                    <div className="feature-description">{DESCRIPTIONS["Student progress"]}</div>
-                                )}
-                            </div>
-                            <span
-                                className="info-icon"
-                                onClick={(e) => handleInfoClick("Student progress", e)}
-                            >
-                                ?
-                            </span>
-                        </div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(0)} onMouseLeave={handleMouseLeave}>—</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}>—</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}>No</div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}>No</div>
                     </div>
 
                 </div>
