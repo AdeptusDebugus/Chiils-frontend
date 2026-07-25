@@ -29,7 +29,7 @@ const OnboardingPlanPopup: React.FC<OnboardingPlanPopupProps> = ({ onClose }) =>
                 priceId = import.meta.env.VITE_PADDLE_PRICE_OPEN_LIBRARY;
                 break;
             case 'smart':
-                priceId = import.meta.env.VITE_PADDLE_PRICE_SMART;
+                priceId = import.meta.env.VITE_PADDLE_PRICE_START;
                 break;
             case 'plus':
                 priceId = import.meta.env.VITE_PADDLE_PRICE_PLUS;
