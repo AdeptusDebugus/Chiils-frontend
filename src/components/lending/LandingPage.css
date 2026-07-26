@@ -2038,9 +2038,9 @@
   }
 
   .mobile-menu-nav button:disabled {
-    color: #999;
     cursor: default;
     pointer-events: none;
+    color: var(--white-30);
   }
 
   .mobile-menu-nav button:disabled::before,
@@ -2052,11 +2052,11 @@
     margin: 0;
     background: transparent;
     font-weight: 700;
-    color: #FFFFFF4D
+    color: var(--white-30);
   }
 
   .mobile-menu-nav .mobile-menu-nav-disabled-note {
-    color: #FFFFFF4D;
+    color: var(--white-30);
     font-family: 'TeX Gyre Heros', sans-serif;
     font-size: 17px;
     font-weight: 400;

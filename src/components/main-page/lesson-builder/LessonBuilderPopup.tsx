@@ -369,7 +369,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                                             }
                                         }}
                                         disabled={isValidatingLink}
-                                        placeholder={isValidatingLink ? "Checking video length..." : "Select a link"}
+                                        placeholder={isValidatingLink ? "Checking video length..." : "Paste a link"}
                                         style={errors.link ? { color: '#f44336' } : {}}
                                     />
                                 </div>

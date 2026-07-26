@@ -1,5 +1,6 @@
 // src/components/OpenLibrary.tsx
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getLessonsLite, type LessonLite, deleteLesson } from '../../../services/lessonService.ts';
 import { useAuth } from '../../../contexts/AuthContext.tsx';
@@ -510,7 +511,46 @@ const OpenLibrary: React.FC = () => {
     };
 
 
+    const mobileFooter = (
+        <div className="open-library-mobile-footer">
+            <div className="open-library-mobile-desktop-prompt">
+                <div className="open-library-mobile-footer-inner">Switch to desktop
+                    <br />
+                    to explore the full
+                    <br />
+                    version</div>
+            </div>
+            <div className="open-library-mobile-footer-panel">
+                <div className="open-library-mobile-footer-inner"><button type="button" className="open-library-mobile-get-started" onClick={() => setIsMobileStubOpen(true)}>
+                    Get started →
+                </button>
+                    <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-footer-logo" />
+                    <button
+                        type="button"
+                        className="open-library-mobile-footer-button"
+                        onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}
+                    >
+                        Contact support
+                    </button>
+                    <button
+                        type="button"
+                        className="open-library-mobile-footer-button"
+                        onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}
+                    >
+                        team@chiils.com
+                    </button>
+                    <div className="open-library-mobile-footer-links">
+                        <a href="/privacypolicy">Privacy policy</a>
+                        <a href="/termsofservice">Terms &amp; Conditions</a>
+                        <a href="/refundpolicy">Refund policy</a>
+                        <span>Copyright © Koala Station DOO Beograd, {new Date().getFullYear()}</span>
+                    </div></div>
+            </div>
+        </div>
+    );
+
     return (
+        <>
         <div className="open-library-page">
             <div className="open-library-mobile-topbar" aria-label="Open Library mobile header">
                 <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-logo" />
@@ -547,7 +587,7 @@ const OpenLibrary: React.FC = () => {
                 <div>
                     <h1>Open Library</h1>
                     <p className="header-description">
-                        All community-created lessons in one place — use tags to find what you need just in a few clicks.
+                        All community-created lessons in one place.
                     </p>
                 </div>
                 <div className="header-controls">
@@ -630,15 +670,10 @@ const OpenLibrary: React.FC = () => {
 
                     </div>
 
-                    {/* RIGHT GROUP: Grammar, Topic */}
+                        {/* RIGHT GROUP: Grammar, Topic */}
                     <div className="filters-right">
                         {/* Grammar - Dependent on CEFR Level */}
                         <div className="filter-group" style={{ position: 'relative' }}>
-                            {(!selectedLanguage || selectedCefrLevels.length === 0) && (
-                                <span className="grammar-warning-text">
-                                    Select a language and a CEFR level first
-                                </span>
-                            )}
                             <span className="filter-group-label">Grammar</span>
                             <FilterDropdown
                                 label={selectedGrammar.length > 0 ? selectedGrammar.join(', ') : "Choose grammar points"}
@@ -791,41 +826,6 @@ const OpenLibrary: React.FC = () => {
                     )}
                 </div>
             </div>
-            <div className="open-library-mobile-footer">
-                <div className="open-library-mobile-desktop-prompt">
-                    Switch to desktop
-                    <br />
-                    to explore the full
-                    <br />
-                    version
-                </div>
-                <div className="open-library-mobile-footer-panel">
-                    <button type="button" className="open-library-mobile-get-started" onClick={() => setIsMobileStubOpen(true)}>
-                        Get started →
-                    </button>
-                    <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-footer-logo" />
-                    <button
-                        type="button"
-                        className="open-library-mobile-footer-button"
-                        onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}
-                    >
-                        Contact support
-                    </button>
-                    <button
-                        type="button"
-                        className="open-library-mobile-footer-button"
-                        onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}
-                    >
-                        team@chiils.com
-                    </button>
-                    <div className="open-library-mobile-footer-links">
-                        <p>Privacy policy</p>
-                        <p>Terms &amp; Conditions</p>
-                        <p>Refund policy</p>
-                        <p>Copyright © Koala Station DOO Beograd, 2025</p>
-                    </div>
-                </div>
-            </div>
             {isMobileFiltersOpen && (
                 <div className="open-library-mobile-filters-screen" role="dialog" aria-modal="true" aria-label="Open Library filters">
                     <div className="open-library-mobile-topbar" aria-label="Open Library filters header">
@@ -895,7 +895,7 @@ const OpenLibrary: React.FC = () => {
                     </div>
 
                     <div className="open-library-mobile-footer-panel open-library-mobile-filters-footer-panel">
-                        <img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-footer-logo" />
+                        <div className="open-library-mobile-footer-inner"><img src={imgChiilsBlackLogo} alt="Chiils" className="open-library-mobile-footer-logo" />
                         <button
                             type="button"
                             className="open-library-mobile-footer-button"
@@ -911,11 +911,11 @@ const OpenLibrary: React.FC = () => {
                             team@chiils.com
                         </button>
                         <div className="open-library-mobile-footer-links">
-                            <p>Privacy policy</p>
-                            <p>Terms &amp; Conditions</p>
-                            <p>Refund policy</p>
-                            <p>Copyright © Koala Station DOO Beograd, 2025</p>
-                        </div>
+                            <a href="/privacypolicy">Privacy policy</a>
+                            <a href="/termsofservice">Terms &amp; Conditions</a>
+                            <a href="/refundpolicy">Refund policy</a>
+                            <span>Copyright © Koala Station DOO Beograd, {new Date().getFullYear()}</span>
+                        </div></div>
                     </div>
                 </div>
             )}
@@ -965,6 +965,8 @@ const OpenLibrary: React.FC = () => {
                 />
             )}
         </div >
+        {createPortal(mobileFooter, document.querySelector('.app.open-library-route') ?? document.body)}
+        </>
     );
 };
 

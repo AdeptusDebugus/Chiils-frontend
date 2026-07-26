@@ -189,29 +189,24 @@ const LandingPage: React.FC = () => {
 
   const faqItems = [
     {
-      image: imgFAQProfile5,
-      question: 'How is it different from Chat GPT?',
-      answer: 'Chiils delivers a complete, beautifully structured lesson — from engaging lead-in to production — packed with every exercise type you need, perfectly balanced, no prompts required. All that in a couple of clicks.'
+      question: 'How is it different from Chat GPT and other LLMs?',
+      answer: 'Yes! You can share your full lesson with students by email. They just need to log in to start working with it.'
     },
     {
-      image: imgFAQProfile1,
-      question: 'Do I need to know how to use AI tools?',
-      answer: 'Not at all. Chiils was built to make AI feel invisible, you just bring the content, and we handle the rest.'
-    },
-    {
-      image: imgFAQProfile2,
-      question: 'Are there any limits or rules I should know about?',
-      answer: "Only a few. Chiils supports public YouTube videos and podcasts shorter than 120 minutes. We don't support private links, everything else is wide open."
-    },
-    {
-      image: imgFAQProfile3,
-      question: 'How long does it take to create a custom lesson?',
-      answer: 'It depends on the length of your video. Usually, it takes around 5-10 minutes, but longer videos (30+ minutes) might require more time.'
-    },
-    {
-      image: imgFAQProfile4,
       question: 'Can I share my lessons with students?',
-      answer: 'Yes! You can instantly share your full lesson with students via a simple public link. No sign-up, no login, no extra steps required.'
+      answer: 'It depends on the length of your video. Usually 5 to 10 minutes, though longer videos can take a bit more.'
+    },
+    {
+      question: 'How long does it take to create a custom lesson?',
+      answer: "Just a few. Chiils works with public videos and podcasts under 60 minutes. Private links aren't supported. Everything else is wide open."
+    },
+    {
+      question: 'Are there any limits or rules I should know about?',
+      answer: 'Not at all. Chiils was built to make AI feel invisible. You don\'t even need to write a prompt.'
+    },
+    {
+      question: 'Do I need to know how to use AI tools?',
+      answer: 'Chiils delivers a complete, beautifully structured lesson in a couple of clicks. No prompts, no setup, no back-and-forth. You bring the content, Chiils does the rest.'
     }
   ];
 
@@ -436,8 +431,8 @@ const LandingPage: React.FC = () => {
                 <ul className="price-features">
                   <li>Full access to the Open Library</li>
                   <li>Ready-made lessons created by Chiils community</li>
-                  <li>Interactive exercises</li>
                   <li>Interactive flashcards</li>
+                  <li>Interactive exercises</li>
                   <li>Grammar hints</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
@@ -451,10 +446,10 @@ const LandingPage: React.FC = () => {
                 <div className="pricing-divider"></div>
                 <p className="price">€10<span>/ month</span></p>
                 <ul className="price-features">
-                  <li>7-day free trial</li>
-                  <li>Everything in Open Library</li>
+                  <li>7 days / 60 minutes free trial</li>
+                  <li>Everything on Open Library</li>
                   <li>Lesson Builder for creating your own lessons</li>
-                  <li>300 minutes / month of YouTube videos included</li>
+                  <li>300 minutes / month after trial</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Start for free</span>
@@ -470,11 +465,10 @@ const LandingPage: React.FC = () => {
                 <div className="pricing-divider"></div>
                 <p className="price">€20<span>/ month</span></p>
                 <ul className="price-features">
-                  <li>7 days free trial</li>
-                  <li>Everything in Start</li>
+                  <li>7 days / 60 minutes free trial</li>
+                  <li>Everything on Start</li>
                   <li>Lesson Builder for creating your own lessons</li>
-                  <li>600 minutes / month of YouTube videos included</li>
-                  <li>Collections</li>
+                  <li>300 minutes / month after trial</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Start for free</span>
@@ -522,7 +516,6 @@ const LandingPage: React.FC = () => {
                 return (
                   <div className={`faq-card ${isExpanded ? 'faq-card-expanded' : ''}`} key={faq.question}>
                     <div className="faq-profile-image">
-                      <img src={faq.image} alt="Profile" />
                     </div>
                     <div className="faq-content">
                       <button

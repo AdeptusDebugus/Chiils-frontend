@@ -55,7 +55,11 @@ const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
 
     if (isProcessing) {
         return (
-            <div className="home-lesson-card processing-stub" onClick={onClick}>
+            <div
+                className="home-lesson-card processing-stub"
+                aria-disabled="true"
+                tabIndex={-1}
+            >
                 <div className="lesson-thumbnail stub-thumbnail">
                     <div className="creating-lesson-banner">Creating lesson...</div>
                 </div>

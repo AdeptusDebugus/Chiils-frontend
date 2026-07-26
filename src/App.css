@@ -1,5 +1,6 @@
 :root {
   --sidebar-width: 180px;
+  --white-30: rgba(255, 255, 255, 0.3);
 }
 
 .app {

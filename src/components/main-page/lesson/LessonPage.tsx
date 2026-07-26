@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { getLessonFull, openLesson, addLessonWords, type LessonData } from '../../../services/lessonService.ts';
 import { useNavigate, useParams } from 'react-router-dom';
 import './LessonPage.css';
@@ -277,7 +278,51 @@ const LessonPage: React.FC = () => {
         description: block.static?.instruction || ''
     }));
 
+    const lessonMobileFooter = (
+        <div className="lesson-mobile-footer">
+            <div className="lesson-mobile-desktop-prompt">
+                <div className="lesson-mobile-footer-inner">
+                    Log in on desktop
+                    <br />
+                    to explore the full
+                    <br />
+                    version
+                </div>
+            </div>
+
+            <div className="lesson-mobile-footer-panel">
+                <div className="lesson-mobile-footer-inner">
+                    <button type="button" className="lesson-mobile-get-started" onClick={() => setIsMobileStubOpen(true)}>
+                        Get started &rarr;
+                    </button>
+                    <img src="/assets/chiils-black-logo.svg" alt="Chiils" className="lesson-mobile-footer-logo" />
+                    <button
+                        type="button"
+                        className="lesson-mobile-footer-button"
+                        onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}
+                    >
+                        Contact support
+                    </button>
+                    <button
+                        type="button"
+                        className="lesson-mobile-footer-button"
+                        onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}
+                    >
+                        team@chiils.com
+                    </button>
+                    <div className="lesson-mobile-footer-links">
+                        <a href="/privacypolicy">Privacy policy</a>
+                        <a href="/termsofservice">Terms &amp; Conditions</a>
+                        <a href="/refundpolicy">Refund policy</a>
+                        <span>Copyright &copy; Koala Station DOO Beograd, {new Date().getFullYear()}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
+        <>
         <div className={`lesson-page ${isPreviewMode ? 'preview-mode' : ''}`}>
             <div className="lesson-mobile-view">
                 <div className="lesson-mobile-topbar">
@@ -365,41 +410,6 @@ const LessonPage: React.FC = () => {
                         ))}
                     </div>
                 </section>
-
-                <div className="lesson-mobile-desktop-prompt">
-                    Log in on desktop
-                    <br />
-                    to explore the full
-                    <br />
-                    version
-                </div>
-
-                <div className="lesson-mobile-footer-panel">
-                    <button type="button" className="lesson-mobile-get-started" onClick={() => setIsMobileStubOpen(true)}>
-                        Get started →
-                    </button>
-                    <img src="/assets/chiils-black-logo.svg" alt="Chiils" className="lesson-mobile-footer-logo" />
-                    <button
-                        type="button"
-                        className="lesson-mobile-footer-button"
-                        onClick={() => window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer')}
-                    >
-                        Contact support
-                    </button>
-                    <button
-                        type="button"
-                        className="lesson-mobile-footer-button"
-                        onClick={() => { window.location.href = 'mailto:team@chiils.com'; }}
-                    >
-                        team@chiils.com
-                    </button>
-                    <div className="lesson-mobile-footer-links">
-                        <p>Privacy policy</p>
-                        <p>Terms &amp; Conditions</p>
-                        <p>Refund policy</p>
-                        <p>Copyright © Koala Station DOO Beograd, 2025</p>
-                    </div>
-                </div>
 
                 {isMobileMenuOpen && (
                     <div className="lesson-mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Mobile navigation">
@@ -614,6 +624,8 @@ const LessonPage: React.FC = () => {
                 />
             )}
         </div>
+        {createPortal(lessonMobileFooter, document.querySelector('.app.lesson-route') ?? document.body)}
+        </>
     );
 };
 

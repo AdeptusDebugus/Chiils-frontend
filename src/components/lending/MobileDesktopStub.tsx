@@ -4,10 +4,14 @@ import './MobileDesktopStub.css';
 
 const imgChiilsBlackLogo = "/assets/chiils-black-logo.svg";
 const imgMobileStub = "/assets/lending/stub_for_moblie.webp";
-const BREVO_CONTACTS_URL = 'https://api.brevo.com/v3/contacts';
-const BREVO_LIST_IDS = [3];
-const DEFAULT_BREVO_API_KEY = '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';
-const brevoApiKey = import.meta.env.VITE_BREVO_API_KEY || DEFAULT_BREVO_API_KEY;
+
+const rawApiBase = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}` : '';
+const normalizedApiBase = (typeof window !== 'undefined' && window.location.protocol === 'https:')
+  ? rawApiBase.replace(/^http:\/\//, 'https://')
+  : rawApiBase;
+const subscribeEmailUrl = normalizedApiBase
+  ? `${normalizedApiBase}/api/v1/notifications/subscribe-email`
+  : '/api/v1/notifications/subscribe-email';
 
 interface MobileDesktopStubProps {
   onBack: () => void;
@@ -56,28 +60,26 @@ const MobileDesktopStub: React.FC<MobileDesktopStubProps> = ({ onBack, onContinu
     setMessage('');
 
     try {
-      const response = await fetch(BREVO_CONTACTS_URL, {
+      const response = await fetch(subscribeEmailUrl, {
         method: 'POST',
         headers: {
-          'api-key': brevoApiKey,
           'content-type': 'application/json',
         },
         body: JSON.stringify({
           email: normalizedEmail,
-          listIds: BREVO_LIST_IDS,
-          updateEnabled: true,
         }),
       });
 
       if (!response.ok) {
-        throw new Error(`Brevo request failed: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(errorText || `Subscribe email request failed: ${response.status}`);
       }
 
       setStatus('success');
       setMessage('Done. We sent the link to your email.');
       onContinue?.();
     } catch (error) {
-      console.error('Brevo contact notification failed:', error);
+      console.error('Email subscription notification failed:', error);
       setStatus('error');
       setMessage('Could not send the link. Please try again.');
     }
