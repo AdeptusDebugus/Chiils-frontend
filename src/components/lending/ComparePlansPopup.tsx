@@ -13,7 +13,7 @@ const DESCRIPTIONS: Record<string, string> = {
     "Minutes included": "1 minute of video = 1 minute used",
     "Collections": "Custom folders, favourites, personal vocab bank for reviews"
 };
-const checkMark = "/assets/lending/pop-up/check-mark.svg"
+const checkMark = "/assets/lending/pop-up/check-mark.svg";
 
 const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
     const [activeInfoRow, setActiveInfoRow] = React.useState<string | null>(null);
@@ -146,7 +146,7 @@ const ComparePlansPopup: React.FC<ComparePlansPopupProps> = ({ onClose }) => {
                                 ?
                             </span>
                         </div>
-                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(0)} onMouseLeave={handleMouseLeave}>No</div>
+                        <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(0)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(1)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(2)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>
                         <div className="compare-cell font-color-grey" onMouseEnter={() => handleMouseEnter(3)} onMouseLeave={handleMouseLeave}><img src={checkMark} className="check-icon" alt={'✔'}></img></div>

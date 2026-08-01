@@ -408,16 +408,44 @@ const OpenLibrary: React.FC = () => {
         navigate('/');
     };
 
-    const handleMobileStudentLogin = () => {
+    const handleMobileOpenLibrary = () => {
         setIsMobileMenuOpen(false);
-        navigate('/login', { state: { hideSignInLink: true } });
+        navigate('/open-library');
+    };
+
+    const scrollToLandingSection = (sectionId: string) => {
+        let attempts = 0;
+        const maxAttempts = 30;
+
+        const tryScroll = () => {
+            const el = document.getElementById(sectionId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            attempts += 1;
+            if (attempts < maxAttempts) {
+                window.requestAnimationFrame(tryScroll);
+            }
+        };
+
+        window.requestAnimationFrame(tryScroll);
+    };
+
+    const handleMobileSection = (sectionId: string) => {
+        setIsMobileMenuOpen(false);
+        navigate('/');
+        scrollToLandingSection(sectionId);
     };
 
     const handleMobileSupport = () => {
+        setIsMobileMenuOpen(false);
         window.open('https://tally.so/r/KYlp6V', '_blank', 'noopener,noreferrer');
     };
 
     const handleMobileEmail = () => {
+        setIsMobileMenuOpen(false);
         window.location.href = 'mailto:team@chiils.com';
     };
 
@@ -936,10 +964,10 @@ const OpenLibrary: React.FC = () => {
 
                         <nav className="mobile-menu-nav" aria-label="Mobile navigation links">
                             <button type="button" onClick={handleMobileHome}>Home</button>
-                            <button type="button" onClick={handleMobileStudentLogin}>Student log in</button>
-                            <button type="button" disabled aria-disabled="true">Tools</button>
-                            <button type="button" disabled aria-disabled="true">Pricing</button>
-                            <button type="button" disabled aria-disabled="true">Questions &amp; Answers</button>
+                            <button type="button" onClick={handleMobileOpenLibrary}>Open Library</button>
+                            <button type="button" onClick={() => handleMobileSection('tools')}>Tools</button>
+                            <button type="button" onClick={() => handleMobileSection('pricing')}>Pricing</button>
+                            <button type="button" onClick={() => handleMobileSection('faq')}>Questions &amp; Answers</button>
                             <button type="button" className="mobile-menu-nav-disabled-auth" disabled aria-disabled="true">
                                 Log in / Sign up
                             </button>

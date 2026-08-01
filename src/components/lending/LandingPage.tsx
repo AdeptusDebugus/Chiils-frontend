@@ -190,19 +190,19 @@ const LandingPage: React.FC = () => {
   const faqItems = [
     {
       question: 'How is it different from Chat GPT and other LLMs?',
-      answer: 'Yes! You can share your full lesson with students by email. They just need to log in to start working with it.'
+      answer: 'Chiils delivers a complete, beautifully structured lesson in a couple of clicks. No prompts, no setup, no back-and-forth. You bring the content, Chiils does the rest.'
     },
     {
       question: 'Can I share my lessons with students?',
-      answer: 'It depends on the length of your video. Usually 5 to 10 minutes, though longer videos can take a bit more.'
+      answer: 'Yes! You can share your full lesson with students by email. They just need to log in to start working with it.'
     },
     {
       question: 'How long does it take to create a custom lesson?',
-      answer: "Just a few. Chiils works with public videos and podcasts under 60 minutes. Private links aren't supported. Everything else is wide open."
+      answer: "It depends on the length of your video. Usually 5 to 10 minutes, though longer videos can take a bit more."
     },
     {
       question: 'Are there any limits or rules I should know about?',
-      answer: 'Not at all. Chiils was built to make AI feel invisible. You don\'t even need to write a prompt.'
+      answer: 'Just a few. Chiils works with public videos and podcasts under 60 minutes. Private links aren\'t supported. Everything else is wide open.'
     },
     {
       question: 'Do I need to know how to use AI tools?',
@@ -468,7 +468,7 @@ const LandingPage: React.FC = () => {
                   <li>7 days / 60 minutes free trial</li>
                   <li>Everything on Start</li>
                   <li>Lesson Builder for creating your own lessons</li>
-                  <li>300 minutes / month after trial</li>
+                  <li>600 minutes / month after trial</li>
                 </ul>
                 <button className="get-started-btn" onClick={handleSignUp}>
                   <span className="btn-text">Start for free</span>
