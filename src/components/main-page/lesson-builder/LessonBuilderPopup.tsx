@@ -8,6 +8,8 @@ import {
     type CefrLevel
 } from '../../../utils/filters.ts';
 import { extractYouTubeId, fetchYouTubeDuration } from '../../../utils/youtube.ts';
+import { createRoot, type Root } from 'react-dom/client';
+import LessonBuilderStartedNotification from './LessonBuilderStartedNotification.tsx';
 
 interface LessonBuilderPopupProps {
     isOpen: boolean;
@@ -16,6 +18,21 @@ interface LessonBuilderPopupProps {
 
 const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose }) => {
     const { user } = useAuth();
+
+    const showStartedNotification = () => {
+        const host = document.createElement('div');
+        document.body.appendChild(host);
+
+        let root: Root | null = createRoot(host);
+        const close = () => {
+            if (!root) return;
+            root.unmount();
+            root = null;
+            host.remove();
+        };
+
+        root.render(<LessonBuilderStartedNotification onClose={close} />);
+    };
 
     // Form State
     const [name, setName] = useState('');
@@ -190,6 +207,8 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                 } 
             }));
 
+            showStartedNotification();
+
             onClose();
             // detailed reset is not needed because the component unmounts on close
         } catch (e: any) {
@@ -205,6 +224,14 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
     return (
         <div className="lesson-builder-overlay" onClick={onClose}>
             <div className="lesson-builder-popup" onClick={e => e.stopPropagation()}>
+                <button
+                    type="button"
+                    className="lesson-builder-close"
+                    onClick={onClose}
+                    aria-label="Close"
+                >
+                    <img src="/assets/lesson-builder/close.svg" alt="" />
+                </button>
                 <div className="lesson-builder-cover"></div>
 
                 <div className="lesson-builder-content">
@@ -352,7 +379,7 @@ const LessonBuilderPopup: React.FC<LessonBuilderPopupProps> = ({ isOpen, onClose
                             <div className="lb-input-row" style={{ zIndex: 20 }}>
                                 <label className="lb-label">Link</label>
                                 <div className="lb-field-container">
-                                    <p className="lb-helper-text">Max length: 60 minutes</p>
+                                    <p className="lb-helper-text">Up to 60 min. YouTube only for now.</p>
                                     <input
                                         className={`lb-input ${errors.link ? 'has-error' : ''} ${isValidatingLink ? 'validating' : ''}`}
                                         value={errors.link && duration && duration > 3600 ? "Video is too long (max 60 min)" : (errors.link ? "Please enter a valid YouTube link" : youtubeLink)}

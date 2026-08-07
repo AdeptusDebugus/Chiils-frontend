@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { LessonBuilderProvider, useLessonBuilder } from './contexts/LessonBuilderContext';
 import LessonBuilderPopup from './components/main-page/lesson-builder/LessonBuilderPopup.tsx';
+import { TakeATourProvider, useTakeATour } from './contexts/TakeATourContext.tsx'
+import TakeATourOverlay from './components/main-page/take-a-tour/TakeATourOverlay.tsx'
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './components/main-page/home/HomePage.tsx';
 import LandingPage from './components/lending/LandingPage.tsx';
@@ -34,6 +36,11 @@ const LessonBuilderPopupWrapper = () => {
   const { isOpen, closeLessonBuilder } = useLessonBuilder();
   return isOpen ? <LessonBuilderPopup isOpen={isOpen} onClose={closeLessonBuilder} /> : null;
 };
+
+const TakeATourOverlayWrapper = () => {
+  const { isOpen, closeTakeATour } = useTakeATour()
+  return isOpen ? <TakeATourOverlay isOpen={isOpen} onClose={closeTakeATour} /> : null
+}
 
 const HomeRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -133,6 +140,7 @@ const AppContent = () => {
       {/* Termly banner displayed globally so the consent modal is always available. */}
       <TermlyBanner />
       <LessonBuilderPopupWrapper />
+      <TakeATourOverlayWrapper />
 
       {/* Onboarding Flow */}
       {isOnboardingOpen && <OnboardingPlanPopup onClose={closeOnboarding} />}
@@ -150,13 +158,15 @@ function App() {
   return (
     <AuthProvider>
       <LessonBuilderProvider>
-        <AuthPromptProvider>
-          <UpgradePromptProvider>
-            <OnboardingProvider>
-              <AppContent />
-            </OnboardingProvider>
-          </UpgradePromptProvider>
-        </AuthPromptProvider>
+        <TakeATourProvider>
+          <AuthPromptProvider>
+            <UpgradePromptProvider>
+              <OnboardingProvider>
+                <AppContent />
+              </OnboardingProvider>
+            </UpgradePromptProvider>
+          </AuthPromptProvider>
+        </TakeATourProvider>
       </LessonBuilderProvider>
     </AuthProvider>
   )

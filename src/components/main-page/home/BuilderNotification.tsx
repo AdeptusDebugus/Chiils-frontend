@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './BuilderNotification.css';
 
 interface BuilderNotificationProps {
@@ -9,18 +9,11 @@ interface BuilderNotificationProps {
 }
 
 const BuilderNotification: React.FC<BuilderNotificationProps> = ({ onUndo, onClose, type = 'info' }) => {
-    const [timeLeft, setTimeLeft] = useState(60);
-
     useEffect(() => {
-        if (timeLeft <= 0) {
-            onClose();
-            return;
-        }
-        const timer = setInterval(() => {
-            setTimeLeft(prev => prev - 1);
-        }, 1000);
-        return () => clearInterval(timer);
-    }, [timeLeft, onClose]);
+        if (type !== 'info') return;
+        const timer = window.setTimeout(() => onClose(), 60_000);
+        return () => window.clearTimeout(timer);
+    }, [type, onClose]);
 
     // Format message based on type
     if (type !== 'info') {
@@ -36,7 +29,7 @@ const BuilderNotification: React.FC<BuilderNotificationProps> = ({ onUndo, onClo
     return (
         <div className="builder-notification info">
             <p className="notification-text">
-                You have <span className="underline">{timeLeft} second(s)</span> to undo the generation.
+                You have <span className="underline">60 seconds</span> to undo the generation.
             </p>
             <div className="notification-actions">
                 <span className="undo-btn" onClick={onUndo}>Undo</span>

@@ -1,0 +1,73 @@
+.lb-started-notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 10001;
+}
+
+.lb-started-card {
+  width: 562px;
+  height: 274px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 22.106px;
+  box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.lb-started-title {
+  width: 100%;
+  margin: 0;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  color: #000000;
+}
+
+.lb-started-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: flex-end;
+}
+
+.lb-started-text {
+  width: 100%;
+  margin: 0;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  text-align: center;
+  color: #000000;
+  white-space: pre-wrap;
+}
+
+.lb-started-button {
+  width: 145px;
+  border: none;
+  border-radius: 14.211px;
+  background: #2a2b2a;
+  color: #ffffff;
+  font-family: 'TeX Gyre Heros', sans-serif;
+  font-size: 15.79px;
+  font-weight: 400;
+  line-height: 19.738px;
+  cursor: pointer;
+}
+
+.lb-started-button:hover {
+  opacity: 0.9;
+}

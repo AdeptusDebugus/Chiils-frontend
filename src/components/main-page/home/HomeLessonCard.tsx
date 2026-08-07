@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LessonLite } from '../../../services/lessonService.ts';
 import { extractYouTubeId } from '../../../utils/youtube.ts';
 import { capitalizeFirstLetter } from '../../../utils/text.ts';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface HomeLessonCardProps {
     lesson: LessonLite;
@@ -35,6 +36,8 @@ const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
     showActions = true,
     showDelete = false
 }) => {
+    const { user } = useAuth();
+    const canUseCollections = user?.permissions?.can_use_collections !== false;
     const isProcessing = lesson.status === 'PROCESSING' || lesson.status === 'PENDING';
     const [isStoppable, setIsStoppable] = useState(false);
 
@@ -147,7 +150,7 @@ const HomeLessonCard: React.FC<HomeLessonCardProps> = ({
                     )}
                 </h3>
 
-                {showActions && (
+                {showActions && canUseCollections && (
                     <div className="home-lesson-actions">
                         <button
                             className="action-btn add-to-folder"

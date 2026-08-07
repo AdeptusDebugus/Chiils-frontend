@@ -216,13 +216,14 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
                                 </div>
                             </div>
 
-                            <div className="modal-footer">
-                                <button className="create-folder-pill" onClick={() => setIsCreatingFolder(true)}>
-                                    Create new folder
-                                </button>
-                            </div>
                         </>
                     )}
+                </div>
+
+                <div className="modal-footer">
+                    <button className="create-folder-pill" onClick={() => setIsCreatingFolder(true)}>
+                        Create new folder
+                    </button>
                 </div>
 
                 {isCreatingFolder && (

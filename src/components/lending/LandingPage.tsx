@@ -7,6 +7,8 @@ import './LandingPage.css';
 import Footer from '../footer/Footer.tsx';
 import ComparePlansPopup from './ComparePlansPopup.tsx';
 import MobileDesktopStub from './MobileDesktopStub.tsx';
+import MobileDesktopStubEmailNotice from './MobileDesktopStubEmailNotice.tsx';
+import YouTubeIFrameApiPlayer from '../common/YouTubeIFrameApiPlayer';
 
 //IMAGES
 const imgHeroImage = "/assets/lending/about-hero-human.webp";
@@ -32,8 +34,8 @@ const LandingPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isMobilePlansOpen, setIsMobilePlansOpen] = React.useState(false);
   const [isMobileStubOpen, setIsMobileStubOpen] = React.useState(false);
+  const [mobileStubStep, setMobileStubStep] = React.useState<'form' | 'notice'>('form');
   const [expandedFaqIndex, setExpandedFaqIndex] = React.useState<number | null>(null);
-  const [mobileStubAction, setMobileStubAction] = React.useState<(() => void) | null>(null);
 
   React.useEffect(() => {
     if (!isMobileMenuOpen && !isMobileStubOpen && !isMobilePlansOpen) {
@@ -65,20 +67,18 @@ const LandingPage: React.FC = () => {
 
   const runWithMobileStub = (action: () => void) => {
     if (isMobileViewport()) {
-      setMobileStubAction(() => action);
       setIsMobileStubOpen(true);
+      setMobileStubStep('form');
       return;
     }
 
     action();
   };
 
-  const continueFromMobileStub = () => {
-    const action = mobileStubAction;
+  const closeMobileStub = () => {
     setIsMobileStubOpen(false);
     setIsMobileMenuOpen(false);
-    setMobileStubAction(null);
-    action?.();
+    setMobileStubStep('form');
   };
 
   const handleSignUp = () => {
@@ -206,7 +206,7 @@ const LandingPage: React.FC = () => {
     },
     {
       question: 'Do I need to know how to use AI tools?',
-      answer: 'Chiils delivers a complete, beautifully structured lesson in a couple of clicks. No prompts, no setup, no back-and-forth. You bring the content, Chiils does the rest.'
+      answer: 'Not at all. Chiils was built to make AI feel invisible. You don\'t even need to write a prompt.'
     }
   ];
 
@@ -296,15 +296,22 @@ const LandingPage: React.FC = () => {
 
       {/* Feature Cards Section */}
       <div className="features-cards-section" id="about">
-        <div className="video-demo-section">
-          <div className="about-background">
-            <img src={imgAboutBackground} alt="Hero" className="hero-image" />
-          </div>
-          <div className="main-container">
-          {/* Video Demo Placeholder */}
-            <div className="video-demo-placeholder">
-              <p className="video-demo-text">Video demo coming soon</p>
+          <div className="video-demo-section">
+            <div className="about-background">
+              <img src={imgAboutBackground} alt="Hero" className="hero-image" />
             </div>
+            <div className="main-container">
+              <div className="video-demo-placeholder">
+                <video
+                  src="https://ietwfbbswfenycwrkuqq.supabase.co/storage/v1/object/public/Demo%20video/Chiils%20main%20demo.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  controls
+                  controlsList="nodownload noremoteplayback noplaybackrate"
+                />
+              </div>
           </div>
         </div>
 
@@ -377,9 +384,18 @@ const LandingPage: React.FC = () => {
                   <span></span>
                 </div>
               </div>
-              <div className="tool-card-image-placeholder">
-                <p>Demo coming soon</p>
-              </div>
+              <YouTubeIFrameApiPlayer
+                videoUrl="https://www.youtube.com/watch?v=ylF6QEFZ9sQ"
+                className="tool-card-image-placeholder"
+                playerId="landing-open-library"
+                title="Open Library demo"
+                playerVars={{
+                  controls: 0,
+                  fs: 0,
+                  disablekb: 1,
+                  iv_load_policy: 3,
+                }}
+              />
             </div>
 
             {/* Lesson Builder Card */}
@@ -399,9 +415,18 @@ const LandingPage: React.FC = () => {
                   <span></span>
                 </div>
               </div>
-              <div className="tool-card-image-placeholder">
-                <p>Demo coming soon</p>
-              </div>
+              <YouTubeIFrameApiPlayer
+                videoUrl="https://www.youtube.com/watch?v=yI10FkkS-0k"
+                className="tool-card-image-placeholder"
+                playerId="landing-lesson-builder"
+                title="Lesson Builder demo"
+                playerVars={{
+                  controls: 0,
+                  fs: 0,
+                  disablekb: 1,
+                  iv_load_policy: 3,
+                }}
+              />
             </div>
           </div>
         </div>
@@ -614,10 +639,17 @@ const LandingPage: React.FC = () => {
       )}
 
       {isMobileStubOpen && (
-        <MobileDesktopStub
-          onBack={() => setIsMobileStubOpen(false)}
-          onContinue={continueFromMobileStub}
-        />
+        mobileStubStep === 'notice' ? (
+          <MobileDesktopStubEmailNotice
+            onBack={() => setMobileStubStep('form')}
+            onClose={closeMobileStub}
+          />
+        ) : (
+          <MobileDesktopStub
+            onBack={closeMobileStub}
+            onContinue={() => setMobileStubStep('notice')}
+          />
+        )
       )}
 
       {isMobilePlansOpen && (

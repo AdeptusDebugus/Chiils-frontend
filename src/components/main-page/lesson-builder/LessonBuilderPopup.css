@@ -32,6 +32,29 @@
     /* Allow dropdowns to go outside */
 }
 
+.lesson-builder-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.lesson-builder-close img {
+    width: 35px;
+    height: 35px;
+    display: block;
+}
+
+.lesson-builder-close:focus-visible {
+    outline: 2px solid rgba(0, 0, 0, 0.6);
+    outline-offset: 4px;
+    border-radius: 999px;
+}
+
 .lesson-builder-content {
     display: flex;
     flex: 1;

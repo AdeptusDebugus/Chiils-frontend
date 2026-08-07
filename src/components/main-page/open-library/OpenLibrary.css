@@ -1635,7 +1635,7 @@
 /* Large screen optimizations */
 @media (min-width: 1440px) {
   .open-library-page {
-    max-width: 1600px;
+    max-width: 100%;
     padding: 40px 50px 120px 50px;
     /* Maintain 50px gutters from sidebar and right edge */
   }
@@ -1643,6 +1643,22 @@
   .main-content-container {
     margin: 0;
     padding: 40px 36px;
+  }
+
+  .filters-container {
+    flex-wrap: nowrap;
+    gap: 16px;
+  }
+
+  .filters-left,
+  .filters-right {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .filter-dropdown {
+    width: auto;
+    min-width: 0;
   }
 
   .filter-options-row {
@@ -1677,7 +1693,7 @@
 /* Extra large screen optimizations */
 @media (min-width: 1920px) {
   .open-library-page {
-    max-width: 1800px;
+    max-width: 100%;
     padding: 40px 50px 120px 50px;
     /* Maintain 50px gutters from sidebar and right edge */
   }

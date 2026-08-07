@@ -100,7 +100,9 @@ const Login: React.FC = () => {
 
           {!hideSignInLink && (
             <p className="signin-link-text">
-              Already have an account? <span onClick={handleGoogleLogin} className="signin-link" style={{ cursor: 'pointer' }}>Sign in.</span>
+              Google only for now, more options
+              <br />
+              on the way.
             </p>
           )}
         </div>

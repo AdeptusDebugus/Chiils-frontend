@@ -4,6 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext.tsx'
 import { useLessonBuilder } from '../../../contexts/LessonBuilderContext.tsx'
 import { useAuthPrompt } from '../../../contexts/AuthPromptContext.tsx'
 import { useUpgradePrompt } from '../../../contexts/UpgradePromptContext.tsx'
+import { useTakeATour } from '../../../contexts/TakeATourContext.tsx'
 import './Sidebar.css'
 
 const Sidebar: React.FC = () => {
@@ -11,6 +12,7 @@ const Sidebar: React.FC = () => {
   const { openAuthPrompt } = useAuthPrompt()
   const { openUpgradePrompt } = useUpgradePrompt()
   const { openLessonBuilder, isOpen } = useLessonBuilder()
+  const { openTakeATour } = useTakeATour()
 
   const handleLessonBuilderClick = () => {
     if (!isAuthenticated) {
@@ -65,6 +67,10 @@ const Sidebar: React.FC = () => {
         >
           Support
         </a>
+
+        <div className="nav-item" onClick={openTakeATour} style={{ cursor: 'pointer' }}>
+          Take a tour
+        </div>
       </div>
     </div>
   )

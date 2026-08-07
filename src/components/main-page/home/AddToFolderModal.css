@@ -9,6 +9,9 @@
     justify-content: center;
     align-items: center;
     z-index: 10000;
+    padding: 24px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .add-to-folder-modal {
@@ -17,10 +20,15 @@
     box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
     padding: 32px;
     width: 633px;
-    height: 70vh;
+    min-height: 70vh;
+    height: auto;
+    max-height: calc(100vh - 48px);
+    max-width: 100%;
+    display: flex;
     flex-direction: column;
     position: relative;
     font-family: 'TeX Gyre Heros', sans-serif;
+    box-sizing: border-box;
 }
 
 .add-to-folder-header {
@@ -57,9 +65,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow-y: auto;
-    padding-bottom: 456px;
-    /* 356px footer + 100px gap */
+    overflow-y: visible;
+    min-height: 0;
 }
 
 .folder-section {
@@ -166,9 +173,10 @@
 }
 
 .modal-footer {
-    margin-top: 40px;
+    margin-top: 24px;
     display: flex;
     justify-content: flex-end;
+    flex-shrink: 0;
 }
 
 .create-folder-pill {
