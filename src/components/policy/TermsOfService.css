@@ -50,6 +50,26 @@
   margin-bottom: 0;
 }
 
+.terms-section h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.terms-section ol {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+
+.terms-section li {
+  margin-bottom: 10px;
+}
+
+.terms-section li:last-child {
+  margin-bottom: 0;
+}
+
 .terms-section address {
   font-style: normal;
   line-height: 1.8;
