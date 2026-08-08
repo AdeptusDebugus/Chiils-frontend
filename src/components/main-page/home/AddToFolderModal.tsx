@@ -23,8 +23,7 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
     const [error, setError] = useState<string | null>(null);
     const [notification, setNotification] = useState<{ folderId: number, folderName: string } | null>(null);
 
-    const recentRowRef = useRef<HTMLDivElement>(null);
-    const allRowRef = useRef<HTMLDivElement>(null);
+    const foldersGridRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         loadFolders();
@@ -57,11 +56,10 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
     };
 
     const handleScroll = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
-        if (ref.current) {
-            const scrollAmount = 220;
-            const newScrollLeft = ref.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
-            ref.current.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
-        }
+        if (!ref.current) return;
+        const scrollAmount = 220;
+        const newScrollLeft = ref.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
+        ref.current.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
     };
 
     const handleToggleFolder = async (folderId: number) => {
@@ -142,17 +140,24 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
         if (e.target === e.currentTarget) onClose();
     };
 
-    // For "Recent", let's take the first 4 folders or similar
-    const recentFolders = folders.slice(0, 4);
-
     return (
         <div className="add-to-folder-overlay" onClick={handleOverlayClick}>
             <div className="add-to-folder-modal">
                 <div className="add-to-folder-header">
                     <h2>Save to folder</h2>
-                    <button className="close-btn" onClick={onClose}>
-                        <img src={iconClose} alt="Close" />
-                    </button>
+                    <div className="header-actions">
+                        <div className="section-nav" aria-label="Scroll folders">
+                            <button onClick={() => handleScroll(foldersGridRef, 'left')} aria-label="Scroll left">
+                                <img src={iconNavLeft} alt="<" />
+                            </button>
+                            <button onClick={() => handleScroll(foldersGridRef, 'right')} aria-label="Scroll right">
+                                <img src={iconNavRight} alt=">" />
+                            </button>
+                        </div>
+                        <button className="close-btn" onClick={onClose} aria-label="Close">
+                            <img src={iconClose} alt="Close" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="add-to-folder-body">
@@ -160,62 +165,24 @@ const AddToFolderModal: React.FC<AddToFolderModalProps> = ({ lessonId, onClose, 
                         <div className="loading-state">Loading folders...</div>
                     ) : (
                         <>
-                            {/* Recent Section */}
-                            <div className="folder-section">
-                                <div className="section-header">
-                                    <h3>Recent</h3>
-                                    <div className="section-nav">
-                                        <button onClick={() => handleScroll(recentRowRef, 'left')}><img src={iconNavLeft} alt="<" /></button>
-                                        <button onClick={() => handleScroll(recentRowRef, 'right')}><img src={iconNavRight} alt=">" /></button>
-                                    </div>
-                                </div>
-                                <div className="folder-cards-row" ref={recentRowRef}>
-                                    {recentFolders.map(folder => (
-                                        <div
-                                            key={`recent-${folder.id}`}
-                                            className="folder-card-item"
-                                            onClick={() => handleToggleFolder(folder.id)}
-                                        >
-                                            <div className="folder-card-info">
-                                                <h4>{folder.name}</h4>
-                                                <span>{folder.lesson_count} lessons</span>
-                                            </div>
-                                            <div className="folder-card-icon">
-                                                <img src={iconFlag} alt="Flag" />
-                                            </div>
+                            <div className="folder-cards-grid" role="list" ref={foldersGridRef}>
+                                {folders.map(folder => (
+                                    <div
+                                        key={folder.id}
+                                        className="folder-card-item"
+                                        onClick={() => handleToggleFolder(folder.id)}
+                                        role="listitem"
+                                    >
+                                        <div className="folder-card-info">
+                                            <h4>{folder.name}</h4>
+                                            <span>{folder.lesson_count} lessons</span>
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* All Folders Section */}
-                            <div className="folder-section">
-                                <div className="section-header">
-                                    <h3>All folders</h3>
-                                    <div className="section-nav">
-                                        <button onClick={() => handleScroll(allRowRef, 'left')}><img src={iconNavLeft} alt="<" /></button>
-                                        <button onClick={() => handleScroll(allRowRef, 'right')}><img src={iconNavRight} alt=">" /></button>
-                                    </div>
-                                </div>
-                                <div className="folder-cards-row" ref={allRowRef}>
-                                    {folders.map(folder => (
-                                        <div
-                                            key={`all-${folder.id}`}
-                                            className="folder-card-item"
-                                            onClick={() => handleToggleFolder(folder.id)}
-                                        >
-                                            <div className="folder-card-info">
-                                                <h4>{folder.name}</h4>
-                                                <span>{folder.lesson_count} lessons</span>
-                                            </div>
-                                            <div className="folder-card-icon">
-                                                <img src={iconFlag} alt="Flag" />
-                                            </div>
+                                        <div className="folder-card-icon">
+                                            <img src={iconFlag} alt="Flag" />
                                         </div>
-                                    ))}
-                                </div>
+                                    </div>
+                                ))}
                             </div>
-
                         </>
                     )}
                 </div>

@@ -811,7 +811,7 @@
 
 /* Apply background to content area only */
 .tool-card-large:nth-child(1) .tool-card-content {
-  background-image: url('/assets/lending/open-library-background.webp');
+  background-image: url('/assets/lending/openlib-background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -918,6 +918,367 @@
   border: none;
   display: block;
 }
+
+.tool-card-large.open-library-tool-card-v2 {
+  flex-direction: column;
+  background: #2a2b2a;
+  height: 506px;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05) contrast(1.05);
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-bg .openlib-v2-bg-mobile {
+  display: none;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-header {
+  position: relative;
+  z-index: 2;
+  padding: 20px 20px 0;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-divider {
+  height: 1px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-description {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-arrow {
+  align-self: flex-start;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #2a2b2a;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+  padding: 0;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-arrow:hover {
+  transform: scale(1.06);
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-arrow img {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-panel {
+  position: relative;
+  z-index: 2;
+  margin: 14px 20px;
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-panel-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.tool-card-large.open-library-tool-card-v2 .openlib-v2-panel-image.openlib-v2-panel-mobile {
+  display: none;
+}
+
+@media (max-width: 839px) {
+  .tool-card-large.open-library-tool-card-v2 {
+    height: 520px;
+    background: transparent;
+  }
+
+  .tool-card-large.open-library-tool-card-v2 .openlib-v2-bg {
+    overflow: hidden;
+  }
+
+  .tool-card-large.open-library-tool-card-v2 .openlib-v2-header {
+    padding: 15px 20px 0;
+  }
+
+  .tool-card-large.open-library-tool-card-v2 .openlib-v2-panel {
+    display: block;
+    margin: 10px 0 0;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+    background: #fff;
+    line-height: 0;
+  }
+
+  .tool-card-large.open-library-tool-card-v2 .openlib-v2-bg .openlib-v2-bg-desktop {
+    display: none;
+  }
+
+  .tool-card-large.open-library-tool-card-v2 .openlib-v2-bg .openlib-v2-bg-mobile {
+    display: block;
+    border-radius: 15px;
+  }
+
+  .tool-card-large.open-library-tool-card-v2 .openlib-v2-panel-image.openlib-v2-panel-desktop {
+    display: none;
+  }
+
+  .tool-card-large.open-library-tool-card-v2 .openlib-v2-panel-image.openlib-v2-panel-mobile {
+    display: block;
+    background: #fff;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 {
+    background: transparent;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg {
+    position: absolute;
+    top: 0;
+    height: 190px;
+    overflow: hidden;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-header {
+    padding: 15px 20px 10px;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg .lessonbuilder-v2-bg-desktop {
+    display: none;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg .lessonbuilder-v2-bg-mobile {
+    display: block;
+  }
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 {
+  flex-direction: column;
+  background: transparent;
+  height: 506px;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #2a2b2a;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05) contrast(1.05);
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg .lessonbuilder-v2-bg-mobile {
+  display: none;
+}
+
+@media (max-width: 839px) {
+  .tool-card-large.lesson-builder-tool-card-v2 {
+    height: 520px;
+    background: transparent;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg {
+    position: absolute;
+    top: 0;
+    height: 190px;
+    overflow: hidden;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-header {
+    padding: 15px 20px 0;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-panel {
+    display: block;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+    background: #fff;
+    line-height: 0;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg .lessonbuilder-v2-bg-desktop {
+    display: none;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg .lessonbuilder-v2-bg-mobile {
+    display: block;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-image.lessonbuilder-v2-panel-desktop {
+    display: none;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-image.lessonbuilder-v2-panel-mobile {
+    display: block;
+  }
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-header {
+  position: relative;
+  z-index: 2;
+  padding: 20px 20px 10px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-divider {
+  height: 1px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-description {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-arrow {
+  align-self: flex-start;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  padding: 0;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-arrow:hover {
+  transform: scale(1.06);
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-arrow img {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-panel {
+  position: relative;
+  z-index: 2;
+  border-radius: 20px;
+  margin: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-image.lessonbuilder-v2-panel-mobile {
+  display: none;
+}
+
+@media (max-width: 839px) {
+  .tool-card-large.lesson-builder-tool-card-v2 {
+    height: 520px;
+    background: transparent;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg {
+    position: absolute;
+    top: 0;
+    height: 190px;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-header {
+    padding: 15px 20px 0;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-panel {
+    display: block;
+    margin: 10px 0 0 0;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+    background: #fff;
+    line-height: 0;
+    box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg .lessonbuilder-v2-bg-desktop {
+    display: none;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-bg .lessonbuilder-v2-bg-mobile {
+    display: block;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-image.lessonbuilder-v2-panel-desktop {
+    display: none;
+  }
+
+  .tool-card-large.lesson-builder-tool-card-v2 .lessonbuilder-v2-image.lessonbuilder-v2-panel-mobile {
+    display: block;
+  }
+}
+
+
 
 /* Video Section Removed */
 
@@ -2405,7 +2766,6 @@
     height: auto;
     min-height: 181px;
     padding: 20px;
-    border-radius: 8px;
     background: #2a2b2a;
     box-shadow: none;
     overflow: hidden;
@@ -2479,7 +2839,7 @@
   .tools-section {
     min-height: 745px;
     padding: 12px 0 61px;
-    background: #fff;
+    background: #f5f4ee;
     overflow: hidden;
   }
 
@@ -2512,7 +2872,6 @@
     width: 333px;
     min-width: 333px;
     height: 536px;
-    border-radius: 8px;
     box-shadow: none;
     flex-direction: column;
     scroll-snap-align: start;
@@ -2789,7 +3148,6 @@
     min-width: 325px;
     height: 483px;
     padding: 22px 21px;
-    border-radius: 8px;
     flex: 0 0 325px;
     scroll-snap-align: start;
   }
@@ -4388,3 +4746,4 @@
     margin-left: auto;
   }
 }
+

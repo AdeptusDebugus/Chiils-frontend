@@ -18,13 +18,21 @@ const imgFeatureCardSmall2 = "/assets/lending/feature-card-small-2.svg";
 const imgPricingBackground = "/assets/lending/pricing-background.webp";
 const imgAboutBackground = "/assets/lending/about-background.webp";
 const imgLessonBuilderBackground = "/assets/lending/openlib-background.webp";
+const imgLessonBuilderMobileBackground = "/assets/lending/mobile-openlib-background.webp";
+const imgLessonBuilderMobilePicture = "/assets/lending/mobile-lesson-builder.webp";
 const imgOpenLibBackground = "/assets/lending/openlib-background.webp";
+const imgOpenLibMobileBackground = "/assets/lending/mobile-openlib-background.webp";
+const imgOpenLibMobileGroup = "/assets/lending/mobile-open-lib.webp";
+const imgOpenLibCardFrame = "/assets/lending/open-library.webp";
 const imgFAQProfile1 = "/assets/lending/portrait-1.webp";
 const imgFAQProfile2 = "/assets/lending/portrait-2.webp";
 const imgFAQProfile3 = "/assets/lending/portrait-3.webp";
 const imgFAQProfile4 = "/assets/lending/portrait-4.webp";
 const imgFAQProfile5 = "/assets/lending/portrait-5.webp";
 const imgJoyfulWomanPortrait = "/assets/lending/cta-background.webp";
+const imgArrowButton = "/assets/lending/arrow-button.svg";
+const imgLessonBuilderTop = "/assets/lending/lesson-builder-top.webp";
+const imgLessonBuilderBot = "/assets/lending/lesson-builder-bot.webp";
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { openLessonBuilder } = useLessonBuilder();
@@ -368,65 +376,50 @@ const LandingPage: React.FC = () => {
 
           <div className="tools-container" onClick={handleToolsClick}>
             {/* Open Library Card */}
-            <div className="tool-card-large">
-              <div className="tool-card-content">
-                <div className="about-background">
-                  <img src={imgOpenLibBackground} alt="Hero" className="hero-image" />
-                </div>
-                <h3>Open Library</h3>
-                <div className="tool-card-divider"></div>
-                <p className="tool-card-description">A growing library of ready-to-use lessons you can teach right away.</p>
-                <button className="tool-card-arrow-btn" onClick={handleOpenLib}>
-                  →
-                </button>
-                <div className="tool-card-dots" aria-hidden="true">
-                  <span></span>
-                  <span></span>
-                </div>
+            <div className="tool-card-large open-library-tool-card-v2">
+              <div className="openlib-v2-bg" aria-hidden="true">
+                <img className="openlib-v2-bg-desktop" src={imgOpenLibBackground} alt="" />
+                <img className="openlib-v2-bg-mobile" src={imgOpenLibMobileBackground} alt="" />
               </div>
-              <YouTubeIFrameApiPlayer
-                videoUrl="https://www.youtube.com/watch?v=ylF6QEFZ9sQ"
-                className="tool-card-image-placeholder"
-                playerId="landing-open-library"
-                title="Open Library demo"
-                playerVars={{
-                  controls: 0,
-                  fs: 0,
-                  disablekb: 1,
-                  iv_load_policy: 3,
-                }}
-              />
+
+              <div className="openlib-v2-header">
+                <h3>Open Library</h3>
+                <div className="openlib-v2-divider" aria-hidden="true"></div>
+                <p className="openlib-v2-description">A growing library of ready-to-use lessons you can teach right away.</p>
+                <button className="openlib-v2-arrow" onClick={handleOpenLib} aria-label="Open Library">
+                  <img src={imgArrowButton} alt="" />
+                </button>
+              </div>
+
+              <div className="openlib-v2-panel" aria-hidden="true">
+                <img className="openlib-v2-panel-image openlib-v2-panel-desktop" src={imgOpenLibCardFrame} alt="" />
+                <img className="openlib-v2-panel-image openlib-v2-panel-mobile" src={imgOpenLibMobileGroup} alt="" />
+              </div>
             </div>
 
             {/* Lesson Builder Card */}
-            <div className="tool-card-large">
-              <div className="tool-card-content">
-                <div className="about-background">
-                  <img src={imgLessonBuilderBackground} alt="Hero" className="hero-image" />
-                </div>
-                <h3>Lesson Builder</h3>
-                <div className="tool-card-divider"></div>
-                <p className="tool-card-description">A video-to-lesson tool for creating custom lessons in a couple of clicks.</p>
-                <button className="tool-card-arrow-btn" onClick={handleLessonBuilder}>
-                  →
-                </button>
-                <div className="tool-card-dots" aria-hidden="true">
-                  <span></span>
-                  <span></span>
-                </div>
+            <div className="tool-card-large lesson-builder-tool-card-v2">
+              <div className="lessonbuilder-v2-bg" aria-hidden="true">
+                <img className="lessonbuilder-v2-bg-desktop" src={imgLessonBuilderBackground} alt="" />
+                <img className="lessonbuilder-v2-bg-mobile" src={imgLessonBuilderMobileBackground} alt="" />
               </div>
-              <YouTubeIFrameApiPlayer
-                videoUrl="https://www.youtube.com/watch?v=yI10FkkS-0k"
-                className="tool-card-image-placeholder"
-                playerId="landing-lesson-builder"
-                title="Lesson Builder demo"
-                playerVars={{
-                  controls: 0,
-                  fs: 0,
-                  disablekb: 1,
-                  iv_load_policy: 3,
-                }}
-              />
+
+              <div className="lessonbuilder-v2-header">
+                <h3>Lesson Builder</h3>
+                <div className="lessonbuilder-v2-divider" aria-hidden="true"></div>
+                <p className="lessonbuilder-v2-description">
+                  A video-to-lesson tool for creating custom lessons in a couple of clicks.
+                </p>
+                <button className="lessonbuilder-v2-arrow" onClick={handleLessonBuilder} aria-label="Lesson Builder">
+                  <img src={imgArrowButton} alt="" />
+                </button>
+              </div>
+
+              <div className="lessonbuilder-v2-panel" aria-hidden="true">
+                <img className="lessonbuilder-v2-image lessonbuilder-v2-panel-desktop" src={imgLessonBuilderTop} alt="" />
+                <img className="lessonbuilder-v2-image lessonbuilder-v2-panel-desktop" src={imgLessonBuilderBot} alt="" />
+                <img className="lessonbuilder-v2-image lessonbuilder-v2-panel-mobile" src={imgLessonBuilderMobilePicture} alt="" />
+              </div>
             </div>
           </div>
         </div>

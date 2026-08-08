@@ -20,7 +20,7 @@
     box-shadow: 0px 3.158px 11.843px 3.158px rgba(0, 0, 0, 0.25);
     padding: 32px;
     width: 633px;
-    min-height: 70vh;
+    min-height: 50vh;
     height: auto;
     max-height: calc(100vh - 48px);
     max-width: 100%;
@@ -46,9 +46,15 @@
     margin: 0;
 }
 
-.add-to-folder-header .close-btn {
+.add-to-folder-header .header-actions {
     position: absolute;
     right: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.add-to-folder-header .close-btn {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -69,30 +75,6 @@
     min-height: 0;
 }
 
-.folder-section {
-    border: 1px solid #222222;
-    border-radius: 24px;
-    padding: 16px 24px;
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    flex-shrink: 0;
-    overflow: hidden;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.section-header h3 {
-    font-size: 24px;
-    font-weight: 400;
-    margin: 0;
-}
-
 .section-nav {
     display: flex;
     gap: 12px;
@@ -110,8 +92,11 @@
     opacity: 1;
 }
 
-.folder-cards-row {
-    display: flex;
+.folder-cards-grid {
+    display: grid;
+    grid-template-rows: repeat(2, 147px);
+    grid-auto-flow: column;
+    grid-auto-columns: 178px;
     gap: 16px;
     overflow-x: auto;
     scrollbar-width: none;
@@ -120,7 +105,7 @@
     margin: 0 -4px;
 }
 
-.folder-cards-row::-webkit-scrollbar {
+.folder-cards-grid::-webkit-scrollbar {
     display: none;
 }
 

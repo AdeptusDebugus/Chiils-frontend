@@ -15,7 +15,7 @@
 
 .lesson-builder-popup {
     /* Fallback */
-    background: #ffffff url('/assets/lending/lesson-builder-background.webp') center;
+    background: #ffffff url('assets/lesson-builder/lesson-builder-backgroud.webp') center;
     border-radius: 22.106px;
     width: 1511px;
     max-width: 1074px;
