@@ -56,7 +56,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       if (response.ok) {
         const fullProfile = await response.json();
-        console.log("Fetched full profile:", fullProfile);
         setUser(prev => ({ ...prev, ...fullProfile }));
         localStorage.setItem('user_data', JSON.stringify(fullProfile));
       } else {
@@ -90,7 +89,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const handlePaddleCheckoutCompleted = () => {
-      console.log('Paddle checkout completed. Waiting 4 seconds to refresh profile...');
       setTimeout(() => {
         if (token) {
           fetchUserProfile(token);
@@ -106,7 +104,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [token]);
 
   const login = (newToken: string, userData: User) => {
-    console.log('Storing user data:', userData); // Debug log
     setToken(newToken);
     setUser(userData);
     localStorage.setItem('jwt_token', newToken);

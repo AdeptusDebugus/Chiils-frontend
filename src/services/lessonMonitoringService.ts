@@ -32,12 +32,9 @@ class LessonMonitoringService {
 
     const initialDelay = config.initialDelayMs || 300000; // По умолчанию 5 минут (300000 мс)
     
-    console.log(`Starting monitoring for lesson ${lessonId}: ${config.lessonName}`);
-    console.log(`Initial delay: ${initialDelay / 1000} seconds before first check`);
 
     // Начальная задержка перед первой проверкой
     const initialTimeout = setTimeout(() => {
-      console.log(`Initial delay completed for lesson ${lessonId}, starting checks`);
       
       // Создаем интервал для проверки
       const interval = setInterval(() => {
@@ -64,7 +61,6 @@ class LessonMonitoringService {
       this.monitors.delete(lessonId);
       this.attemptCounts.delete(lessonId);
       this.configs.delete(lessonId);
-      console.log(`Stopped monitoring for lesson ${lessonId}`);
     }
   }
 
@@ -84,29 +80,24 @@ class LessonMonitoringService {
 
     // Проверяем, не превышено ли максимальное количество попыток
     if (currentAttempts >= maxAttempts) {
-      console.log(`Max attempts reached for lesson ${lessonId}, stopping monitoring`);
       this.stopMonitoring(lessonId);
       config.onError(lessonId, 'Превышено максимальное время ожидания. Попробуйте создать урок заново.');
       return;
     }
 
     try {
-      console.log(`Checking lesson ${lessonId} status (attempt ${currentAttempts + 1}/${maxAttempts})`);
       
       const response: LessonReadyResponse = await checkLessonReady(lessonId);
       
       if (response.success && response.is_ready) {
-        console.log(`Lesson ${lessonId} is ready!`);
         this.stopMonitoring(lessonId);
         config.onReady(lessonId, config.lessonName);
       } else if (response.status === 'ERROR') {
-        console.log(`Lesson ${lessonId} failed with ERROR status`);
         this.stopMonitoring(lessonId);
         config.onError(lessonId, response.message || 'Ошибка генерации урока');
       } else {
         // Увеличиваем счетчик попыток
         this.attemptCounts.set(lessonId, currentAttempts + 1);
-        console.log(`Lesson ${lessonId} not ready yet: ${response.message}`);
       }
     } catch (error) {
       console.error(`Error checking lesson ${lessonId} status:`, error);

@@ -81,7 +81,6 @@ const MyLessonsExpanded: React.FC<MyLessonsExpandedProps> = ({
     useEffect(() => {
         globalLessonMonitoring.setSilentMode(true);
         const unsubscribe = globalLessonMonitoring.subscribe((lessonId, lessonName) => {
-            console.log('MyLessonsExpanded: Lesson ready, refreshing...', lessonId);
             (async () => {
                 if (!user?.email) return;
                 try {

@@ -88,7 +88,6 @@ const LessonPage: React.FC = () => {
             },
             events: {
                 onReady: () => {
-                    console.log('YouTube Player is ready');
                     setIsPlayerReady(true);
                 },
                 onError: (e: any) => console.error('YouTube Player Error:', e.data),
@@ -232,7 +231,6 @@ const LessonPage: React.FC = () => {
         if (lesson?.word_bank?.quizlet_export) {
             navigator.clipboard.writeText(lesson.word_bank.quizlet_export)
                 .then(() => {
-                    console.log('Quizlet export copied to clipboard');
                 })
                 .catch(err => {
                     console.error('Failed to copy Quizlet export: ', err);

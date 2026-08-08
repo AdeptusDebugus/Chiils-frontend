@@ -75,12 +75,10 @@ export interface LessonReadyResponse {
 
 export const createLesson = async (data: CreateLessonRequest): Promise<CreateLessonResponse> => {
   try {
-    console.log('Sending createLesson request with data:', data)
 
     // Try different endpoint variations
     let response;
     response = await api.post<CreateLessonResponse>('/lessons/create-lesson', data)
-    console.log('createLesson response:', response.data)
     return response.data
   } catch (error) {
     console.error('createLesson error:', error)
@@ -105,11 +103,8 @@ export const createLesson = async (data: CreateLessonRequest): Promise<CreateLes
 
 export const checkLessonReady = async (lessonId: string): Promise<LessonReadyResponse> => {
   try {
-    console.log('Checking lesson ready status for:', lessonId)
 
     const response = await api.get<any>(`/lessons/is-lesson-ready/${lessonId}`)
-
-    console.log('checkLessonReady response:', response.data)
 
     // Handle both boolean and object responses
     const data = response.data
@@ -124,7 +119,6 @@ export const checkLessonReady = async (lessonId: string): Promise<LessonReadyRes
       message: status === 'ERROR' ? 'Lesson generation failed' : (isReady ? 'Lesson is ready' : 'Lesson is not ready')
     }
 
-    console.log('checkLessonReady processed response:', result)
     return result
   } catch (error) {
     console.error('checkLessonReady error:', error)

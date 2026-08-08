@@ -149,7 +149,6 @@ const HistoryPopup: React.FC<HistoryPopupProps> = ({ onClose, likedLessonIds, on
                 <div className="history-group-items" ref={ref}>
                     {items.map(item => {
                         const anyItem = item as any;
-                        console.log('History Item:', anyItem); // Debug log to identify correct properties
 
                         const id = anyItem.lessonId || anyItem.lesson_id || anyItem.id || anyItem._id || anyItem.lesson?.id || anyItem.lesson?._id;
 

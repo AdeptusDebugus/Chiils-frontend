@@ -19,7 +19,6 @@ class PaddleService {
             const initOptions: any = {
                 token: this.clientToken,
                 eventCallback: (data: any) => {
-                    console.log('Paddle Event:', data);
                     if (data.name === 'checkout.completed') {
                         window.dispatchEvent(new CustomEvent('paddle-checkout-completed'));
                     }
@@ -61,7 +60,6 @@ class PaddleService {
             const portalUrl = response.data;
 
             if (portalUrl) {
-                console.log('Redirecting to Paddle Customer Portal');
                 window.location.href = portalUrl;
             } else {
                 console.error('Failed to get portal session URL');

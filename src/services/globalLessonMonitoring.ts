@@ -108,7 +108,6 @@ class GlobalLessonMonitoring {
 
   // Запускаем мониторинг урока
   startMonitoring(lessonId: string, lessonName: string) {
-    console.log('Global: Starting monitoring for lesson:', lessonId);
 
     // Сохраняем в localStorage
     this.saveActiveMonitoring(lessonId, lessonName);
@@ -117,12 +116,10 @@ class GlobalLessonMonitoring {
       lessonId,
       lessonName,
       onReady: (id: string, name: string) => {
-        console.log('Global: Lesson ready:', id, name);
         this.removeActiveMonitoring(id);
         this.notifyListeners(id, name);
       },
       onError: (id: string, error: string) => {
-        console.log('Global: Lesson error:', id, error);
         this.removeActiveMonitoring(id);
         if (!this.isErrorShown(id)) {
           this.notifyErrorListeners(id, error);
@@ -137,14 +134,12 @@ class GlobalLessonMonitoring {
 
   // Останавливаем мониторинг конкретного урока
   stopMonitoring(lessonId: string) {
-    console.log('Global: Stopping monitoring for lesson:', lessonId);
     this.removeActiveMonitoring(lessonId);
     lessonMonitoringService.stopMonitoring(lessonId);
   }
 
   // Останавливаем все мониторинги
   stopAllMonitoring() {
-    console.log('Global: Stopping all monitoring');
     this.clearActiveMonitoring();
     lessonMonitoringService.stopAllMonitoring();
   }
@@ -152,7 +147,6 @@ class GlobalLessonMonitoring {
   // Восстанавливаем мониторинги при загрузке приложения
   restoreMonitoring() {
     const active = this.getActiveMonitoring();
-    console.log('Global: Restoring monitoring for', active.length, 'lessons');
 
     active.forEach(({ lessonId, lessonName, startTime }) => {
       // Проверяем, что мониторинг не старше 2 часов
@@ -160,24 +154,20 @@ class GlobalLessonMonitoring {
       const elapsedTime = Date.now() - startTime;
 
       if (elapsedTime < twoHours) {
-        console.log('Global: Restoring monitoring for lesson:', lessonId);
 
         // Если прошло больше 5 минут, начинаем мониторинг без задержки
         const fiveMinutes = 5 * 60 * 1000;
         const shouldSkipDelay = elapsedTime > fiveMinutes;
 
         if (shouldSkipDelay) {
-          console.log('Global: Skipping initial delay for restored lesson:', lessonId);
           lessonMonitoringService.startMonitoring({
             lessonId,
             lessonName,
             onReady: (id: string, name: string) => {
-              console.log('Global: Lesson ready:', id, name);
               this.removeActiveMonitoring(id);
               this.notifyListeners(id, name);
             },
             onError: (id: string, error: string) => {
-              console.log('Global: Lesson error:', id, error);
               this.removeActiveMonitoring(id);
               if (!this.isErrorShown(id)) {
                 this.notifyErrorListeners(id, error);
@@ -193,7 +183,6 @@ class GlobalLessonMonitoring {
           this.startMonitoring(lessonId, lessonName);
         }
       } else {
-        console.log('Global: Skipping expired monitoring for lesson:', lessonId);
         this.removeActiveMonitoring(lessonId);
       }
     });

@@ -8,18 +8,14 @@ const GlobalLessonMonitor: React.FC = () => {
   useEffect(() => {
     // Восстанавливаем мониторинги при инициализации
     globalLessonMonitoring.restoreMonitoring();
-    
-    console.log('Global lesson monitor initialized');
 
     // Подписка на ошибки
     const unsubscribeError = globalLessonMonitoring.subscribeToError((lessonId, error) => {
-      console.log(`Global monitor: Error detected for lesson ${lessonId}`);
       setErrorLessonId(lessonId);
     });
     
     // Очистка при размонтировании приложения (не компонента)
     return () => {
-      console.log('Global lesson monitor cleanup - stopping all monitoring');
       globalLessonMonitoring.stopAllMonitoring();
       unsubscribeError();
     };

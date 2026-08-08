@@ -40,8 +40,7 @@ const LoginSuccess: React.FC = () => {
         }
 
         // Decode JWT to get user info (you might want to verify the token on backend)
-        const tokenPayload = decodeJWT(token);
-        console.log('JWT Payload:', tokenPayload); // Debug log
+        const tokenPayload = decodeJWT(token); // Debug log
 
         // Handle different JWT formats and field names
         const userData = {
@@ -51,8 +50,6 @@ const LoginSuccess: React.FC = () => {
           picture: tokenPayload.picture || tokenPayload.avatar || tokenPayload.profile_image,
           role: tokenPayload.role || tokenPayload.UserRole || tokenPayload.roles?.[0] || 'USER'
         };
-
-        console.log('Processed user data:', userData); // Debug log
 
         // Store token and user data
         login(token, userData);
